@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import Button from "~/components/ui/button/Button.vue";
+
+definePageMeta({
+  layout: false,
+});
 </script>
 
 <template>
@@ -11,7 +15,7 @@ import Button from "~/components/ui/button/Button.vue";
         and growth to the next level.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <NuxtLink to="/register">
+        <NuxtLink to="/login">
           <Button type="button" class="w-full sm:w-auto">Start Free</Button>
         </NuxtLink>
         <Button variant="outline" class="w-full sm:w-auto">Learn More</Button>
