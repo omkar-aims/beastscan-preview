@@ -2,6 +2,10 @@
 import Button from "~/components/ui/button/Button.vue";
 import Label from "~/components/ui/label/Label.vue";
 import Input from "~/components/ui/input/Input.vue";
+
+definePageMeta({
+  layout: false,
+});
 </script>
 
 <template>
