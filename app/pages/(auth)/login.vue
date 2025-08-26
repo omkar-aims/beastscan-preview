@@ -7,17 +7,32 @@ import Button from "~/components/ui/button/Button.vue";
 import Input from "~/components/ui/input/Input.vue";
 import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 import PasswordInput from "~/components/PasswordInput.vue";
+import { useLogin } from "~/composables/auth/useLogin";
+import { toast } from "vue-sonner";
+import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
+
+const { login, pending, error } = useLogin();
 
 definePageMeta({
   layout: false,
+  middleware: [redirectIfAuthenticated],
 });
 
 const form = useForm({
   validationSchema: toTypedSchema(loginSchema),
 });
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log(values);
+const onSubmit = form.handleSubmit(async (values) => {
+  const res = await login(values);
+  if (res) {
+    await navigateTo("/dashboard");
+  }
+
+  if (error.value) {
+    toast.error(error.value);
+  }
+
+  form.resetForm();
 });
 </script>
 
@@ -33,6 +48,7 @@ const onSubmit = form.handleSubmit((values) => {
             <AppLink to="/register">create a new account</AppLink>
           </p>
         </div>
+
         <form class="grid gap-4" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="username">
             <FormItem class="grid gap-2">
@@ -68,7 +84,14 @@ const onSubmit = form.handleSubmit((values) => {
             </FormItem>
           </FormField>
 
-          <Button type="submit" class="w-full"> Login </Button>
+          <Button type="submit" class="w-full" :disabled="pending">
+            <Icon
+              v-if="pending"
+              name="svg-spinners:180-ring-with-bg"
+              class="w-5 h-5"
+            />
+            <span>{{ pending ? "Logging in" : "Login" }}</span>
+          </Button>
           <div
             class="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"
           >

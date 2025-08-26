@@ -51,7 +51,7 @@
     0px 4px 6px -1px hsl(0 0% 0% / 0);
   --shadow-xl: 0px 0px 0px 0px hsl(0 0% 0% / 0),
     0px 8px 10px -1px hsl(0 0% 0% / 0);
-  --shadow-2xl: 0px 0px 0px 0px hsl(0 0% 0% / 0);
+  --shadow-2xl: 0px 1px 10px 0px hsl(0 0% 0% / 0.1);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }
@@ -167,4 +167,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* SONNER */
+[data-sonner-toast][data-styled="true"] {
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-2xl) !important;
 }

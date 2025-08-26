@@ -2,9 +2,11 @@
 import Button from "~/components/ui/button/Button.vue";
 import Label from "~/components/ui/label/Label.vue";
 import Input from "~/components/ui/input/Input.vue";
+import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 
 definePageMeta({
   layout: false,
+  middleware: [redirectIfAuthenticated],
 });
 </script>
 
