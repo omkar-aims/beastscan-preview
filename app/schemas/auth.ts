@@ -5,4 +5,12 @@ export const loginSchema = z.object({
   password: z.string(),
 });
 
+export const registrationSchema = z.object({
+  type: z.string().nonempty("Account type is required"),
+  locale: z.string().nonempty("Locale is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Please make a Strong Password"),
+});
+
 export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registrationSchema>;
