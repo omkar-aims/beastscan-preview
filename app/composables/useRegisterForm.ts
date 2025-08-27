@@ -5,7 +5,6 @@ import { steps, type Step } from "~/utils/registerSteps";
 
 export function useRegisterForm() { 
   const router = useRouter();
-
   const step = ref(0);
   const formData = reactive<Record<string, string>>({});
   const errorMessage = ref("");
