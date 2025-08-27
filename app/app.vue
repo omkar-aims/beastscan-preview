@@ -11,7 +11,7 @@ import "vue-sonner/style.css";
       <NuxtPage />
     </NuxtLayout>
 
-    <Toaster />
+    <Toaster position="top-center" theme="system" rich-colors />
   </div>
 </template>
 

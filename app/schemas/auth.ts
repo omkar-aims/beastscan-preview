@@ -11,6 +11,5 @@ export const registrationSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Please make a Strong Password"),
 });
-
-export type LoginInput = z.infer<typeof loginSchema>;
+export type LoginSchema = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registrationSchema>;

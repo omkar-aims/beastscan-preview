@@ -9,9 +9,11 @@ import {
   FormLabel,
   FormControl,
 } from "~/components/ui/form";
+import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 
-definePageMeta({
+definePageMeta({  
   layout: false,
+  middleware: [redirectIfAuthenticated],
 });
 
 const {

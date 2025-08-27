@@ -47,7 +47,7 @@ const items = [
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton as-child>
                 <a :href="item.url" class="flex items-center gap-2">
                   <Icon :name="item.icon" class="w-4 h-4" />
                   <span>{{ item.title }}</span>
