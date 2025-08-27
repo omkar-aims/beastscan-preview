@@ -3,15 +3,13 @@
 import { useRegisterForm } from "~/composables/useRegisterForm";
 import Button from "~/components/ui/button/Button.vue";
 import Input from "~/components/ui/input/Input.vue";
-
-import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 import {
   FormField,
   FormItem,
   FormLabel,
   FormControl,
 } from "~/components/ui/form";
-
+import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 
 definePageMeta({  
   layout: false,
