@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useVModel } from "@vueuse/core";
-import Input from "./ui/input/Input.vue";
-import Button from "./ui/button/Button.vue";
 
 const props = defineProps<{
   modelValue?: string;
@@ -35,7 +32,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       type="button"
       variant="ghost"
       size="sm"
-      class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent active:animate-spin"
+      class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
       tabindex="-1"
       @click="showPassword = !showPassword"
     >

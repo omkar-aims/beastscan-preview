@@ -1,10 +1,14 @@
 <script setup="ts">
 import { Toaster } from "./components/ui/sonner";
 import "vue-sonner/style.css";
+
+useHead({
+  titleTemplate: (title) => (title ? `${title} | Beastscan` : "Beastscan"),
+});
 </script>
 
 <template>
-  <div class="max-h-dvh overflow-hidden">
+  <div>
     <NuxtRouteAnnouncer />
 
     <NuxtLayout>

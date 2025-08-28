@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { useRegisterForm } from "~/composables/useRegisterForm";
 import Button from "~/components/ui/button/Button.vue";
 import Input from "~/components/ui/input/Input.vue";
@@ -11,7 +10,11 @@ import {
 } from "~/components/ui/form";
 import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 
-definePageMeta({  
+useHead({
+  title: "Register",
+});
+
+definePageMeta({
   layout: false,
   middleware: [redirectIfAuthenticated],
 });
@@ -37,7 +40,7 @@ const {
         <div class="grid gap-1 text-center">
           <AppLogo />
           <h1 class="text-3xl font-bold">Create an account</h1>
-          <p class="text-balance text-muted-foreground ">
+          <p class="text-balance text-muted-foreground">
             <span>or{{ " " }}</span>
             <AppLink to="/login">Login to your Account</AppLink>
           </p>
