@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "shadcn-nuxt",
     "@pinia/nuxt",
+    "@nuxtjs/color-mode",
   ],
   shadcn: {
     prefix: "",
@@ -29,5 +30,9 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  colorMode: {
+    classSuffix: "",
   },
 });

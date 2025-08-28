@@ -1,57 +1,36 @@
 <script setup lang="ts">
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-
 const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: "lucide:home",
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: "lucide:inbox",
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: "lucide:calendar",
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: "lucide:search",
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: "lucide:settings",
-  },
+  { title: "Dashboard", url: "", icon: "lucide:layout-dashboard" },
+  { title: "Campaigns", url: "campaigns", icon: "lucide:megaphone" },
+  { title: "Lead Tools", url: "lead-tools", icon: "lucide:users" },
+  { title: "Devices", url: "devices", icon: "lucide:tablet-smartphone" },
+  { title: "Contacts", url: "contacts", icon: "lucide:contact" },
+  { title: "Products", url: "products", icon: "lucide:package" },
+  { title: "Loyalty", url: "loyalty", icon: "lucide:gift" },
+  { title: "Mailer", url: "mailer", icon: "lucide:mail" },
+  { title: "Offers", url: "offers", icon: "lucide:tag" },
 ];
 </script>
 
 <template>
   <Sidebar>
+    <SidebarHeader>
+      <AppLogoFull />
+    </SidebarHeader>
+
     <SidebarContent>
       <SidebarGroup>
-        <SidebarGroupLabel>Application</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
               <SidebarMenuButton as-child>
-                <a :href="item.url" class="flex items-center gap-2">
-                  <Icon :name="item.icon" class="w-4 h-4" />
+                <NuxtLink
+                  :to="`/dashboard/${item.url}`"
+                  class="flex items-center gap-2"
+                >
+                  <Icon :name="item.icon" />
                   <span>{{ item.title }}</span>
-                </a>
+                </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

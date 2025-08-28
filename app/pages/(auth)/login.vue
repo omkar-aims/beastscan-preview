@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import { loginSchema } from "~/schemas/auth";
-
-import Button from "~/components/ui/button/Button.vue";
-import Input from "~/components/ui/input/Input.vue";
-import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
-import PasswordInput from "~/components/PasswordInput.vue";
-import { useLogin } from "~/composables/auth/useLogin";
 import { toast } from "vue-sonner";
+
+import { loginSchema } from "~/schemas/auth";
+import { useLogin } from "~/composables/auth/useLogin";
 import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 
-const { login, pending, error } = useLogin();
+useHead({
+  title: "Login",
+});
 
 definePageMeta({
   layout: false,
   middleware: [redirectIfAuthenticated],
 });
+
+const { login, pending, error } = useLogin();
 
 const form = useForm({
   validationSchema: toTypedSchema(loginSchema),
