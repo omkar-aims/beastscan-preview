@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE,
+    },
+  },
+
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
@@ -14,6 +20,8 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxt/image",
     "shadcn-nuxt",
+    "@pinia/nuxt",
+    "@nuxtjs/color-mode",
   ],
   shadcn: {
     prefix: "",
@@ -22,5 +30,9 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  colorMode: {
+    classSuffix: "",
   },
 });

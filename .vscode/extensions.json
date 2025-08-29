@@ -4,6 +4,7 @@
     "dbaeumer.vscode-eslint",
     "bradlc.vscode-tailwindcss",
     "Vue.volar",
-    "mikestead.dotenv"
+    "mikestead.dotenv",
+    "antfu.iconify"
   ]
 }
