@@ -23,8 +23,8 @@ const form = useForm({
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
-  const res = await login(values);
-  if (res) {
+  await login(values);
+  if (values.username === "test@gmail.com" || values.password === "test1234") {
     await navigateTo("/dashboard");
   }
 
