@@ -7,12 +7,14 @@ defineProps<{
   openDelay?: number;
   closeDelay?: number;
 }>();
+
+defineEmits(["update:modelValue"]);
 </script>
 
 <template>
   <HoverCard :open-delay="openDelay ?? 20" :close-delay="closeDelay ?? 0">
     <HoverCardTrigger as-child>
-      <Card>
+      <Card class="cursor-pointer" @click="$emit('update:modelValue', title)">
         <CardHeader class="flex items-center gap-4">
           <Icon v-if="icon" :name="icon" class="text-3xl text-primary" />
           <div>
