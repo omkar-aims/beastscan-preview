@@ -1,160 +1,256 @@
 <script setup lang="ts">
-useHead({
-  title: "Campaigns",
+interface Campaign {
+  id: number;
+  name: string;
+  qrData: string;
+  createdAt: string;
+  type: "dynamic" | "static";
+}
+
+const campaigns = ref<Campaign[]>([
+  {
+    id: 1,
+    name: "Google QR",
+    qrData: "https://www.google.com",
+    createdAt: "2025-01-01",
+    type: "dynamic",
+  },
+  {
+    id: 2,
+    name: "YouTube QR",
+    qrData: "https://www.youtube.com",
+    createdAt: "2025-02-15",
+    type: "static",
+  },
+  {
+    id: 3,
+    name: "Vue QR",
+    qrData: "https://vuejs.org",
+    createdAt: "2025-03-10",
+    type: "dynamic",
+  },
+]);
+
+const layout = ref<"grid" | "list">("list");
+const sortOption = ref<"name" | "date">("name");
+const filterType = ref<"all" | "dynamic" | "static">("all");
+const search = ref("");
+
+const displayedCampaigns = computed(() => {
+  let filtered = campaigns.value;
+
+  if (filterType.value !== "all") {
+    filtered = filtered.filter((c) => c.type === filterType.value);
+  }
+
+  if (search.value) {
+    filtered = filtered.filter((c) =>
+      c.name.toLowerCase().includes(search.value.toLowerCase())
+    );
+  }
+
+  if (sortOption.value === "name") {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortOption.value === "date") {
+    filtered.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  return filtered;
 });
-
-const stats = [
-  { title: "Total Campaigns", value: 124, icon: "lucide:bar-chart-2" },
-  { title: "Total Scans", value: 18209, icon: "lucide:scan" },
-  { title: "Lead Conversions", value: 4567, icon: "lucide:user-check" },
-  { title: "Active Devices", value: 345, icon: "lucide:cpu" },
-];
-
-const campaigns = [
-  { title: "Restaurant Promo", scans: "5,342", icon: "lucide:coffee" },
-  { title: "Business Card", scans: "3,118", icon: "lucide:credit-card" },
-  { title: "Event RSVP", scans: "2,765", icon: "lucide:calendar" },
-];
-
-const devices = [
-  { title: "Key Hangers", scans: "139", icon: "lucide:key" },
-  { title: "Wood Cubes", scans: "97", icon: "lucide:cuboid" },
-  { title: "Stickers", scans: "184", icon: "lucide:sticky-note" },
-];
-
-const qrCodes = [
-  {
-    type: "Website",
-    url: "https://www.hollo.dk",
-    scans: 0,
-    tags: ["Website"],
-    date: "Jul 1, 2025",
-    icon: "lucide:globe",
-  },
-  {
-    type: "Dynamic Page",
-    url: "Grottino77 QR Menu",
-    scans: 124,
-    tags: ["Dynamic", "Restaurant"],
-    date: "Jun 15, 2025",
-    icon: "lucide:file-text",
-  },
-  {
-    type: "vCard",
-    url: "Michae's Contact",
-    scans: 44,
-    tags: ["Static", "vCard"],
-    date: "May 2, 2025",
-    icon: "lucide:user",
-  },
-  {
-    type: "Event",
-    url: "Summer Festival Invite",
-    scans: 322,
-    tags: ["Event"],
-    date: "May 28, 2025",
-    icon: "lucide:ferris-wheel",
-  },
-];
 </script>
 
 <template>
-  <div class="space-y-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card v-for="stat in stats" :key="stat.title">
-        <CardHeader class="flex items-center gap-2">
-          <Icon :name="stat.icon" class="w-5 h-5 text-primary" />
-          <CardTitle class="text-sm font-medium">{{ stat.title }}</CardTitle>
+  <div class="space-y-4">
+    <h1 class="text-2xl font-bold">Active QR codes</h1>
+
+    <div
+      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
+    >
+      <AppRow
+        direction="horizontal"
+        class="flex-wrap gap-4 items-center w-full sm:w-auto"
+      >
+        <Tabs v-model="filterType">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="dynamic">Dynamic</TabsTrigger>
+            <TabsTrigger value="static">Static</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <Input
+          v-model="search"
+          placeholder="Search campaigns..."
+          class="w-full sm:w-64"
+        />
+      </AppRow>
+
+      <Tabs v-model="layout" class="self-end sm:self-auto">
+        <TabsList>
+          <TabsTrigger value="grid">
+            <Icon name="lucide:layout-grid" />
+          </TabsTrigger>
+          <TabsTrigger value="list">
+            <Icon name="lucide:layout-list" />
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </div>
+
+    <div
+      v-if="layout === 'grid'"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4"
+    >
+      <Card
+        v-for="campaign in displayedCampaigns"
+        :key="campaign.id"
+        class="flex flex-col"
+      >
+        <CardHeader class="flex flex-col items-center gap-3">
+          <NuxtImg
+            src="https://upload.wikimedia.org/wikipedia/commons/3/31/MM_QRcode.png?20120720164609"
+            alt="QR Code"
+            class="w-32 h-32 object-contain"
+          />
+          <CardTitle class="text-center text-lg font-semibold">
+            {{ campaign.name }}
+          </CardTitle>
+          <AppRow direction="horizontal" class="mx-auto gap-2 flex-wrap">
+            <Badge class="uppercase">Website</Badge>
+            <Badge class="uppercase" variant="destructive">
+              {{
+                campaign.type.charAt(0).toUpperCase() + campaign.type.slice(1)
+              }}
+            </Badge>
+          </AppRow>
         </CardHeader>
-        <CardContent>
-          <p class="text-2xl font-bold">
-            <AnimatedCounter :value="stat.value" />
-          </p>
+        <Separator />
+
+        <CardContent class="flex flex-col flex-1 justify-between gap-4">
+          <div class="grid gap-2">
+            <AppRow direction="horizontal" class="justify-between text-sm">
+              <AppRow direction="horizontal" class="items-center gap-1">
+                <Icon name="lucide:scan" /> Scan
+              </AppRow>
+              <span>12</span>
+            </AppRow>
+
+            <AppRow direction="horizontal" class="justify-between text-sm">
+              <AppRow direction="horizontal" class="items-center gap-1">
+                <Icon name="lucide:calendar" /> Created
+              </AppRow>
+              <span>{{
+                new Date(campaign.createdAt).toLocaleDateString()
+              }}</span>
+            </AppRow>
+          </div>
+
+          <AppRow direction="horizontal" class="justify-center gap-2 mt-auto">
+            <AppShareDialog link-to-copy="https://www.google.com">
+              <Button variant="outline">
+                <Icon name="lucide:share-2" />
+              </Button>
+            </AppShareDialog>
+
+            <QRDownloadButton>
+              <Button variant="outline">
+                <Icon name="lucide:download" />
+              </Button>
+            </QRDownloadButton>
+
+            <NuxtLink to="./campaigns/overview">
+              <Button variant="outline">
+                <Icon name="lucide:bar-chart-2" />
+              </Button>
+            </NuxtLink>
+
+            <QREditDialog>
+              <Button variant="outline">
+                <Icon name="lucide:pencil" />
+              </Button>
+            </QREditDialog>
+          </AppRow>
         </CardContent>
       </Card>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Campaigns</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul class="space-y-3">
-            <li
-              v-for="item in campaigns"
-              :key="item.title"
-              class="flex justify-between items-center"
-            >
-              <div class="flex items-center gap-2">
-                <Icon :name="item.icon" class="w-5 h-5 text-primary" />
-                <span>{{ item.title }}</span>
-              </div>
-              <Badge variant="secondary">{{ item.scans }}</Badge>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
+    <div v-else class="grid grid-cols-1 gap-4 mt-4">
+      <Card
+        v-for="campaign in displayedCampaigns"
+        :key="campaign.id"
+        class="flex flex-row items-center gap-6 p-4"
+      >
+        <NuxtImg
+          src="https://upload.wikimedia.org/wikipedia/commons/3/31/MM_QRcode.png?20120720164609"
+          alt="QR Code"
+          class="w-24 h-24 object-contain flex-shrink-0"
+        />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Devices</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul class="space-y-3">
-            <li
-              v-for="item in devices"
-              :key="item.title"
-              class="flex justify-between items-center"
-            >
-              <div class="flex items-center gap-2">
-                <Icon :name="item.icon" class="w-5 h-5 text-primary" />
-                <span>{{ item.title }}</span>
-              </div>
-              <Badge>{{ item.scans }}</Badge>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-    </div>
+        <div class="flex flex-1 flex-col lg:flex-row lg:justify-between gap-2">
+          <div class="flex-1 grid gap-2">
+            <div>
+              <h3 class="text-lg font-semibold">{{ campaign.name }}</h3>
+              <AppRow direction="horizontal" class="gap-2 mt-1 flex-wrap">
+                <Badge>Website</Badge>
+                <Badge variant="destructive">
+                  {{
+                    campaign.type.charAt(0).toUpperCase() +
+                    campaign.type.slice(1)
+                  }}
+                </Badge>
+              </AppRow>
+            </div>
 
-    <Card>
-      <CardHeader>
-        <CardTitle>Active QR Codes</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div class="space-y-4">
+            <AppRow class="text-sm">
+              <AppRow direction="horizontal" class="items-center gap-1">
+                <Icon name="lucide:calendar" /> Created
+                <span class="ml-1">
+                  {{ new Date(campaign.createdAt).toLocaleDateString() }}
+                </span>
+              </AppRow>
+              <AppRow direction="horizontal" class="items-center gap-1">
+                <Icon name="lucide:scan" /> Scan
+                <span class="ml-1">12</span>
+              </AppRow>
+            </AppRow>
+          </div>
+
           <div
-            v-for="qr in qrCodes"
-            :key="qr.url"
-            class="flex items-center justify-between border rounded-lg p-4"
+            class="grid grid-cols-4 lg:grid-cols-2 gap-2 lg:items-center lg:content-center"
           >
-            <ColorModeImage
-              src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
-              alt="QR Code"
-              class="w-20 h-20 rounded-md object-cover mr-4"
-            />
+            <AppShareDialog link-to-copy="https://www.google.com">
+              <Button variant="outline" class="w-full">
+                <Icon name="lucide:share-2" />
+                <span class="hidden lg:inline">Share</span>
+              </Button>
+            </AppShareDialog>
 
-            <div class="flex-1">
-              <div class="flex items-center gap-2">
-                <Icon :name="qr.icon" class="w-5 h-5 text-primary" />
-                <h3 class="font-medium">{{ qr.url }}</h3>
-              </div>
-              <p class="text-sm text-muted-foreground">{{ qr.date }}</p>
-              <div class="flex gap-2 mt-2">
-                <Badge v-for="tag in qr.tags" :key="tag">{{ tag }}</Badge>
-              </div>
-            </div>
+            <QRDownloadButton>
+              <Button variant="outline" class="w-full">
+                <Icon name="lucide:download" />
+                <span class="hidden lg:inline">Download</span>
+              </Button>
+            </QRDownloadButton>
 
-            <div class="flex items-center gap-4">
-              <span class="text-sm text-muted-foreground"
-                >{{ qr.scans }} scans</span
-              >
-              <Button size="sm" variant="outline">Download</Button>
-            </div>
+            <NuxtLink to="./campaigns/overview">
+              <Button variant="outline" class="w-full">
+                <Icon name="lucide:bar-chart-2" />
+                <span class="hidden lg:inline">Analytics</span>
+              </Button>
+            </NuxtLink>
+
+            <QREditDialog>
+              <Button variant="outline" class="w-full">
+                <Icon name="lucide:pencil" />
+                <span class="hidden lg:inline">Edit</span>
+              </Button>
+            </QREditDialog>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </Card>
+    </div>
   </div>
 </template>

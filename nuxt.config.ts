@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@pinia/nuxt",
     "@nuxtjs/color-mode",
+    "nuxt-color-picker",
+    "@vueuse/motion/nuxt",
   ],
   shadcn: {
     prefix: "",
