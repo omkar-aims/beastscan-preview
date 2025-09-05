@@ -34,7 +34,7 @@ export const useLogin = () => {
       return res;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      error.value = err.data.message || "Something went wrong";
+      error.value = err.data?.message || "Something went wrong";
     } finally {
       pending.value = false;
     }
