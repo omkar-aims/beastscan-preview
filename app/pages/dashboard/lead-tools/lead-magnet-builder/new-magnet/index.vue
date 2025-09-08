@@ -45,21 +45,13 @@ const formDesktop = ref(true);
 const formTablet = ref(true);
 const formMobile = ref(true);
 
-const selectedTriggers = computed(() => {
-  const list: string[] = [];
-  if (timeDelay.value) list.push("Time Delay");
-  if (scrollPercent.value) list.push("Scroll %");
-  if (exitIntent.value) list.push("Exit Intent");
-  if (floatingButton.value) list.push("Floating Button");
-  return list.join(", ") || "No trigger selected";
-});
 
 const backoffClosed = ref("");
 const backoffSubmitted = ref("");
 const showTriggerAfterClosed = ref(true);
 const keepTriggerAfterSubmit = ref(true);
 
-const embedCode = `<script src="https://cdn.beastscan.com/widgets/form.js" data-form-id="abc123" data-embedded-id="beast-lead"><\/script>`;
+const embedCode = `<script src="https://cdn.beastscan.com/widgets/form.js" data-form-id="abc123" data-embedded-id="beast-lead"><script>`;
 
 const copied = ref(false);
 function copySnippet() {

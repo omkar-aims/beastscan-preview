@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // ---------- Static Data (mock) ----------
-type Stat = { label: string; value: any };
+type Stat = { label: string; value: number | string };
 type DeviceRow = {
   device: "Mobile" | "Desktop" | "Tablet";
   leads: number;

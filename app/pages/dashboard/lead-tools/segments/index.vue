@@ -5,15 +5,6 @@ useHead({
   title: "Segments",
 });
 
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 
 const segmentData = ref([
   {

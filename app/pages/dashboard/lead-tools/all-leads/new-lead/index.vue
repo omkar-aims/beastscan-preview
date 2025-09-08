@@ -73,7 +73,7 @@ const handleTabChange = (tab: "csv" | "manual") => {
           <CardContent class="p-6 space-y-4">
             <div>
               <Label class="mb-2">Choose your CSV file</Label>
-              <Input type="file" accept=".csv" @change="validateFile" class="mb-2"/>
+              <Input type="file" accept=".csv" class="mb-2" @change="validateFile" />
               <p class="text-sm text-muted-foreground ml-1">
                 Make sure your file includes at least name and email columns and is less than 2MB.
               </p>

@@ -306,20 +306,20 @@ const openFilter = ref(false); // control popover open/close (Nuxt SSR-safe)
                   <Input
                     type="number"
                     :model-value="filters.emailsSent.min"
+                    placeholder="Min"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.emailsSent.min = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Min"
                   />
                   <Input
                     type="number"
                     :model-value="filters.emailsSent.max"
+                    placeholder="Max"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.emailsSent.max = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Max"
                   />
                 </div>
               </div>
@@ -333,20 +333,20 @@ const openFilter = ref(false); // control popover open/close (Nuxt SSR-safe)
                   <Input
                     type="number"
                     :model-value="filters.openRate.min"
+                    placeholder="Min"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.openRate.min = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Min"
                   />
                   <Input
                     type="number"
                     :model-value="filters.openRate.max"
+                    placeholder="Max"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.openRate.max = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Max"
                   />
                 </div>
               </div>
@@ -360,20 +360,20 @@ const openFilter = ref(false); // control popover open/close (Nuxt SSR-safe)
                   <Input
                     type="number"
                     :model-value="filters.clickRate.min"
+                    placeholder="Min"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.clickRate.min = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Min"
                   />
                   <Input
                     type="number"
                     :model-value="filters.clickRate.max"
+                    placeholder="Max"
                     @update:model-value="(v: string | number | undefined) => {
                     const n = typeof v === 'string' ? Number(v) : v;
                     filters.clickRate.max = (n === undefined || Number.isNaN(n as number)) ? undefined : (n as number);
                   }"
-                    placeholder="Max"
                   />
                 </div>
               </div>
@@ -385,13 +385,13 @@ const openFilter = ref(false); // control popover open/close (Nuxt SSR-safe)
                 >
                 <div class="flex gap-2">
                   <Input
+                  v-model="filters.dateRange.start"
                     type="date"
-                    v-model="filters.dateRange.start"
                     placeholder="Start date"
                   />
                   <Input
+                  v-model="filters.dateRange.end"
                     type="date"
-                    v-model="filters.dateRange.end"
                     placeholder="End date"
                   />
                 </div>
@@ -405,25 +405,25 @@ const openFilter = ref(false); // control popover open/close (Nuxt SSR-safe)
                   class="flex flex-col space-y-1"
                 >
                   <div class="flex items-center space-x-2">
-                    <RadioGroupItem value="last7" id="last7" />
+                    <RadioGroupItem id="last7" value="last7"  />
                     <label for="last7" class="text-sm"
                       >Active last 7 days</label
                     >
                   </div>
                   <div class="flex items-center space-x-2">
-                    <RadioGroupItem value="last30" id="last30" />
+                    <RadioGroupItem id="last30" value="last30"  />
                     <label for="last30" class="text-sm"
                       >Active last 30 days</label
                     >
                   </div>
                   <div class="flex items-center space-x-2">
-                    <RadioGroupItem value="last90" id="last90" />
+                    <RadioGroupItem id="last90" value="last90"  />
                     <label for="last90" class="text-sm"
                       >Active last 90 days</label
                     >
                   </div>
                   <div class="flex items-center space-x-2">
-                    <RadioGroupItem value="inactive30" id="inactive30" />
+                    <RadioGroupItem id="inactive30" value="inactive30"  />
                     <label for="inactive30" class="text-sm"
                       >Inactive 30+ days</label
                     >

@@ -122,8 +122,8 @@ function applyFilters() {
                 <FormLabel>No activity since</FormLabel>
                 <FormControl>
                   <Input
+                  v-model="filters.lastActivity"
                     type="date"
-                    v-model="filters.lastActivity"
                     class="w-full"
                   />
                 </FormControl>
@@ -158,9 +158,9 @@ function applyFilters() {
                 <FormLabel>Tags (optional)</FormLabel>
                 <FormControl>
                   <Input
+                  v-model="filters.tags"
                     type="text"
                     placeholder="e.g. Summer, QR"
-                    v-model="filters.tags"
                     class="w-full"
                   />
                 </FormControl>
@@ -231,8 +231,8 @@ function applyFilters() {
         </div>
       </CardContent>
       <CardFooter
+      v-if="leads.length > 0"
         class="flex justify-between"
-        v-if="leads.length > 0"
       >
         <Button variant="destructive" class="cursor-pointer">
           Delete Selected

@@ -156,7 +156,7 @@ function createSegment() {
                   v-for="(group, index) in conditions"
                   :key="index"
                   class="border rounded-lg p-4 space-y-4 relative transition-all duration-300 transform"
-                  <!-- Group Header -->
+                >
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <span>Match</span>
@@ -181,8 +181,8 @@ function createSegment() {
                       type="button"
                       variant="destructive"
                       size="sm"
-                      @click="removeConditionGroup(index)"
                       class="cursor-pointer"
+                      @click="removeConditionGroup(index)"
                     >
                       Remove Group
                     </Button>
@@ -272,7 +272,7 @@ function createSegment() {
         </CardContent>
 
         <CardFooter class="flex justify-end">
-          <Button @click="createSegment" class="cursor-pointer"
+          <Button class="cursor-pointer" @click="createSegment" 
             >Create Segment</Button
           >
         </CardFooter>

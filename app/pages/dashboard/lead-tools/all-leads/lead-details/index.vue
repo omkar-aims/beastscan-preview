@@ -101,16 +101,7 @@ const emailInteractionHistory = [
   },
 ];
 
-const leadEngagement = {
-  emailsSent: {
-    total: 9,
-    opened: 3,
-    clicked: 1,
-  },
-  spamComplaints: true, // ✅ Yes = true, No = false
-  lastDevice: "iPhone 14 (Safari)",
-  tags: ["Early Adopter", "Promo A"], // multiple tags possible
-};
+
 
 const activityLogs = [
   { message: 'Clicked link in: "Promo Offer"', time: "2 days ago" },
@@ -119,9 +110,7 @@ const activityLogs = [
   { message: "Signed up via popup magnet", time: "Jan 5, 2024" },
 ];
 
-const tableHeaders = computed(() =>
-  Object.keys(emailInteractionHistory[0] || {})
-);
+
 
 type SubmissionField = {
   label: string;

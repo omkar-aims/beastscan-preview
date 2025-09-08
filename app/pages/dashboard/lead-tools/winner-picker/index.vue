@@ -61,7 +61,7 @@ function onSubmit() {
 
         <CardContent class="p-6">
           <Form>
-            <form @submit.prevent="onSubmit" class="space-y-6">
+            <form class="space-y-6" @submit.prevent="onSubmit" >
               <!-- Row: Segment + Dates -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Segment -->
