@@ -78,8 +78,8 @@ const {
                     <Input
                       v-if="field.type !== 'password'"
                       v-bind="componentField"
-                      v-model="formData[field.id]"
                       :id="field.id"
+                      v-model="formData[field.id]"
                       :type="field.type"
                       :placeholder="field.placeholder"
                       :required="field.required"

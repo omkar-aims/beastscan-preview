@@ -5,4 +5,6 @@ export default withNuxt({
   rules: {
     "vue/require-default-prop": "off",
   },
+
+  ignores: ["/app/components/ui/"],
 });
