@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import { toast } from "vue-sonner";
 
 import { loginSchema } from "~/schemas/auth";
 import { useLogin } from "~/composables/auth/useLogin";
@@ -23,14 +22,9 @@ const form = useForm({
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
-  await login(values);
-  if (values.username === "test@gmail.com" || values.password === "test1234") {
-    await navigateTo("/dashboard");
-  }
+  const user = await login(values);
 
-  if (error.value) {
-    toast.error(error.value);
-  }
+  if (user) return navigateTo("/dashboard");
 
   form.resetForm();
 });
@@ -49,7 +43,17 @@ const onSubmit = form.handleSubmit(async (values) => {
           </p>
         </div>
 
-        <form class="grid gap-4" @submit="onSubmit">
+        <Alert v-if="error" class="flex items-start gap-3">
+          <Icon
+            name="lucide:circle-alert"
+            class="text-lg text-destructive-foreground"
+          />
+          <AlertDescription class="text-destructive-foreground">
+            {{ error }}
+          </AlertDescription>
+        </Alert>
+
+        <form class="grid gap-4" @submit.prevent="onSubmit">
           <FormField v-slot="{ componentField }" name="username">
             <FormItem class="grid gap-2">
               <FormLabel> Username </FormLabel>
@@ -60,7 +64,7 @@ const onSubmit = form.handleSubmit(async (values) => {
                   v-bind="componentField"
                 />
               </FormControl>
-              <FormMessage /> 
+              <FormMessage />
             </FormItem>
           </FormField>
 
