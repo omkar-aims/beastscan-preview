@@ -118,6 +118,10 @@ const columns: ColumnDef<Device>[] = [
     accessorKey: "name",
   },
   {
+    header: "Tag ID",
+    accessorKey: "linkedTo.title",
+  },
+  {
     header: "Status",
     accessorKey: "status",
     cell: ({ row }) =>

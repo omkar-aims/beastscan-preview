@@ -37,6 +37,12 @@ const route = useRoute();
           >
             <Button>Create New</Button>
           </NuxtLink>
+          <NuxtLink
+            v-if="route.path === '/dashboard/contacts'"
+            to="/dashboard/contacts/new"
+          >
+            <Button>Add New</Button>
+          </NuxtLink>
           <AppThemeToggler />
           <UserProfileDropDown />
         </div>
