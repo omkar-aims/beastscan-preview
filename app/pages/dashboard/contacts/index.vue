@@ -177,6 +177,7 @@ const columns: ColumnDef<Contact>[] = [
 
 <template>
   <div>
+    <AppHeading :level="3">Your contacts</AppHeading>
     <DataTable :data="contacts" :columns="columns" filter-by="name" />
   </div>
 </template>

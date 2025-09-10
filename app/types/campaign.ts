@@ -9,3 +9,10 @@ export interface CampaignOption {
   category: "communication" | "content" | "business" | "utility";
   formSchema: ZodObjectOrWrapped;
 }
+
+export interface CampaignTemplate {
+  id: number;
+  name: string;
+  category: string;
+  imageUrl: string;
+}

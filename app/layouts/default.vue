@@ -20,8 +20,8 @@ const route = useRoute();
 
         <div class="flex items-center gap-3">
           <NuxtLink
-            v-if="route.path === '/dashboard/campaigns'"
-            to="/dashboard/campaigns/new"
+            v-if="route.path === '/dashboard/qr-codes'"
+            to="/dashboard/qr-codes/new"
           >
             <Button>Add New</Button>
           </NuxtLink>
@@ -30,6 +30,12 @@ const route = useRoute();
             to="/dashboard/contacts/new"
           >
             <Button>Add New</Button>
+          </NuxtLink>
+          <NuxtLink
+            v-if="route.path === '/dashboard/campaigns'"
+            to="/dashboard/campaigns/new"
+          >
+            <Button>Create New</Button>
           </NuxtLink>
           <AppThemeToggler />
           <UserProfileDropDown />
