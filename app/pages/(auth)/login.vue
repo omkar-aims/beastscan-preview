@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-
 import { loginSchema } from "~/schemas/auth";
 import { useLogin } from "~/composables/auth/useLogin";
 import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";

@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { NuxtLink } from "#components";
 
 useHead({
   title: "Segments",
 });
 
-
-const segmentData = ref([
+const segments = [
   {
     name: "Segment A",
     description: "description for segment A",
@@ -14,7 +22,6 @@ const segmentData = ref([
     senderName: "Sender 1",
     senderEmail: "sender1@gmail.com",
     lastuse: "July 1, 2025",
-    action: ["View", "Edit"],
   },
   {
     name: "Segment B",
@@ -22,84 +29,67 @@ const segmentData = ref([
     leads: 200,
     senderName: "Sender 2",
     senderEmail: "sender2@gmail.com",
-    lastuse: "July 2, 2025",
-    action: ["View", "Edit"],
+    lastuse: "Aug 3, 2025",
   },
-  {
-    name: "Segment C",
-    description: "description for segment C",
-    leads: 180,
-    senderName: "Sender 3",
-    senderEmail: "sender3@gmail.com",
-    lastuse: "July 3, 2025",
-    action: ["View", "Edit"],
-  },
-]);
+];
 
-const getActionLink = (act: string) => {
-  if (act === "View") return "/dashboard/lead-tools/segments/show-segment";
-  if (act === "Edit") return "/dashboard/lead-tools/segments/edit-segment";
-  return "#";
-};
+// common navigation links
+const actions = [
+  { label: "View", href: "/segments/view" },
+  { label: "Edit", href: "/segments/edit" },
+];
 </script>
 
 <template>
-  <div class="p-6">
-    <div>
-      <h1 class="text-2xl font-semibold mb-4">Lead Segments</h1>
+  <div>
+    <div class="md:flex md:justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold mb-4">Lead Segments</h1>
+      </div>
+      <div class="flex justify-end">
+        <NuxtLink to="/dashboard/lead-tools/segments/newsegment">
+          <Button class="mb-4 cursor-pointer">Create New Segment</Button>
+        </NuxtLink>
+      </div>
     </div>
-    <div class="flex justify-end">
-      <NuxtLink to="/dashboard/lead-tools/segments/newsegment">
-        <Button class="mb-4 cursor-pointer">Create New Segment</Button>
-      </NuxtLink>
-    </div>
-    <div>
-      <Table>
-        <TableHeader>
-          <TableRow class="bg-secondary font-bold">
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Leads</TableHead>
-            <TableHead>Sender Name</TableHead>
-            <TableHead>Sender Email</TableHead>
-            <TableHead>Last Use</TableHead>
-            <TableHead class="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Card
+        v-for="segment in segments"
+        :key="segment.name"
+        class="flex flex-col"
+      >
+        <!-- Header -->
+        <CardHeader>
+          <CardTitle>{{ segment.name }}</CardTitle>
+          <CardDescription>{{ segment.description }}</CardDescription>
+        </CardHeader>
 
-        <!-- Dynamic Rows -->
-        <TableBody>
-          <TableRow v-for="(row, rowIndex) in segmentData" :key="rowIndex">
-            <TableCell class="whitespace-normal break-words max-w-[200px]">
-              {{ row.name }}
-            </TableCell>
-            <TableCell class="whitespace-normal break-words max-w-[300px]">
-              {{ row.description }}
-            </TableCell>
-            <TableCell>{{ row.leads }}</TableCell>
-            <TableCell class="whitespace-normal break-words max-w-[200px]">
-              {{ row.senderName }}
-            </TableCell>
-            <TableCell class="whitespace-normal break-words max-w-[250px]">
-              {{ row.senderEmail }}
-            </TableCell>
-            <TableCell>{{ row.lastuse }}</TableCell>
-            <TableCell class="text-right">
-              <div class="flex justify-end space-x-2">
-                <NuxtLink
-                  v-for="(act, i) in row.action"
-                  :key="i"
-                  :to="getActionLink(act)"
-                >
-                  <Button size="sm" variant="outline" class="cursor-pointer">
-                    {{ act }}
-                  </Button>
-                </NuxtLink>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+        <!-- Content -->
+        <CardContent class="space-y-2 text-sm">
+          <p><span class="font-medium">Leads:</span> {{ segment.leads }}</p>
+          <p>
+            <span class="font-medium">Sender:</span>
+            {{ segment.senderName }} ({{ segment.senderEmail }})
+          </p>
+          <p>
+            <span class="font-medium">Last Used:</span> {{ segment.lastuse }}
+          </p>
+        </CardContent>
+
+        <!-- Footer -->
+        <CardFooter class="flex gap-2 mt-auto">
+          <NuxtLink
+            v-for="action in actions"
+            :key="action.label"
+            :to="action.href"
+            class="flex-1"
+          >
+            <Button class="w-full" variant="outline">
+              {{ action.label }}
+            </Button>
+          </NuxtLink>
+        </CardFooter>
+      </Card>
     </div>
   </div>
 </template>

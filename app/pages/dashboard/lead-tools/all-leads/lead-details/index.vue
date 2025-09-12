@@ -1,6 +1,27 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-vue-next";
+
+const activeTab = ref("userInfo");
+
+const tabs = [
+  { value: "userInfo", label: "Lead Information" },
+  { value: "optIn", label: "Opt-In Details" },
+  { value: "touchAttribution", label: "Touch Attribution" },
+  { value: "emailInteraction", label: "Email Interaction" },
+  { value: "activity", label: "Activity Log" },
+  { value: "response", label: "Submitted Response" },
+];
 
 useHead({
   title: "Lead Details",
@@ -101,16 +122,12 @@ const emailInteractionHistory = [
   },
 ];
 
-
-
 const activityLogs = [
   { message: 'Clicked link in: "Promo Offer"', time: "2 days ago" },
   { message: 'Opened email: "Welcome to the Program"', time: "3 days ago" },
   { message: 'Scanned campaign "Summer Giveaway"', time: "Jun 22, 2025" },
   { message: "Signed up via popup magnet", time: "Jan 5, 2024" },
 ];
-
-
 
 type SubmissionField = {
   label: string;
@@ -160,338 +177,388 @@ const submissions: Submission[] = [
 
 <template>
   <div class="space-y-6 flex flex-col">
-    <div>
-      <Card class="w-full mx-auto rounded-lg shadow-sm">
-        <CardContent class="flex items-center justify-between px-4 py-2">
-          <!-- Left Section -->
-          <div class="space-y-2">
-            <p class="text-2xl font-semibold">{{ leadDetails.name }}</p>
-            <p>{{ leadDetails.email }}</p>
-            <p>
-              <span>Joined : {{ leadDetails.joinDate }}</span>
-            </p>
-          </div>
+    <div class="w-full lg:flex flex-1 justify-between">
+      <div>
+        <p class="text-3xl text-primary">Lead Details</p>
+      </div>
 
-          <!-- Right Section (Status) -->
-          <div class="flex flex-col items-end gap-2">
-            <Badge
-              class="text-white px-3 py-1 rounded-full text-sm"
-              :class="{
-                'bg-green-600 hover:bg-green-700':
-                  leadDetails.status === 'Active',
-                'bg-gray-500 hover:bg-gray-600':
-                  leadDetails.status === 'Inactive',
-                'bg-red-600 hover:bg-red-700': leadDetails.status === 'Bounced',
-              }"
-            >
-              {{ leadDetails.status }}
-            </Badge>
-            <div class="flex gap-2 flex-wrap">
-              <Badge
-                v-for="(src, i) in leadDetails.source"
-                :key="i"
-                variant="secondary"
-                class="bg-primary text-white"
-              >
-                {{ src }}
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-
-    <div>
-      <Card class="w-full mx-auto rounded-lg shadow-sm">
-        <CardHeader>
-          <CardTitle class="font-semibold">Opt-In Details</CardTitle>
-        </CardHeader>
-        <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-          <!-- Left Column -->
-          <div class="space-y-2 text-sm">
-            <p
-              v-for="(value, key) in {
-                'Opt-In Type': optIn.optInType,
-                'Confirmed At': optIn.confirmedAt,
-                Source: optIn.source,
-              }"
-              :key="key"
-              class="ml-1 flex flex-wrap items-center"
-            >
-              <Label class="font-semibold">{{ key }}:</Label>
-              <span v-if="key !== 'Source'" class="ml-1">{{ value }}</span>
-              <span v-else class="ml-1 flex flex-wrap items-center">
-                {{ value }}
-                <a
-                  :href="optIn.sourceLink"
-                  target="_blank"
-                  class="ml-1 text-blue-600 underline"
-                >
-                  {{ optIn.sourceLink }}
-                </a>
-              </span>
-            </p>
-          </div>
-
-          <!-- Right Column -->
-          <div class="space-y-2 text-sm">
-            <p
-              v-for="(value, key) in {
-                'Opt-In IP': optIn.optInIP,
-                Location: optIn.location,
-                Browser: optIn.browser,
-              }"
-              :key="key"
-              class="flex flex-wrap items-center"
-            >
-              <Label class="font-semibold">{{ key }}:</Label>
-              <span class="ml-1">{{ value }}</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-    <div>
-      <!-- Touch Attribution -->
-      <Card class="w-full mx-auto rounded-lg shadow-sm">
-        <CardHeader>
-          <CardTitle class="text-base font-semibold"
-            >Touch Attribution</CardTitle
+      <div class="flex gap-2 md:justify-end">
+        <div>
+          <Button variant="outline" class="cursor-pointer">Edit Tags</Button>
+        </div>
+        <div>
+          <Button variant="destructive" class="cursor-pointer"
+            >Delete Lead</Button
           >
-        </CardHeader>
-        <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-          <!-- First Touch -->
-          <div class="space-y-2">
-            <h3 class="font-semibold text-sm">First Touch</h3>
-            <Separator />
-            <ul class="space-y-1 text-sm">
-              <li
-                v-for="(value, key) in leadAttribution.firstTouch"
-                :key="key"
-                class="flex"
-              >
-                <Label class="font-semibold">{{ key }}:</Label>
-                <span v-if="key === 'Referrer'">
-                  <a
-                    :href="value"
-                    target="_blank"
-                    class="text-blue-600 underline"
-                  >
-                    {{ value }}
-                  </a>
-                </span>
-                <span v-else>{{ value }}</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Last Touch -->
-          <div class="space-y-2">
-            <h3 class="font-semibold text-sm">Last Touch</h3>
-            <Separator />
-            <ul class="space-y-1 text-sm">
-              <li
-                v-for="(value, key) in leadAttribution.lastTouch"
-                :key="key"
-                class="flex"
-              >
-                <Label class="font-semibold">{{ key }}:</Label>
-                <span v-if="key === 'Referrer'">
-                  <a
-                    :href="value"
-                    target="_blank"
-                    class="text-blue-600 underline"
-                  >
-                    {{ value }}
-                  </a>
-                </span>
-                <span v-else>{{ value }}</span>
-              </li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
+    <Tabs v-model="activeTab" class="w-full mx-auto">
+      <!-- Desktop Tabs -->
+      <div class="hidden md:block">
+        <TabsList>
+          <TabsTrigger v-for="tab in tabs" :key="tab.value" :value="tab.value">
+            {{ tab.label }}
+          </TabsTrigger>
+        </TabsList>
+      </div>
 
-    <div>
-      <Card class="w-full shadow-sm rounded-lg">
-        <CardContent>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Stat Item -->
-            <Card
-              v-for="(item, index) in stats"
-              :key="index"
-              class="p-4 text-center shadow-sm rounded-md"
+      <!-- Mobile/Tablet Dropdown -->
+      <div class="block md:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            class="w-full border rounded px-3 py-2 flex items-center justify-between"
+          >
+            <span>{{
+              tabs.find((tab) => tab.value === activeTab)?.label
+            }}</span>
+            <ChevronDown class="h-4 w-4 opacity-70" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent class="w-full" align="end">
+            <DropdownMenuItem
+              v-for="tab in tabs"
+              :key="tab.value"
+              @click="activeTab = tab.value"
             >
-              <CardTitle class="text-sm font-semibold mb-2">
-                {{ item.title }}
-              </CardTitle>
+              {{ tab.label }}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-              <!-- Tags -->
-              <div
-                v-if="item.type === 'tags'"
-                class="flex flex-wrap justify-center gap-2"
-              >
+      <!-- Shared Tab Contents -->
+      <TabsContent value="userInfo"
+        ><div v-motion-slide-bottom>
+          <Card class="w-full mx-auto rounded-lg shadow-sm mb-2">
+            <CardContent class="flex items-center justify-between px-4 py-2">
+              <!-- Left Section -->
+              <div class="space-y-2">
+                <p class="text-2xl font-semibold">{{ leadDetails.name }}</p>
+                <p>{{ leadDetails.email }}</p>
+                <p>
+                  <span>Joined : {{ leadDetails.joinDate }}</span>
+                </p>
+              </div>
+
+              <!-- Right Section (Status) -->
+              <div class="flex flex-col items-end gap-2">
                 <Badge
-                  v-for="tag in item.tags"
-                  :key="tag"
-                  :class="tagColorMap[tag] || 'bg-gray-300 text-black'"
-                  class="px-3 py-1 rounded-full text-xs font-medium"
+                  class="text-white px-3 py-1 rounded-full text-sm"
+                  :class="{
+                    'bg-green-600 hover:bg-green-700':
+                      leadDetails.status === 'Active',
+                    'bg-gray-500 hover:bg-gray-600':
+                      leadDetails.status === 'Inactive',
+                    'bg-red-600 hover:bg-red-700':
+                      leadDetails.status === 'Bounced',
+                  }"
                 >
-                  {{ tag }}
+                  {{ leadDetails.status }}
                 </Badge>
+                <div class="flex gap-2 flex-wrap">
+                  <Badge
+                    v-for="(src, i) in leadDetails.source"
+                    :key="i"
+                    variant="secondary"
+                    class="bg-primary text-white"
+                  >
+                    {{ src }}
+                  </Badge>
+                </div>
               </div>
-
-              <!-- Normal Value -->
-              <div v-else class="flex flex-col items-center">
-                <p class="text-lg font-bold" :class="item.valueClass">
-                  {{ item.value }}
-                </p>
-                <p v-if="item.description" class="text-sm">
-                  {{ item.description }}
-                </p>
-              </div>
-            </Card>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Email Interaction History</CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <CardDescription>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Opened</TableHead>
-                  <TableHead>Clicked</TableHead>
-                  <TableHead>Device</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>IP</TableHead>
-                  <TableHead>Response</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                <TableRow
-                  v-for="(interaction, index) in emailInteractionHistory"
+            </CardContent>
+          </Card>
+        </div>
+        <div v-motion-slide-bottom>
+          <Card class="w-full shadow-sm rounded-lg">
+            <CardContent>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Stat Item -->
+                <Card
+                  v-for="(item, index) in stats"
                   :key="index"
+                  class="p-4 text-center shadow-sm rounded-md"
                 >
-                  <TableCell>{{ interaction.email }}</TableCell>
-                  <TableCell>
-                    <span
-                      :class="
-                        interaction.opened ? 'text-green-600' : 'text-red-600'
-                      "
+                  <CardTitle class="text-sm font-semibold mb-2">
+                    {{ item.title }}
+                  </CardTitle>
+
+                  <!-- Tags -->
+                  <div
+                    v-if="item.type === 'tags'"
+                    class="flex flex-wrap justify-center gap-2"
+                  >
+                    <Badge
+                      v-for="tag in item.tags"
+                      :key="tag"
+                      :class="tagColorMap[tag] || 'bg-gray-300 text-black'"
+                      class="px-3 py-1 rounded-full text-xs font-medium"
                     >
-                      {{ interaction.opened ? "Yes" : "No" }}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      :class="
-                        interaction.clicked ? 'text-green-600' : 'text-red-600'
-                      "
+                      {{ tag }}
+                    </Badge>
+                  </div>
+
+                  <!-- Normal Value -->
+                  <div v-else class="flex flex-col items-center">
+                    <p class="text-lg font-bold" :class="item.valueClass">
+                      {{ item.value }}
+                    </p>
+                    <p v-if="item.description" class="text-sm">
+                      {{ item.description }}
+                    </p>
+                  </div>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div></TabsContent
+      >
+      <TabsContent value="optIn"
+        ><div v-motion-slide-bottom>
+          <Card class="w-full mx-auto rounded-lg shadow-sm">
+            <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Left Column -->
+              <div class="space-y-2 text-sm">
+                <p
+                  v-for="(value, key) in {
+                    'Opt-In Type': optIn.optInType,
+                    'Confirmed At': optIn.confirmedAt,
+                    Source: optIn.source,
+                  }"
+                  :key="key"
+                  class="ml-1 flex flex-wrap items-center"
+                >
+                  <Label class="font-semibold">{{ key }}:</Label>
+                  <span v-if="key !== 'Source'" class="ml-1">{{ value }}</span>
+                  <span v-else class="ml-1 flex flex-wrap items-center">
+                    {{ value }}
+                    <a
+                      :href="optIn.sourceLink"
+                      target="_blank"
+                      class="ml-1 text-blue-600 underline"
                     >
-                      {{ interaction.clicked ? "Yes" : "No" }}
-                    </span>
-                  </TableCell>
-                  <TableCell>{{ interaction.device }}</TableCell>
-                  <TableCell>{{ interaction.location }}</TableCell>
-                  <TableCell>{{ interaction.ip }}</TableCell>
-                  <TableCell>{{ interaction.response }}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardDescription>
-        </CardContent>
-      </Card>
-    </div>
+                      {{ optIn.sourceLink }}
+                    </a>
+                  </span>
+                </p>
+              </div>
 
-    <div>
-      <Card class="w-full mx-auto">
-        <CardHeader>
-          <CardTitle>Activity Log</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul>
-            <li
-              v-for="(log, index) in activityLogs"
-              :key="index"
-              class="flex flex-col sm:flex-row sm:justify-between py-3 text-sm"
-            >
-              <span>{{ log.message }}</span>
-              <span
-                class="text-gray-500 sm:ml-4 mt-1 sm:mt-0 whitespace-nowrap"
-              >
-                {{ log.time }}
-              </span>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-    </div>
-
-    <div>
-      <Card class="w-full mx-auto">
-        <CardHeader>
-          <CardTitle>Submitted Surveys & Quizzes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div v-if="submissions.length === 0">No submissions</div>
-          <div v-else>
-            <ul class="space-y-6">
-              <li
-                v-for="(submission, index) in submissions"
-                :key="index"
-                class="space-y-2"
-              >
-                <!-- Submission Title -->
-                <h3 class="font-medium">
-                  {{ submission.title }}
-                </h3>
-
-                <!-- Submission Fields -->
+              <!-- Right Column -->
+              <div class="space-y-2 text-sm">
+                <p
+                  v-for="(value, key) in {
+                    'Opt-In IP': optIn.optInIP,
+                    Location: optIn.location,
+                    Browser: optIn.browser,
+                  }"
+                  :key="key"
+                  class="flex flex-wrap items-center"
+                >
+                  <Label class="font-semibold">{{ key }}:</Label>
+                  <span class="ml-1">{{ value }}</span>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div></TabsContent
+      >
+      <TabsContent value="touchAttribution"
+        ><div v-motion-slide-bottom>
+          <!-- Touch Attribution -->
+          <Card class="w-full mx-auto rounded-lg shadow-sm">
+            <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- First Touch -->
+              <div class="space-y-2">
+                <h3 class="font-semibold">First Touch</h3>
+                <Separator />
                 <ul class="space-y-1">
                   <li
-                    v-for="(field, idx) in submission.fields"
-                    :key="idx"
-                    class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2"
+                    v-for="(value, key) in leadAttribution.firstTouch"
+                    :key="key"
+                    class="flex gap-2"
                   >
-                    <Label class="font-semibold">{{ field.label }}:</Label>
-                    <span>{{ field.value }}</span>
+                    <Label class="font-semibold">{{ key }}:</Label>
+                    <span v-if="key === 'Referrer'">
+                      <a
+                        :href="value"
+                        target="_blank"
+                        class="text-blue-600 underline"
+                      >
+                        {{ value }}
+                      </a>
+                    </span>
+                    <span v-else>{{ value }}</span>
                   </li>
                 </ul>
+              </div>
 
-                <!-- Separator between submissions -->
-                <Separator v-if="index < submissions.length - 1" class="mt-4" />
-              </li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              <!-- Last Touch -->
+              <div class="space-y-2">
+                <h3 class="font-semibold">Last Touch</h3>
+                <Separator />
+                <ul class="space-y-1">
+                  <li
+                    v-for="(value, key) in leadAttribution.lastTouch"
+                    :key="key"
+                    class="flex gap-2"
+                  >
+                    <Label class="font-semibold">{{ key }}:</Label>
+                    <span v-if="key === 'Referrer'">
+                      <a
+                        :href="value"
+                        target="_blank"
+                        class="text-blue-600 underline"
+                      >
+                        {{ value }}
+                      </a>
+                    </span>
+                    <span v-else>{{ value }}</span>
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div></TabsContent
+      >
+      <TabsContent value="emailInteraction"
+        ><div v-motion-slide-bottom>
+          <Card>
+            <CardContent>
+              <CardDescription>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Opened</TableHead>
+                      <TableHead>Clicked</TableHead>
+                      <TableHead>Device</TableHead>
+                      <TableHead>Location</TableHead>
+                      <TableHead>IP</TableHead>
+                      <TableHead>Response</TableHead>
+                    </TableRow>
+                  </TableHeader>
+
+                  <TableBody>
+                    <TableRow
+                      v-for="(interaction, index) in emailInteractionHistory"
+                      :key="index"
+                    >
+                      <TableCell>{{ interaction.email }}</TableCell>
+                      <TableCell>
+                        <span
+                          :class="
+                            interaction.opened
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          "
+                        >
+                          {{ interaction.opened ? "Yes" : "No" }}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          :class="
+                            interaction.clicked
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          "
+                        >
+                          {{ interaction.clicked ? "Yes" : "No" }}
+                        </span>
+                      </TableCell>
+                      <TableCell>{{ interaction.device }}</TableCell>
+                      <TableCell>{{ interaction.location }}</TableCell>
+                      <TableCell>{{ interaction.ip }}</TableCell>
+                      <TableCell>{{ interaction.response }}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div></TabsContent
+      >
+      <TabsContent value="activity"
+        ><div v-motion-slide-bottom>
+          <Card class="w-full mx-auto">
+            <CardContent>
+              <ul>
+                <li
+                  v-for="(log, index) in activityLogs"
+                  :key="index"
+                  class="flex flex-col sm:flex-row sm:justify-between py-3 text-sm"
+                >
+                  <span>{{ log.message }}</span>
+                  <span
+                    class="text-gray-500 sm:ml-4 mt-1 sm:mt-0 whitespace-nowrap"
+                  >
+                    {{ log.time }}
+                  </span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div></TabsContent
+      >
+      <TabsContent value="response"
+        ><div v-motion-slide-bottom>
+          <Card class="w-full mx-auto">
+            <CardHeader>
+              <CardTitle>Submitted Surveys & Quizzes</CardTitle>
+            </CardHeader>
+            <CardContent>
+  <div v-if="submissions.length === 0" class="text-center text-muted-foreground py-6">
+    No submissions
+  </div>
+  <div v-else>
+    <ul class="space-y-8">
+      <li
+        v-for="(submission, index) in submissions"
+        :key="index"
+        class="space-y-4"
+      >
+        <!-- Submission Title -->
+        <h3 class="text-xl font-semibold text-primary">
+          {{ submission.title }}
+        </h3>
+
+        <!-- Submission Fields -->
+        <ul class="space-y-3">
+          <li
+            v-for="(field, idx) in submission.fields"
+            :key="idx"
+            class="flex flex-col sm:flex-row sm:items-baseline sm:gap-3"
+          >
+            <Label class="font-medium text-sm text-muted-foreground ">
+              {{ field.label }} {{ "  " }}:
+            </Label>
+            <span class="text-base text-foreground">
+              {{ field.value }}
+            </span>
+          </li>
+        </ul>
+
+        <!-- Separator between submissions -->
+        <Separator
+          v-if="index < submissions.length - 1"
+          class="mt-6"
+        />
+      </li>
+    </ul>
+  </div>
+</CardContent>
+          </Card></div
+      ></TabsContent>
+    </Tabs>
     <div class="mt-4 w-full flex flex-row justify-between">
       <div>
-        <Button
-          class="cursor-pointer border-2 rounded-lg px-4 py-2 hover:border-2 hover:border-blue-500"
-          >View All Leads</Button
-        >
-      </div>
-      <div>
-        <Button
-          class="cursor-pointer border-2 rounded-lg px-4 py-2 hover:border-2 hover:border-blue-500"
-          >Edit Tags</Button
-        >
-        <Button
-          class="cursor-pointer border-2 rounded-lg px-4 py-2 hover:border-2 hover:border-blue-500 ml-4"
-          >Delete Lead</Button
-        >
+        <NuxtLink to="/dashboard/lead-tools">
+          <Button
+            class="cursor-pointer rounded-lg px-4 py-2"
+            v-motion-slide-bottom
+            >Back to All Leads</Button
+          >
+        </NuxtLink>
       </div>
     </div>
   </div>

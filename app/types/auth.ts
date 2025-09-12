@@ -10,3 +10,17 @@ export interface UserProfileResponse {
   status: "ok";
   result: User;
 }
+
+export interface RegisterSuccessResponse {
+  status: "ok";
+  result: User;
+}
+
+export interface RegisterErrorResponse {
+  status: "error";
+  result: {
+    message: string;
+  };
+}
+
+export type RegisterResponse = RegisterSuccessResponse | RegisterErrorResponse;
