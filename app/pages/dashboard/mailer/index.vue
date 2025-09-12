@@ -1,15 +1,15 @@
 <script setup lang="ts">
 const layout = ref<"grid" | "list">("list");
 
-const data = [
+const mailerData = [
   {
     id: 1,
     heading: "Newsletter Campaigns",
     description: "Create, manage, and analyze your email campaigns with ease.",
     total_count: 5,
     button: [
-      { label: "View All Campaigns", link: "/dashboard/mailer/all-campaigns"},
-      { label: "Create New Campaign",  link: "/dashboard/mailer/new-campaign"  },
+      { label: "View All Campaigns", link: "/dashboard/mailer/all-campaigns" },
+      { label: "Create New Campaign", link: "/dashboard/mailer/new-campaign" },
     ],
   },
   {
@@ -36,6 +36,7 @@ const mailerAnalytics = [
   },
 ];
 </script>
+
 <template>
   <div class="p-6 space-y-6">
     <div>
@@ -59,7 +60,7 @@ const mailerAnalytics = [
     </div>
     <div>
       <Card>
-        <CardContent v-for="data in data" :key="data.id">
+        <CardContent v-for="data in mailerData" :key="data.id">
           <Card
             class="hover:bg-primary/5 transition-shadow duration-300 p-4 rounded-lg"
           >

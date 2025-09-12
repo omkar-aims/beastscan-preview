@@ -15,7 +15,7 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const { register, pending, error } = useRegister()
+const { register, error } = useRegister()
 
 const form = useForm({
   validationSchema: toTypedSchema(registrationSchema),

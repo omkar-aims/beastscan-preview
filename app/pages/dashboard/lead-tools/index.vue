@@ -13,11 +13,9 @@ import {
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
   SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
@@ -246,7 +244,6 @@ const data = [
   },
 ];
 
-const selectedTags = ref([]);
 
 // Compute unique tags
 const uniqueTags = computed(() => {
