@@ -32,7 +32,6 @@ export const useLogin = () => {
       refreshTokenExpiration.value = res.refresh_token_expiration;
 
       return res;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       error.value = err.data?.message || "Something went wrong";
     } finally {
