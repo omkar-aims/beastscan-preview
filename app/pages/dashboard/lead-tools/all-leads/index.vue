@@ -49,7 +49,7 @@ const tableData = [
     name: "John Doe",
     email: "john@edli.com",
     source: "QR Campaign",
-    tags: ["QR", "Burger"],
+      
     emailsSent: 3,
     openRate: "60%",
     clickRate: "20%",

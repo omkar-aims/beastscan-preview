@@ -12,8 +12,8 @@ export const useLogin = () => {
     "refreshTokenExpiration"
   );
 
-  const pending = ref(false);
-  const error = ref<string | null>(null);
+      const pending = ref(false);
+      const error = ref<string | null>(null);
 
   const login = async (
     credentials: LoginSchema
