@@ -244,7 +244,6 @@ const data = [
   },
 ];
 
-
 // Compute unique tags
 const uniqueTags = computed(() => {
   const allTags = data.flatMap((user) => user.tags);
@@ -258,7 +257,7 @@ function getTagColor(tag: string): string {
     const index = Object.keys(tagColors).length % colors.length;
     tagColors[tag] = colors[index];
   }
-  return tagColors[tag]!; 
+  return tagColors[tag]!;
 }
 
 /* -------------------------
@@ -551,13 +550,13 @@ function clearFilters() {
               </div>
               <div class="flex gap-2">
                 <Input
-                  type="number"
                   v-model="emailsSentMinInput"
+                  type="number"
                   placeholder="Min"
                 />
                 <Input
-                  type="number"
                   v-model="emailsSentMaxInput"
+                  type="number"
                   placeholder="Max"
                 />
               </div>
@@ -570,13 +569,13 @@ function clearFilters() {
               </div>
               <div class="flex gap-2">
                 <Input
-                  type="number"
                   v-model="openRateMinInput"
+                  type="number"
                   placeholder="Min"
                 />
                 <Input
-                  type="number"
                   v-model="openRateMaxInput"
+                  type="number"
                   placeholder="Max"
                 />
               </div>
@@ -587,13 +586,13 @@ function clearFilters() {
               <div><Label>Click Rate % (Min/Max)</Label></div>
               <div class="flex gap-2">
                 <Input
-                  type="number"
                   v-model="clickRateMinInput"
+                  type="number"
                   placeholder="Min"
                 />
                 <Input
-                  type="number"
                   v-model="clickRateMaxInput"
+                  type="number"
                   placeholder="Max"
                 />
               </div>
@@ -602,13 +601,13 @@ function clearFilters() {
             <!-- Tags -->
             <p class="text-sm font-medium m-0">Tags</p>
             <Select v-model="filters.tags" multiple>
-              <SelectTrigger >
+              <SelectTrigger>
                 <!-- Always show placeholder instead of selected values -->
                 <span class="text-muted-foreground">Select tags</span>
               </SelectTrigger>
 
               <SelectContent class="max-h-80 overflow-y-auto">
-                <SelectItem v-for="tag in uniqueTags" :key="tag" :value="tag" >
+                <SelectItem v-for="tag in uniqueTags" :key="tag" :value="tag">
                   {{ tag }}
                 </SelectItem>
               </SelectContent>
@@ -630,8 +629,12 @@ function clearFilters() {
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-        <NuxtLink to="/dashboard/lead-tools/segments" ><Button>Lead Segment</Button></NuxtLink>
-        <NuxtLink><Button>Lead Magnet</Button></NuxtLink>
+        <NuxtLink to="/dashboard/lead-tools/segments"
+          ><Button>Lead Segment</Button></NuxtLink
+        >
+        <NuxtLink to="/dashboard/lead-tools/lead-magnet-builder"
+          ><Button>Lead Magnet</Button></NuxtLink
+        >
 
         <!-- Filters dropdown using ShadCN components -->
       </div>

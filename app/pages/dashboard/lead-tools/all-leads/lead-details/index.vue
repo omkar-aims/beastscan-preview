@@ -227,8 +227,8 @@ const submissions: Submission[] = [
       </div>
 
       <!-- Shared Tab Contents -->
-      <TabsContent value="userInfo"
-        ><div v-motion-slide-bottom>
+      <TabsContent value="userInfo">
+        <div v-motion-slide-bottom>
           <Card class="w-full mx-auto rounded-lg shadow-sm mb-2">
             <CardContent class="flex items-center justify-between px-4 py-2">
               <!-- Left Section -->
@@ -507,46 +507,51 @@ const submissions: Submission[] = [
               <CardTitle>Submitted Surveys & Quizzes</CardTitle>
             </CardHeader>
             <CardContent>
-  <div v-if="submissions.length === 0" class="text-center text-muted-foreground py-6">
-    No submissions
-  </div>
-  <div v-else>
-    <ul class="space-y-8">
-      <li
-        v-for="(submission, index) in submissions"
-        :key="index"
-        class="space-y-4"
-      >
-        <!-- Submission Title -->
-        <h3 class="text-xl font-semibold text-primary">
-          {{ submission.title }}
-        </h3>
+              <div
+                v-if="submissions.length === 0"
+                class="text-center text-muted-foreground py-6"
+              >
+                No submissions
+              </div>
+              <div v-else>
+                <ul class="space-y-8">
+                  <li
+                    v-for="(submission, index) in submissions"
+                    :key="index"
+                    class="space-y-4"
+                  >
+                    <!-- Submission Title -->
+                    <h3 class="text-xl font-semibold text-primary">
+                      {{ submission.title }}
+                    </h3>
 
-        <!-- Submission Fields -->
-        <ul class="space-y-3">
-          <li
-            v-for="(field, idx) in submission.fields"
-            :key="idx"
-            class="flex flex-col sm:flex-row sm:items-baseline sm:gap-3"
-          >
-            <Label class="font-medium text-sm text-muted-foreground ">
-              {{ field.label }} {{ "  " }}:
-            </Label>
-            <span class="text-base text-foreground">
-              {{ field.value }}
-            </span>
-          </li>
-        </ul>
+                    <!-- Submission Fields -->
+                    <ul class="space-y-3">
+                      <li
+                        v-for="(field, idx) in submission.fields"
+                        :key="idx"
+                        class="flex flex-col sm:flex-row sm:items-baseline sm:gap-3"
+                      >
+                        <Label
+                          class="font-medium text-sm text-muted-foreground"
+                        >
+                          {{ field.label }} {{ "  " }}:
+                        </Label>
+                        <span class="text-base text-foreground">
+                          {{ field.value }}
+                        </span>
+                      </li>
+                    </ul>
 
-        <!-- Separator between submissions -->
-        <Separator
-          v-if="index < submissions.length - 1"
-          class="mt-6"
-        />
-      </li>
-    </ul>
-  </div>
-</CardContent>
+                    <!-- Separator between submissions -->
+                    <Separator
+                      v-if="index < submissions.length - 1"
+                      class="mt-6"
+                    />
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
           </Card></div
       ></TabsContent>
     </Tabs>

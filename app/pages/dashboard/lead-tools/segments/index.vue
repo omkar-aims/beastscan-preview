@@ -35,7 +35,7 @@ const segments = [
 
 // common navigation links
 const actions = [
-  { label: "View", href: "/segments/view" },
+  { label: "View", href: "/dashboard/lead-tools/segments/show-segment" },
   { label: "Edit", href: "/segments/edit" },
 ];
 </script>
@@ -43,8 +43,14 @@ const actions = [
 <template>
   <div>
     <div class="md:flex md:justify-between">
-      <div>
-        <h1 class="text-2xl font-semibold mb-4">Lead Segments</h1>
+      <div class="flex flex-col">
+        <div>
+          <h1 class="text-2xl font-semibold mb-4">Lead Segments</h1>
+        </div>
+        <div class="mb-2">
+          <span>Total Segment:{{ " " }}</span
+          >{{ segments.length }}
+        </div>
       </div>
       <div class="flex justify-end">
         <NuxtLink to="/dashboard/lead-tools/segments/newsegment">
@@ -67,9 +73,10 @@ const actions = [
         <!-- Content -->
         <CardContent class="space-y-2 text-sm">
           <p><span class="font-medium">Leads:</span> {{ segment.leads }}</p>
-          <p>
-            <span class="font-medium">Sender:</span>
-            {{ segment.senderName }} ({{ segment.senderEmail }})
+          <p class="flex">
+            <span class="font-medium items-center">Sender:</span>
+            {{ segment.senderName }} {{ " " }}
+            <CardDescription> ({{ segment.senderEmail }}) </CardDescription>
           </p>
           <p>
             <span class="font-medium">Last Used:</span> {{ segment.lastuse }}
