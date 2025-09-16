@@ -4,21 +4,19 @@ defineProps<{
   desc?: string;
   icon?: string;
   preview?: string;
-  openDelay?: number;
-  closeDelay?: number;
 }>();
 
 defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-  <HoverCard :open-delay="openDelay ?? 20" :close-delay="closeDelay ?? 0">
+  <HoverCard>
     <HoverCardTrigger as-child>
       <Card class="cursor-pointer" @click="$emit('update:modelValue', title)">
         <CardHeader class="flex items-center gap-4">
           <Icon v-if="icon" :name="icon" class="text-3xl text-primary" />
           <div>
-            <CardTitle>{{ title }}</CardTitle>
+            <CardTitle class="mb-0.5">{{ title }}</CardTitle>
             <CardDescription v-if="desc">{{ desc }}</CardDescription>
           </div>
         </CardHeader>

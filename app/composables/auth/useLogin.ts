@@ -1,15 +1,15 @@
 import { ref } from "vue";
-import apiRoutes from "~/constants/apiRoutes";
 import type { LoginSchema } from "~/schemas/auth";
 import type { LoginResponse } from "~/types/auth";
 
 export const useLogin = () => {
-  const routes = apiRoutes();
+  const routes = useApiRoutes();
 
-  const token = useCookie<string | null>("token");
-  const refreshToken = useCookie<string | null>("refreshToken");
+  const token = useCookie<string | null>("token", { path: "/" });
+  const refreshToken = useCookie<string | null>("refreshToken", { path: "/" });
   const refreshTokenExpiration = useCookie<number | null>(
-    "refreshTokenExpiration"
+    "refreshTokenExpiration",
+    { path: "/" }
   );
 
   const pending = ref(false);
@@ -17,7 +17,7 @@ export const useLogin = () => {
 
   const login = async (
     credentials: LoginSchema
-  ): Promise<LoginResponse | undefined> => {
+  ): Promise<LoginResponse | null> => {
     pending.value = true;
     error.value = null;
 
@@ -34,7 +34,9 @@ export const useLogin = () => {
       return res;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      error.value = err.data?.message || "Something went wrong";
+      error.value =
+        err?.data?.message || err?.message || "Something went wrong";
+      return null;
     } finally {
       pending.value = false;
     }

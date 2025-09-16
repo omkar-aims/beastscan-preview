@@ -6,8 +6,7 @@ export const campaignOptions: CampaignOption[] = [
     title: "Website",
     desc: "Open any website URL",
     icon: "lucide:globe",
-    type: "both",
-    category: "communication",
+    type: "static",
     formSchema: z.object({
       url: z
         .string({ required_error: "URL is required" })
@@ -19,47 +18,36 @@ export const campaignOptions: CampaignOption[] = [
     title: "Email",
     desc: "Send an email",
     icon: "lucide:mail",
-    type: "both",
-    category: "communication",
+    type: "static",
     formSchema: z.object({
       email: z
         .string({ required_error: "Email is required" })
         .email("Enter a valid email")
         .describe("Recipient Email"),
-      subject: z
-        .string({ required_error: "Subject is required" })
-        .describe("Subject"),
-      body: z
-        .string({ required_error: "Message body is required" })
-        .describe("Message"),
+      subject: z.string().describe("Subject").optional(),
+      body: z.string().describe("Message").optional(),
     }),
   },
   {
     title: "SMS",
     desc: "Send a text message",
     icon: "lucide:message-square",
-    type: "both",
-    category: "communication",
+    type: "static",
     formSchema: z.object({
       phone: z
         .string({ required_error: "Phone number is required" })
-        .min(10, "Enter a valid phone number")
         .describe("Phone Number"),
-      message: z
-        .string({ required_error: "Message is required" })
-        .describe("SMS Message"),
+      message: z.string().describe("SMS Message").optional(),
     }),
   },
   {
     title: "Call",
     desc: "Place a quick call",
     icon: "lucide:phone",
-    type: "both",
-    category: "communication",
+    type: "static",
     formSchema: z.object({
       phone: z
         .string({ required_error: "Phone number is required" })
-        .min(10, "Enter a valid phone number")
         .describe("Phone Number"),
     }),
   },
@@ -68,7 +56,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Show a list of links",
     icon: "lucide:link",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       links: z
         .array(
@@ -87,40 +74,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Form",
-    desc: "Create and share a form",
-    icon: "lucide:form-input",
-    badge: "NEW",
-    type: "dynamic",
-    category: "content",
-    formSchema: z.object({
-      title: z
-        .string({ required_error: "Form title is required" })
-        .describe("Form Title"),
-      fields: z
-        .array(
-          z.object({
-            label: z
-              .string({ required_error: "Field label is required" })
-              .describe("Field Label"),
-            type: z
-              .enum(["text", "email", "number"], {
-                required_error: "Field type is required",
-              })
-              .describe("Field Type"),
-            required: z.boolean().default(false).describe("Required Field"),
-          }),
-          { required_error: "At least one field is required" }
-        )
-        .min(1, "At least one field must be added"),
-    }),
-  },
-  {
     title: "PDF",
     desc: "Show a PDF",
     icon: "lucide:file-text",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       file: z
         .string({ required_error: "PDF file URL is required" })
@@ -133,7 +90,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Play a video",
     icon: "lucide:video",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       url: z
         .string({ required_error: "Video URL is required" })
@@ -146,7 +102,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Show an image",
     icon: "lucide:image",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       url: z
         .string({ required_error: "Image URL is required" })
@@ -160,7 +115,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Display multiple images",
     icon: "lucide:images",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       images: z
         .array(
@@ -181,7 +135,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Play an audio file",
     icon: "lucide:music",
     type: "dynamic",
-    category: "content",
     formSchema: z.object({
       url: z
         .string({ required_error: "Audio file URL is required" })
@@ -194,7 +147,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Display your business details",
     icon: "lucide:briefcase",
     type: "dynamic",
-    category: "business",
     formSchema: z.object({
       name: z
         .string({ required_error: "Business name is required" })
@@ -214,7 +166,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Share your Facebook profile",
     icon: "lucide:facebook",
     type: "dynamic",
-    category: "business",
     formSchema: z.object({
       url: z
         .string({ required_error: "Facebook page URL is required" })
@@ -223,29 +174,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Event",
-    desc: "Promote an event",
-    icon: "lucide:calendar",
-    type: "dynamic",
-    category: "business",
-    formSchema: z.object({
-      name: z
-        .string({ required_error: "Event name is required" })
-        .describe("Event Name"),
-      date: z
-        .string({ required_error: "Event date is required" })
-        .describe("Event Date"),
-      location: z
-        .string({ required_error: "Event location is required" })
-        .describe("Event Location"),
-    }),
-  },
-  {
     title: "Mobile App",
     desc: "Redirect to app store",
     icon: "lucide:smartphone",
     type: "dynamic",
-    category: "business",
     formSchema: z.object({
       iosUrl: z
         .string()
@@ -260,36 +192,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Feedback & Rating",
-    desc: "Collect feedback",
-    icon: "lucide:star",
-    type: "dynamic",
-    category: "business",
-    formSchema: z.object({
-      question: z
-        .string({ required_error: "Feedback question is required" })
-        .describe("Feedback Question"),
-    }),
-  },
-  {
-    title: "Coupon Code",
-    desc: "Share a coupon code",
-    icon: "lucide:ticket",
-    type: "dynamic",
-    category: "business",
-    formSchema: z.object({
-      code: z
-        .string({ required_error: "Coupon code is required" })
-        .describe("Coupon Code"),
-      expiry: z.string().optional().describe("Expiry Date"),
-    }),
-  },
-  {
     title: "Restaurant Menu",
     desc: "Display a restaurant/bar menu",
     icon: "lucide:utensils",
     type: "dynamic",
-    category: "business",
     formSchema: z.object({
       items: z
         .array(
@@ -312,7 +218,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Open on Google Maps",
     icon: "lucide:map-pin",
     type: "dynamic",
-    category: "business",
     formSchema: z.object({
       latitude: z
         .string({ required_error: "Latitude is required" })
@@ -326,8 +231,7 @@ export const campaignOptions: CampaignOption[] = [
     title: "Digital Business Card",
     desc: "Share contact details",
     icon: "lucide:id-card",
-    type: "static",
-    category: "utility",
+    type: "dynamic",
     formSchema: z.object({
       name: z
         .string({ required_error: "Name is required" })
@@ -348,12 +252,29 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Connect to a WiFi network",
     icon: "lucide:wifi",
     type: "static",
-    category: "utility",
     formSchema: z.object({
       ssid: z
         .string({ required_error: "SSID is required" })
+        .min(1, "SSID cannot be empty")
         .describe("Network SSID"),
-      password: z.string().optional().describe("Password"),
+
+      password: z
+        .string()
+        .optional()
+        .describe("Password (leave empty for open networks)"),
+
+      security: z
+        .enum(["WPA", "WEP", "nopass"], {
+          required_error: "Security type is required",
+        })
+        .default("WPA")
+        .describe("Security type of the network"),
+
+      hidden: z
+        .boolean()
+        .default(false)
+        .describe("Whether the network is hidden")
+        .optional(),
     }),
   },
   {
@@ -361,7 +282,6 @@ export const campaignOptions: CampaignOption[] = [
     desc: "Display a short message",
     icon: "lucide:align-left",
     type: "static",
-    category: "utility",
     formSchema: z.object({
       text: z
         .string({ required_error: "Message is required" })

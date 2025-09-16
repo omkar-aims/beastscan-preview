@@ -5,10 +5,9 @@ const props = defineProps<{ options: object }>();
 
 const qrCodePreviewRef = useTemplateRef("qrCodePreviewRef");
 
-const qrCode = new QRCodeStyling(props.options);
-
 onMounted(async () => {
   if (qrCodePreviewRef.value) {
+    const qrCode = new QRCodeStyling(props.options);
     qrCode.append(qrCodePreviewRef.value);
   }
 });

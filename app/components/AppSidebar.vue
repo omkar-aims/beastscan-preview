@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const items = [
   { title: "Dashboard", url: "", icon: "lucide:layout-dashboard" },
-  { title: "QR Codes", url: "qr-codes", icon: "lucide:qr-code" },
   { title: "Campaigns", url: "campaigns", icon: "lucide:megaphone" },
   { title: "Lead Tools", url: "lead-tools", icon: "lucide:users" },
   { title: "Devices", url: "devices", icon: "lucide:tablet-smartphone" },

@@ -25,10 +25,16 @@ import {
 
 import { valueUpdater } from "@/lib/utils";
 
-const props = defineProps<{
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    allowImportExport?: boolean;
+  }>(),
+  {
+    allowImportExport: true,
+  }
+);
 
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
@@ -75,7 +81,9 @@ const { exportCSV } = useExportCSV();
 
 <template>
   <div>
-    <div class="flex items-center justify-between py-4">
+    <div
+      class="flex md:items-center justify-between flex-col md:flex-row py-4 gap-2"
+    >
       <Input v-model="globalFilter" class="max-w-sm" placeholder="Search" />
       <AppRow direction="horizontal">
         <AlertDialog>
@@ -113,10 +121,11 @@ const { exportCSV } = useExportCSV();
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
         <Dialog>
           <DialogTrigger>
             <Button
-              v-if="Object.keys(rowSelection).length <= 0"
+              v-if="Object.keys(rowSelection).length <= 0 && allowImportExport"
               variant="secondary"
             >
               <Icon name="lucide:file-down" />
@@ -141,6 +150,7 @@ const { exportCSV } = useExportCSV();
           </DialogContent>
         </Dialog>
         <Button
+          v-if="allowImportExport"
           variant="outline"
           @click="exportCSV(props.data as object[], 'contacts.csv')"
         >

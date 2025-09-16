@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import { useClipboard } from "@vueuse/core";
 
-defineProps<{
+const props = defineProps<{
   linkToCopy: string;
+  modelValue: boolean;
 }>();
 
+const emit = defineEmits(["update:modelValue"]);
+
 const { copy, copied, isSupported } = useClipboard();
+const open = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    open.value = newVal;
+  }
+);
+
+watch(open, (val) => {
+  emit("update:modelValue", val);
+});
 </script>
 
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <slot />
-    </DialogTrigger>
+  <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>Share</DialogTitle>

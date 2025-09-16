@@ -8,7 +8,6 @@ type Step = {
 
 defineProps<{
   steps: Step[];
-  disabled: boolean;
 }>();
 </script>
 
@@ -28,7 +27,6 @@ defineProps<{
 
       <StepperTrigger as-child>
         <Button
-          :disabled="disabled"
           :variant="
             state === 'completed' || state === 'active' ? 'default' : 'outline'
           "
