@@ -19,61 +19,45 @@
   } from "@/components/ui/table";
   import { Separator } from "@/components/ui/separator";
   import { ScrollArea } from "@/components/ui/scroll-area";
-  import type { CampaignOption } from "~/types/campaign";
-  import { capitalize } from "~/utils/";
-
-  import { campaignOptions } from "~/config/campaignOptions";
-  import z from "zod";
 
   const selectedType = ref<string>();
 
-  const formSchema = computed(() => {
-    const campaign = campaignOptions.find(
-      (campaign) => campaign.title === selectedType.value
-    );
-    return campaign?.formSchema ?? z.object({});
-  });
-
-  const { currentStep, isLastStep, nextStep } = useWizard(4);
+  const {  isLastStep, nextStep } = useWizard(4);
   const { shoot } = useConfetti();
   watch(selectedType, () => {
     if (selectedType.value) nextStep();
   });
 
-  function handleSubmit() {
-    nextStep();
-  }
-
   watch(isLastStep, () => {
     shoot();
   });
 
-  const steps = [
-    {
-      step: 1,
-      title: "Select Type",
-      description: "Choose the QR code type",
-      icon: "lucide:layers",
-    },
-    {
-      step: 2,
-      title: "Fill Data",
-      description: "Enter your details",
-      icon: "lucide:edit-3",
-    },
-    {
-      step: 3,
-      title: "Customize QR",
-      description: "Style and personalize",
-      icon: "lucide:sparkles",
-    },
-    {
-      step: 4,
-      title: "Done",
-      description: "Download or share",
-      icon: "lucide:check-circle",
-    },
-  ];
+  // const steps = [
+  //   {
+  //     step: 1,
+  //     title: "Select Type",
+  //     description: "Choose the QR code type",
+  //     icon: "lucide:layers",
+  //   },
+  //   {
+  //     step: 2,
+  //     title: "Fill Data",
+  //     description: "Enter your details",
+  //     icon: "lucide:edit-3",
+  //   },
+  //   {
+  //     step: 3,
+  //     title: "Customize QR",
+  //     description: "Style and personalize",
+  //     icon: "lucide:sparkles",
+  //   },
+  //   {
+  //     step: 4,
+  //     title: "Done",
+  //     description: "Download or share",
+  //     icon: "lucide:check-circle",
+  //   },
+  // ];
 
   type Stat = { label: string; value: number | string };
   type DeviceRow = {
