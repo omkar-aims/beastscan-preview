@@ -42,8 +42,8 @@ watch(
 const handleSelectTemplate = (config: typeof qrOptions) => {
   qrOptions.value = {
     ...config,
-    width: 250,
-    height: 250,
+    width: 280,
+    height: 280,
     data: qrOptions.value.data,
   };
 };
@@ -185,29 +185,31 @@ const handleSelectTemplate = (config: typeof qrOptions) => {
       </TabsContent>
 
       <AppRow>
-        <Card class="self-baseline p-0 py-2.5 w-full gap-2">
-          <div ref="qrCodePreviewRef" class="flex justify-center" />
+        <Card class="self-baseline w-full gap-2">
+          <CardContent>
+            <div ref="qrCodePreviewRef" class="flex justify-center" />
 
-          <AppRow direction="vertical" gap="xs" class="items-center">
-            <AppRow
-              direction="horizontal"
-              gap="sm"
-              class="transition-all duration-300"
-              :class="
-                isScannable
-                  ? 'text-success-foreground'
-                  : 'text-destructive-foreground'
-              "
-            >
-              <Icon
-                :name="isScannable ? 'lucide:check' : 'lucide:x'"
-                class="text-2xl"
-              />
-              <span class="text-lg font-semibold uppercase">{{
-                scanableLabel
-              }}</span>
+            <AppRow direction="vertical" gap="xs" class="items-center mt-4">
+              <AppRow
+                direction="horizontal"
+                gap="sm"
+                class="transition-all duration-300 items-center"
+                :class="
+                  isScannable
+                    ? 'text-success-foreground'
+                    : 'text-destructive-foreground'
+                "
+              >
+                <Icon
+                  :name="isScannable ? 'lucide:check' : 'lucide:x'"
+                  class="text-2xl"
+                />
+                <span class="text-lg font-semibold uppercase">{{
+                  scanableLabel
+                }}</span>
+              </AppRow>
             </AppRow>
-          </AppRow>
+          </CardContent>
         </Card>
         <slot />
       </AppRow>

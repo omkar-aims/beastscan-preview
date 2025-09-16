@@ -9,8 +9,8 @@ import type {
 } from "qr-code-styling";
 
 export const defaultQROption = {
-  width: 250,
-  height: 250,
+  width: 280,
+  height: 280,
   type: "canvas" as DrawType,
   margin: 10,
   qrOptions: {

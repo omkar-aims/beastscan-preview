@@ -1,59 +1,124 @@
 <script setup lang="ts">
-const campaigns = [
+import type { ColumnDef } from "@tanstack/vue-table";
+import type { Campaign } from "~/types/campaign";
+
+import { useCampaigns } from "~/composables/campaign/useCampaigns";
+import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
+import QRCodeCanvas from "~/components/QRCodeCanvas.vue";
+import { CampaignDataTableDropDown } from "#components";
+import Badge from "~/components/ui/badge/Badge.vue";
+const { data: campaigns } = await useCampaigns();
+
+const showDeleteDialog = ref<boolean>(false);
+
+const columns: ColumnDef<Campaign>[] = [
   {
-    id: "campaign_001",
-    templateId: 2,
-    name: "Olivia's Real Estate Portfolio",
-    category: "link-page",
-    status: "draft",
-    createdAt: "2025-09-10T16:30:00Z",
-    lastEditedAt: "2025-09-10T16:45:00Z",
+    id: "select",
+    header: ({ table }) =>
+      h(Checkbox, {
+        modelValue: table.getIsAllPageRowsSelected(),
+        "onUpdate:modelValue": (value: boolean | string) =>
+          table.toggleAllPageRowsSelected(Boolean(value)),
+        ariaLabel: "Select all",
+      }),
+    cell: ({ row }) =>
+      h(Checkbox, {
+        modelValue: row.getIsSelected(),
+        "onUpdate:modelValue": (value: boolean | string) =>
+          row.toggleSelected(Boolean(value)),
+        ariaLabel: "Select row",
+      }),
+    enableSorting: false,
+    enableHiding: false,
+  },
+
+  {
+    header: "QR Code",
+    accessorKey: "qrOption",
+    cell: (props) =>
+      h(QRCodeCanvas, {
+        options: { ...props.getValue(), width: 80, height: 80 },
+      }),
+  },
+
+  {
+    header: "Name",
+    accessorKey: "name",
   },
   {
-    id: "campaign_002",
-    templateId: 1,
-    name: "Margaret's Marketing Profile",
-    category: "link-page",
-    status: "published",
-    createdAt: "2025-09-09T14:20:00Z",
-    lastEditedAt: "2025-09-10T10:00:00Z",
+    header: "Type",
+
+    accessorKey: "type",
+    cell: (props) => h("span", { class: "uppercase" }, props.getValue()),
   },
   {
-    id: "campaign_003",
-    templateId: 3,
-    name: "Juliana's Photography Portfolio",
-    category: "link-page",
-    status: "draft",
-    createdAt: "2025-09-08T11:15:00Z",
-    lastEditedAt: "2025-09-09T17:45:00Z",
+    header: "Mode",
+    cell: () => h(Badge, { variant: "outline" }, "STATIC"),
   },
   {
-    id: "campaign_004",
-    templateId: 4,
-    name: "Custom Business Landing Page",
-    category: "landing-page",
-    status: "published",
-    createdAt: "2025-09-07T09:00:00Z",
-    lastEditedAt: "2025-09-08T08:30:00Z",
+    header: "Scans",
+    cell: () => 12,
   },
   {
-    id: "campaign_005",
-    templateId: 5,
-    name: "E-commerce Storefront Sample",
-    category: "store-front",
-    status: "draft",
-    createdAt: "2025-09-06T20:45:00Z",
-    lastEditedAt: "2025-09-07T13:15:00Z",
+    header: "Created At",
+    accessorKey: "createdAt",
+    cell: (props) =>
+      h(
+        "span",
+        Intl.DateTimeFormat("en-us").format(new Date(props.getValue()))
+      ),
+  },
+
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const campaign = row.original;
+
+      return h(
+        "div",
+        { class: "relative" },
+        h(CampaignDataTableDropDown, {
+          campaign,
+          onTriggerDeleteDialog: () => (showDeleteDialog.value = true),
+        })
+      );
+    },
   },
 ];
-
-console.log(campaigns);
 </script>
 
 <template>
-  <div>
-    <AppRow>
-      <AppHeading :level="3">My Campaigns</AppHeading>
-    </AppRow>
+  <div class="space-y-4">
+    <template v-if="campaigns?.length === 0">
+      <div class="text-center space-y-4">
+        <NuxtImg
+          src="/empty.svg"
+          width="320"
+          height="100%"
+          class="m-0 mx-auto"
+        />
+        <div>
+          <AppHeading :level="2">You don't have any campaigns yet</AppHeading>
+          <p class="text-muted-foreground mt-1">
+            Start creating campaigns to reach your audience and track their
+            engagement.
+          </p>
+        </div>
+        <NuxtLink to="./campaigns/new">
+          <Button>Create New Campaign</Button>
+        </NuxtLink>
+      </div>
+    </template>
+    <template v-if="campaigns && campaigns?.length > 0">
+      <div>
+        <AppHeading :level="3">Your Campaigns</AppHeading>
+        <DataTable
+          :data="campaigns"
+          :columns="columns"
+          :allow-import-export="false"
+        />
+      </div>
+    </template>
   </div>
 </template>
