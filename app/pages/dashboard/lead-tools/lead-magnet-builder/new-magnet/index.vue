@@ -1,21 +1,33 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import Textarea from "~/components/ui/textarea/Textarea.vue";
-import { Check, Copy } from "lucide-vue-next";
+import AppStepper from "@/components/AppStepper.vue";
+const { currentStep, nextStep, prevStep } = useWizard(4);
+const step = [
+  {
+    step: 1,
+    title: "General Information",
+    description: "Add information about magnet",
+    icon: "lucide:badge-info",
+  },
+  {
+    step: 2,
+    title: "Audience Assignment",
+    description: "Assign Segment for Lead magnet",
+    icon: "lucide:users-round",
+  },
+  {
+    step: 3,
+    title: "Form Setting",
+    description: "Popuo/Embedded Form Setting",
+    icon: "lucide:settings",
+  },
+  {
+    step: 4,
+    title: "Done",
+    description: "Continue to Design",
+    icon: "lucide:figma",
+  },
+];
 
 const options = [
   { id: "popup", label: "Popup" },
@@ -27,7 +39,6 @@ const options = [
 ];
 
 const selectedOptions = ref<string[]>([]);
-
 const timeDelay = ref(false);
 const scrollPercent = ref(false);
 const exitIntent = ref(false);
@@ -44,30 +55,15 @@ const triggerMobile = ref(true);
 const formDesktop = ref(true);
 const formTablet = ref(true);
 const formMobile = ref(true);
-
-
-const backoffClosed = ref("");
-const backoffSubmitted = ref("");
-const showTriggerAfterClosed = ref(true);
-const keepTriggerAfterSubmit = ref(true);
-
-const embedCode = `<script src="https://cdn.beastscan.com/widgets/form.js" data-form-id="abc123" data-embedded-id="beast-lead"><script>`;
-
-const copied = ref(false);
-function copySnippet() {
-  navigator.clipboard.writeText(embedCode).then(() => {
-    copied.value = true;
-    setTimeout(() => (copied.value = false), 2000);
-  });
-}
 </script>
 <template>
-  <div class="space-y-8">
-    <div class="space-y-6 mb-4">
-        <p class="text-3xl font-bold">Create Lead Magnet</p>
+  <div>
+    <div>
+      <Card>
+        <AppStepper v-model="currentStep" :steps="step" :disabled="false" />
+      </Card>
     </div>
-
-    <div class="space-y-6">
+    <div v-if="currentStep === 1">
       <Card class="w-full">
         <CardHeader>
           <CardTitle>General Information</CardTitle>
@@ -111,7 +107,7 @@ function copySnippet() {
             <!-- Form Type -->
             <FormField name="file">
               <FormItem>
-                <FormLabel>Form Type</FormLabel>
+                <FormLabel>Choose Segment</FormLabel>
                 <FormControl>
                   <Select>
                     <SelectTrigger class="w-full">
@@ -131,7 +127,11 @@ function copySnippet() {
           </Form>
         </CardContent>
       </Card>
-
+      <div class="flex justify-end mt-6">
+        <Button @click="nextStep">Next</Button>
+      </div>
+    </div>
+    <div v-if="currentStep === 2">
       <Card class="w-full">
         <CardHeader>
           <CardTitle>Form Type</CardTitle>
@@ -177,8 +177,6 @@ function copySnippet() {
                       </label>
                     </div>
                   </div>
-
-
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -186,7 +184,12 @@ function copySnippet() {
           </Form>
         </CardContent>
       </Card>
-
+      <div class="flex justify-between mt-6">
+        <Button variant="outline" @click="prevStep">Back</Button>
+        <Button @click="nextStep">Next</Button>
+      </div>
+    </div>
+    <div v-if="currentStep === 3">
       <Card class="w-full">
         <CardHeader>
           <CardTitle>Popup Settings</CardTitle>
@@ -324,148 +327,52 @@ function copySnippet() {
           </Form>
         </CardContent>
       </Card>
+      <div class="flex justify-between mt-6">
+        <Button variant="outline" @click="prevStep">Back</Button>
+        <Button @click="nextStep">Next</Button>
+      </div>
+    </div>
+    <div v-if="currentStep === 4">
+      <div
+        v-if="currentStep === 4"
+        class="flex flex-col items-center justify-center text-center space-y-6 py-12"
+      >
+        <!-- Success Icon -->
+        <div
+          class="w-16 h-16 flex items-center justify-center rounded-full bg-green-100 text-green-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
 
-      <Card class="w-full">
-        <CardHeader>
-          <CardTitle>Suppression & Reappearance</CardTitle>
-          <CardDescription>
-            Configure backoff timings and floating button behavior.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <Form>
-            <div class="space-y-6">
-              <!-- Backoff Inputs -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField name="backoffClosed">
-                  <FormItem>
-                    <FormLabel>Backoff After Form Closed (days)</FormLabel>
-                    <FormControl>
-                      <Input v-model="backoffClosed" placeholder="e.g. 7" />
-                    </FormControl>
-                    <FormDescription>
-                      How many days before this form reappears if the visitor
-                      closes it?
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-
-                <FormField name="backoffSubmitted">
-                  <FormItem>
-                    <FormLabel>Backoff After Form Submitted (days)</FormLabel>
-                    <FormControl>
-                      <Input
-                        v-model="backoffSubmitted"
-                        placeholder="e.g. 365"
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      How many days before this form can be shown again after
-                      someone subscribes?
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-              </div>
-
-              <!-- Floating Button Behavior -->
-              <FormField name="floatingBehavior">
-                <FormItem class="space-y-3">
-                  <FormLabel>Floating Button Behavior</FormLabel>
-                  <FormControl>
-                    <div class="space-y-2">
-                      <div class="flex items-center gap-2">
-                        <Checkbox v-model="showTriggerAfterClosed" />
-                        <span
-                          >Show trigger button even after form is closed</span
-                        >
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <Checkbox v-model="keepTriggerAfterSubmit" />
-                        <span
-                          >Keep trigger available even after form was
-                          submitted</span
-                        >
-                      </div>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-            </div>
-          </Form>
-        </CardContent>
-      </Card>
-
-      <Card class="w-full">
-        <CardHeader>
-          <CardTitle>Embedded Form Info</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="text-sm text-muted-foreground">
-            This form will be embedded directly into your website. You'll
-            receive a snippet of HTML or JS to paste.
+        <!-- Heading -->
+        <div class="space-y-2">
+          <h2 class="text-2xl font-semibold tracking-tight">Content is Ready 🎉</h2>
+          <p class="text-muted-foreground max-w-md mx-auto">
+            Your lead magnet setup is complete. You can now move forward and
+            design your form layout.
           </p>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card class="w-full">
-        <CardHeader>
-          <CardTitle>How to Embed This Form</CardTitle>
-          <CardDescription>
-            Copy and paste the following code into your website, right before
-            the closing
-            <code>&lt;/body&gt;</code> tag:
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <div>
-            <p>Embed snippet</p>
-          </div>
-          <div class="relative bg-primary rounded-lg mt-2">
-            <!-- Code Block -->
-            <pre
-              class="rounded-lg p-4 text-sm overflow-x-hidden text-white"
-            ><code>{{ embedCode }}</code></pre>
-
-            <!-- Copy Button -->
-            <Button
-              variant="outline"
-              size="icon"
-              class="absolute top-2 right-2"
-              @click="copySnippet"
-            >
-              <component :is="copied ? Check : Copy" class="h-4 w-4" />
-            </Button>
-          </div>
-          <div>
-            <p>
-              Tip: Make sure your website supports JavaScript. The form will
-              auto-appear based on your trigger and timing settings.
-            </p>
-          </div>
-          <div>
-            <p>
-              Need Help?
-              <span
-                class="cursor-pointer underline underline-offset-2 text-primary"
-              >
-                <NuxtLink>Read The Full Documentation</NuxtLink></span
-              >
-              or
-              <span
-                class="cursor-pointer underline underline-offset-2 text-primary"
-              >
-                <NuxtLink> Contect Support </NuxtLink></span
-              >
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-      <Button class="w-full align-left mt-4 ">Continue to Design</Button>
+        <!-- Action Button -->
+        <Button
+          class="px-8 py-3 text-base rounded-xl shadow-md hover:shadow-lg transition"
+        >
+          Continue to Design
+        </Button>
+      </div>
     </div>
   </div>
 </template>
