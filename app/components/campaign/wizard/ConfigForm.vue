@@ -8,19 +8,17 @@ defineProps<{
 </script>
 
 <template>
-  <Card v-motion-slide-bottom>
-    <CardContent>
-      <AutoForm
-        keep-values
-        class="space-y-4"
-        :schema="formSchema"
-        @submit="handleSubmit"
-      >
-        <Button type="submit">
-          <span>Next</span>
-          <Icon name="lucide:chevron-right" />
-        </Button>
-      </AutoForm>
-    </CardContent>
-  </Card>
+  <div v-motion-slide-bottom>
+    <AutoForm
+      keep-values
+      class="space-y-4"
+      :schema="formSchema"
+      @submit="handleSubmit"
+    >
+      <Button type="submit">
+        <span>Next</span>
+        <Icon name="lucide:chevron-right" />
+      </Button>
+    </AutoForm>
+  </div>
 </template>

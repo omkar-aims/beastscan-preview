@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { CampaignTemplate } from "~/types/campaign";
 
-defineProps<{ templates: CampaignTemplate[] }>();
+defineProps<{
+  templates: CampaignTemplate[];
+  handleSelectTemplate: (a: string) => void;
+}>();
 </script>
 
 <template>
@@ -20,6 +23,7 @@ defineProps<{ templates: CampaignTemplate[] }>();
       v-for="(item, index) in templates"
       :key="index"
       :item="item"
+      @click="() => handleSelectTemplate(item.name)"
     />
   </div>
 </template>

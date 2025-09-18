@@ -5,9 +5,15 @@ export default defineEventHandler(async (event) => {
   const manager = crudManager(campaigns, "id");
 
   const body = await readBody(event);
-  const newCampaign = manager.create(body);
+  const campaign = { ...body };
 
-  console.log(newCampaign);
+  if (campaign.type === "Form") {
+    campaign.url = `https://bw.aimsinfosoft.com/beast-builder/?id=${
+      campaigns.length + 1
+    }`;
+  }
+
+  const newCampaign = manager.create(campaign);
 
   return newCampaign;
 });

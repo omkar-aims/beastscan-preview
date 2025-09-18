@@ -22,7 +22,7 @@ watch(
 </script>
 
 <template>
-  <QRCodeBuilder v-model="campaign.qrOption" v-motion-slide-bottom>
+  <QRCodeBuilder v-model="campaign.qrOption">
     <Button @click="props.nextStep">
       <span>Next</span>
       <Icon name="lucide:chevron-right" />

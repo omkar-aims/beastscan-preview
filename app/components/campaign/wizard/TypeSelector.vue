@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { CampaignType } from "~/types/campaign";
 import { campaignOptions } from "~/config/campaignOptions";
 defineProps<{
-  handleTypeSelect: (value: string) => void;
+  handleChange: (type: CampaignType) => void;
 }>();
 </script>
 
@@ -25,17 +26,25 @@ defineProps<{
         </AccordionTrigger>
         <AccordionContent>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <AppHoverCard
-              v-for="qr in campaignOptions.filter(
-                (qr) => qr.type === 'dynamic'
+            <template
+              v-for="(option, index) in campaignOptions.filter(
+                (option) => option.mode === 'dynamic'
               )"
-              :key="qr.title"
-              :title="qr.title"
-              :desc="qr.desc"
-              :icon="qr.icon"
-              :preview="`campaign-previews/campaign-previews-website.png`"
-              @update:model-value="handleTypeSelect"
-            />
+              :key="index"
+            >
+              <Card
+                class="w-full cursor-pointer"
+                @click="() => handleChange(option.type)"
+              >
+                <CardHeader class="flex items-center gap-4">
+                  <Icon :name="option.icon" class="text-3xl text-primary" />
+                  <div>
+                    <CardTitle class="mb-0.5">{{ option.type }}</CardTitle>
+                    <CardDescription>{{ option.description }}</CardDescription>
+                  </div>
+                </CardHeader>
+              </Card>
+            </template>
           </div>
         </AccordionContent>
       </AccordionItem>
@@ -57,15 +66,25 @@ defineProps<{
         </AccordionTrigger>
         <AccordionContent>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <AppHoverCard
-              v-for="qr in campaignOptions.filter((qr) => qr.type === 'static')"
-              :key="qr.title"
-              :title="qr.title"
-              :desc="qr.desc"
-              :icon="qr.icon"
-              :preview="`campaign-previews/campaign-previews-website.png`"
-              @update:model-value="handleTypeSelect"
-            />
+            <template
+              v-for="(option, index) in campaignOptions.filter(
+                (option) => option.mode === 'static'
+              )"
+              :key="index"
+            >
+              <Card
+                class="w-full cursor-pointer"
+                @click="() => handleChange(option.type)"
+              >
+                <CardHeader class="flex items-center gap-4">
+                  <Icon :name="option.icon" class="text-3xl text-primary" />
+                  <div>
+                    <CardTitle class="mb-0.5">{{ option.type }}</CardTitle>
+                    <CardDescription>{{ option.description }}</CardDescription>
+                  </div>
+                </CardHeader>
+              </Card>
+            </template>
           </div>
         </AccordionContent>
       </AccordionItem>
