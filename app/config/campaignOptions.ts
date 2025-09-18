@@ -3,10 +3,10 @@ import type { CampaignOption } from "~/types/campaign";
 
 export const campaignOptions: CampaignOption[] = [
   {
-    title: "Website",
-    desc: "Open any website URL",
+    type: "Website",
+    description: "Open any website URL",
     icon: "lucide:globe",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       url: z
         .string({ required_error: "URL is required" })
@@ -15,10 +15,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Email",
-    desc: "Send an email",
+    type: "Email",
+    description: "Send an email",
     icon: "lucide:mail",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       email: z
         .string({ required_error: "Email is required" })
@@ -29,10 +29,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "SMS",
-    desc: "Send a text message",
+    type: "SMS",
+    description: "Send a text message",
     icon: "lucide:message-square",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       phone: z
         .string({ required_error: "Phone number is required" })
@@ -41,10 +41,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Call",
-    desc: "Place a quick call",
+    type: "Call",
+    description: "Place a quick call",
     icon: "lucide:phone",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       phone: z
         .string({ required_error: "Phone number is required" })
@@ -52,32 +52,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Linkpage",
-    desc: "Show a list of links",
-    icon: "lucide:link",
-    type: "dynamic",
-    formSchema: z.object({
-      links: z
-        .array(
-          z.object({
-            label: z
-              .string({ required_error: "Label is required" })
-              .describe("Link Label"),
-            url: z
-              .string({ required_error: "URL is required" })
-              .url("Enter a valid URL")
-              .describe("Link URL"),
-          }),
-          { required_error: "At least one link is required" }
-        )
-        .min(1, "At least one link must be added"),
-    }),
-  },
-  {
-    title: "PDF",
-    desc: "Show a PDF",
+    type: "PDF",
+    description: "Show a PDF",
     icon: "lucide:file-text",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       file: z
         .string({ required_error: "PDF file URL is required" })
@@ -86,10 +64,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Video",
-    desc: "Play a video",
+    type: "Video",
+    description: "Play a video",
     icon: "lucide:video",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       url: z
         .string({ required_error: "Video URL is required" })
@@ -98,10 +76,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Image",
-    desc: "Show an image",
+    type: "Image",
+    description: "Show an image",
     icon: "lucide:image",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       url: z
         .string({ required_error: "Image URL is required" })
@@ -111,10 +89,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Image Gallery",
-    desc: "Display multiple images",
+    type: "Image Gallery",
+    description: "Display multiple images",
     icon: "lucide:images",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       images: z
         .array(
@@ -131,10 +109,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Audio",
-    desc: "Play an audio file",
+    type: "Audio",
+    description: "Play an audio file",
     icon: "lucide:music",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       url: z
         .string({ required_error: "Audio file URL is required" })
@@ -143,10 +121,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Business Page",
-    desc: "Display your business details",
+    type: "Business Page",
+    description: "Display your business details",
     icon: "lucide:briefcase",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       name: z
         .string({ required_error: "Business name is required" })
@@ -161,11 +139,12 @@ export const campaignOptions: CampaignOption[] = [
         .describe("Website URL"),
     }),
   },
+
   {
-    title: "Facebook Page",
-    desc: "Share your Facebook profile",
+    type: "Facebook Page",
+    description: "Share your Facebook profile",
     icon: "lucide:facebook",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       url: z
         .string({ required_error: "Facebook page URL is required" })
@@ -174,10 +153,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Mobile App",
-    desc: "Redirect to app store",
+    type: "Mobile App",
+    description: "Redirect to app store",
     icon: "lucide:smartphone",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       iosUrl: z
         .string()
@@ -192,10 +171,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Restaurant Menu",
-    desc: "Display a restaurant/bar menu",
+    type: "Restaurant Menu",
+    description: "Display a restaurant/bar menu",
     icon: "lucide:utensils",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       items: z
         .array(
@@ -214,10 +193,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Map Location",
-    desc: "Open on Google Maps",
+    type: "Map Location",
+    description: "Open on Google Maps",
     icon: "lucide:map-pin",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
       latitude: z
         .string({ required_error: "Latitude is required" })
@@ -228,30 +207,96 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Digital Business Card",
-    desc: "Share contact details",
+    type: "Digital Business Card",
+    description: "Share contact details",
     icon: "lucide:id-card",
-    type: "dynamic",
+    mode: "dynamic",
     formSchema: z.object({
-      name: z
-        .string({ required_error: "Name is required" })
-        .describe("Full Name"),
-      phone: z
-        .string({ required_error: "Phone number is required" })
-        .describe("Phone Number"),
-      email: z
-        .string()
-        .email("Enter a valid email")
+      profilePhoto: z
+        .string({ required_error: "Profile photo URL is required" })
+        .url("Must be a valid URL")
+        .describe("Profile Photo URL"),
+
+      name: z.object({
+        fullName: z
+          .string({ required_error: "Full name is required" })
+          .describe("Full Name"),
+
+        middleName: z.string().optional().describe("Middle Name"),
+
+        lastName: z.string().optional().describe("Last Name"),
+      }),
+
+      bio: z.string().optional().describe("Short Bio"),
+
+      job: z.object({
+        type: z.string().optional().describe("Job Type"),
+        company: z.string().optional().describe("Company"),
+      }),
+
+      phone: z.object({
+        personal: z.string().optional().describe("Personal Phone"),
+        business: z.string().optional().describe("Business Phone"),
+      }),
+
+      email: z.object({
+        personal: z
+          .string()
+          .email("Enter a valid personal email")
+          .optional()
+          .describe("Personal Email"),
+
+        business: z
+          .string()
+          .email("Enter a valid business email")
+          .optional()
+          .describe("Business Email"),
+      }),
+
+      address: z.string().optional().describe("Address"),
+
+      socialLinks: z
+        .array(
+          z.object({
+            mode: z
+              .enum([
+                "whatsapp",
+                "facebook",
+                "instagram",
+                "linkedin",
+                "twitter",
+                "tiktok",
+                "website",
+              ])
+              .describe("Social platform mode"),
+
+            url: z
+              .string()
+              .url("Enter a valid URL")
+              .describe("Social link URL"),
+          })
+        )
         .optional()
-        .describe("Email"),
-      company: z.string().optional().describe("Company"),
+        .describe("Social links"),
+
+      callToAction: z.string().optional().describe("Call To Action"),
     }),
   },
   {
-    title: "Wi-Fi",
-    desc: "Connect to a WiFi network",
+    type: "Form",
+    description: "Create a form to capture leads",
+    icon: "lucide:text-cursor-input",
+    mode: "dynamic",
+    formSchema: z.object({
+      submitURL: z.string().url().describe("Submit URL"),
+      buttonLabel: z.string().describe("Button Label"),
+    }),
+  },
+  {
+    type: "Wi-Fi",
+    description: "Connect to a WiFi network",
     icon: "lucide:wifi",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       ssid: z
         .string({ required_error: "SSID is required" })
@@ -265,10 +310,10 @@ export const campaignOptions: CampaignOption[] = [
 
       security: z
         .enum(["WPA", "WEP", "nopass"], {
-          required_error: "Security type is required",
+          required_error: "Security mode is required",
         })
         .default("WPA")
-        .describe("Security type of the network"),
+        .describe("Security mode of the network"),
 
       hidden: z
         .boolean()
@@ -278,10 +323,10 @@ export const campaignOptions: CampaignOption[] = [
     }),
   },
   {
-    title: "Plain Text",
-    desc: "Display a short message",
+    type: "Plain Text",
+    description: "Display a short message",
     icon: "lucide:align-left",
-    type: "static",
+    mode: "static",
     formSchema: z.object({
       text: z
         .string({ required_error: "Message is required" })

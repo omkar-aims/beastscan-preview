@@ -35,10 +35,15 @@ const columns: ColumnDef<Campaign>[] = [
   {
     header: "QR Code",
     accessorKey: "qrOption",
-    cell: (props) =>
-      h(QRCodeCanvas, {
-        options: { ...props.getValue(), width: 80, height: 80 },
-      }),
+    cell: ({ row }) => {
+      const qrOption = row.getValue("qrOption");
+      const options =
+        typeof qrOption === "object" && qrOption !== null
+          ? { ...qrOption, width: 80, height: 80 }
+          : { width: 80, height: 80 };
+
+      return h(QRCodeCanvas, { options });
+    },
   },
 
   {
@@ -49,12 +54,13 @@ const columns: ColumnDef<Campaign>[] = [
     header: "Type",
 
     accessorKey: "type",
-    cell: (props) => h("span", { class: "uppercase" }, props.getValue()),
+    cell: ({ row }) => h("span", { class: "uppercase" }, row.getValue("type")),
   },
   {
     header: "Mode",
-    cell: () => h(Badge, { variant: "outline" }, "STATIC"),
+    cell: () => h(Badge, { variant: "outline" }, () => "STATIC"),
   },
+
   {
     header: "Scans",
     cell: () => 12,
@@ -62,10 +68,10 @@ const columns: ColumnDef<Campaign>[] = [
   {
     header: "Created At",
     accessorKey: "createdAt",
-    cell: (props) =>
+    cell: ({ row }) =>
       h(
         "span",
-        Intl.DateTimeFormat("en-us").format(new Date(props.getValue()))
+        Intl.DateTimeFormat("en-us").format(new Date(row.getValue("createdAt")))
       ),
   },
 

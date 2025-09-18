@@ -64,13 +64,6 @@ const onSubmit = handleSubmit((value) => {
       </Card>
 
       <AppRow direction="horizontal">
-        <AppShareDialog link-to-copy="https://www.google.com">
-          <Button variant="outline" class="flex-1">
-            <Icon name="lucide:share-2" />
-            <span class="hidden lg:inline">Share</span>
-          </Button>
-        </AppShareDialog>
-
         <QRDownloadButton
           :title="campaign.name"
           :qr-options="campaign.qrOption"

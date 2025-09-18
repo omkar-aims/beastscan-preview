@@ -11,7 +11,7 @@ const showDeleteDialog = ref<boolean>(false);
 const showShareDialog = ref<boolean>(false);
 
 const { mutate: deleteCampaign, status } = useDeleteCampaign();
-const { refresh } = useCampaigns();
+const { refresh } = await useCampaigns();
 
 async function handleDelete() {
   const id = props.campaign.id;
