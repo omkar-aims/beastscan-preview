@@ -2,13 +2,13 @@
 import type { CampaignType } from "~/types/campaign";
 import { campaignOptions } from "~/config/campaignOptions";
 defineProps<{
-  handleChange: (type: CampaignType) => void;
+  handleChange: (type: CampaignType | "") => void;
 }>();
 </script>
 
 <template>
   <AppRow>
-    <Accordion type="single" collapsible default-value="static">
+    <Accordion type="single" collapsible default-value="dynamic">
       <AccordionItem value="dynamic">
         <AccordionTrigger>
           <div>

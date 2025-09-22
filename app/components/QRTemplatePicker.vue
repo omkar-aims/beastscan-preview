@@ -10,6 +10,7 @@ defineEmits(["template-selected"]);
       <QRCodeCanvas
         class="cursor-pointer hover:scale-105 transition-transform duration-200 flex justify-center"
         :options="{ ...qrTemplate, data: 'https://www.google.com' }"
+        :allow-preview="false"
         @click="$emit('template-selected', qrTemplate)"
       />
     </template>

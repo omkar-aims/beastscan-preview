@@ -49,7 +49,7 @@ const route = useRoute();
       </header>
       <Separator orientation="horizontal" class="h-4" />
 
-      <main class="p-4">
+      <main :class="route.path !== '/dashboard/builder' ? 'p-4' : ''">
         <slot />
       </main>
     </SidebarInset>

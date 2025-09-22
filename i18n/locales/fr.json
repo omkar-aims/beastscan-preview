@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "campaigns": "Campagnes",
+    "forms": "Formulaires",
+    "sites": "Sites",
+    "vcards": "Cartes de visite",
+    "crm": "CRM",
+    "leads": "Leads",
+    "mailer": "Messagerie",
+    "store": "Boutique",
+    "products": "Produits",
+    "ecommerce": "E-commerce",
+    "offers": "Offres",
+    "stampCards": "Cartes à tampons numériques",
+    "giftCards": "Cartes cadeaux",
+    "offersList": "Offres",
+    "giveaway": "Cadeau"
+  }
+}

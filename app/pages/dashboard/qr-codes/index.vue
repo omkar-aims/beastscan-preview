@@ -105,14 +105,14 @@ const columns: ColumnDef<Campaign>[] = [
           class="m-0 mx-auto"
         />
         <div>
-          <AppHeading :level="2">You don't have any campaigns yet</AppHeading>
+          <AppHeading :level="2">You don't have any QR Codes yet</AppHeading>
           <p class="text-muted-foreground mt-1">
             Start creating campaigns to reach your audience and track their
             engagement.
           </p>
         </div>
-        <NuxtLink to="./campaigns/new">
-          <Button>Create New Campaign</Button>
+        <NuxtLink to="./qr-codes/new">
+          <Button>Create New QR Code</Button>
         </NuxtLink>
       </div>
     </template>
