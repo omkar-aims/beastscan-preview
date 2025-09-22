@@ -33,7 +33,16 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "nuxt-color-picker",
     "@vueuse/motion/nuxt",
+    "@nuxtjs/i18n",
   ],
+  i18n: {
+    locales: [
+      { code: "en", language: "en-US", file: "en.json" },
+      { code: "fr", language: "fr-FR", file: "fr.json" },
+    ],
+    defaultLocale: "en",
+  },
+
   shadcn: {
     prefix: "",
     componentDir: "./app/components/ui",

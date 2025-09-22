@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "campaigns": "Campaigns",
+    "forms": "Forms",
+    "sites": "Sites",
+    "vcards": "VCards",
+    "crm": "CRM",
+    "leads": "Leads",
+    "mailer": "Mailer",
+    "store": "Store",
+    "products": "Products",
+    "ecommerce": "E-commerce",
+    "loyalty": "Loyalty",
+    "stampCards": "Digital Stamp Cards",
+    "giftCards": "Gift Cards",
+    "offersList": "Offers",
+    "giveaway": "Giveaway"
+  }
+}

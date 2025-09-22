@@ -49,7 +49,7 @@ async function handleDelete() {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <a
-              class="flex gap-2 items-center"
+              class="flex gap-2 items-center w-full"
               :href="campaign.url"
               target="_blank"
             >
@@ -59,9 +59,8 @@ async function handleDelete() {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <NuxtLink
-              class="flex gap-2 items-center"
+              class="flex gap-2 items-center w-full"
               to="./campaigns/overview"
-              as-child
             >
               <Icon name="lucide:activity" />
               <span>Analytics</span>
