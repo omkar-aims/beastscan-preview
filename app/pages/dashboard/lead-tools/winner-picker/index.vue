@@ -503,13 +503,7 @@ const selectedSegmentLabel = computed(() => {
                     <span>{{ w.email }}</span>
                   </div>
                 </div>
-                <div class="mt-3 md:mt-0">
-                  <NuxtLink
-                    :to="`/segments/${w.segment}`"
-                    class="text-sm underline"
-                    >Go to Segment</NuxtLink
-                  >
-                </div>
+                
               </li>
             </ul>
 
@@ -525,7 +519,7 @@ const selectedSegmentLabel = computed(() => {
                 >
               </div>
               <div class="flex-1 md:flex md:justify-end">
-                <NuxtLink to="/segments" class="w-full md:w-40">
+                <NuxtLink to="/dashboard/lead-tools/segments" class="w-full md:w-40">
                   <Button class="w-full">Go to Segment</Button>
                 </NuxtLink>
               </div>

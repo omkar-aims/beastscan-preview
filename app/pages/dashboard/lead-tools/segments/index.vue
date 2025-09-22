@@ -42,19 +42,23 @@ const actions = [
 
 <template>
   <div>
-    <div class="md:flex md:justify-between">
+    <div class="md:flex md:justify-between items-center">
       <div class="flex flex-col">
         <div>
           <h1 class="text-2xl font-semibold mb-4">Lead Segments</h1>
         </div>
         <div class="mb-2">
-          <span>Total Segment:{{ " " }}</span
-          >{{ segments.length }}
+          <span>Total Segment: </span>{{ segments.length }}
         </div>
       </div>
-      <div class="flex justify-end">
+
+      <!-- Buttons Section -->
+      <div class="flex gap-3">
+        <NuxtLink to="/dashboard/lead-tools/winner-picker">
+          <Button class="cursor-pointer">Winner Picker Tool</Button>
+        </NuxtLink>
         <NuxtLink to="/dashboard/lead-tools/segments/newsegment">
-          <Button class="mb-4 cursor-pointer">Create New Segment</Button>
+          <Button class="cursor-pointer">Create New Segment</Button>
         </NuxtLink>
       </div>
     </div>
