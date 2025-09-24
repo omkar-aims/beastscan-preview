@@ -121,12 +121,17 @@ const handleTabChange = (tab: "csv" | "manual") => {
               <Input placeholder="e.g. Opt-in Form" />
             </div>
 
-            <Button class="w-full bg-green-600 hover:bg-green-700">
+            <Button class="w-full bg-primary">
               Add Lead
             </Button>
           </CardContent>
         </Card>
       </transition>
+      <div class="mt-4">
+        <NuxtLink to="/dashboard/leads">
+          <Button>Back To Leads</Button>
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>

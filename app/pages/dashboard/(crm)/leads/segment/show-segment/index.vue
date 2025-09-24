@@ -219,7 +219,7 @@ const leads: Lead[] = [
   </Tabs>
 
   <div class="flex justify-center mt-6">
-    <NuxtLink to="/dashboard/lead-tools/segments">
+    <NuxtLink to="/dashboard/leads/segments">
       <Button variant="outline">View All Leads in Segment</Button>
     </NuxtLink>
   </div>

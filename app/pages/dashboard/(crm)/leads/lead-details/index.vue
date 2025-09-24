@@ -557,10 +557,10 @@ const submissions: Submission[] = [
     </Tabs>
     <div class="mt-4 w-full flex flex-row justify-between">
       <div>
-        <NuxtLink to="/dashboard/lead-tools">
+        <NuxtLink to="/dashboard/leads">
           <Button
-            class="cursor-pointer rounded-lg px-4 py-2"
             v-motion-slide-bottom
+            class="cursor-pointer rounded-lg px-4 py-2"
             >Back to All Leads</Button
           >
         </NuxtLink>

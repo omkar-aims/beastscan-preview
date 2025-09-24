@@ -170,7 +170,7 @@ const totalQuiz = formDataList.filter((f) => f.type === "quiz").length;
 
         <!-- Footer -->
         <CardFooter class="flex justify-between">
-          <NuxtLink to="/dashboard/lead-tools/lead-form/stats">
+          <NuxtLink to="/dashboard/leads/lead-form/stats">
          <Button variant="outline">View Stats</Button>
         </NuxtLink>
           

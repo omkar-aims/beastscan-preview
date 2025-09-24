@@ -1,8 +1,25 @@
 <script setup lang="ts">
-defineProps<{
-  newForm: Ref;
-  triggerValues: Ref;
+const props = defineProps<{
+  modelValue: {
+    form: any;
+    triggers: any;
+  };
 }>();
+
+const emit = defineEmits<{
+  (e: "update:modelValue", value: { form: any; triggers: any }): void;
+}>();
+
+const localState = reactive({
+  form: { ...props.modelValue.form },
+  triggers: { ...props.modelValue.triggers },
+});
+
+watch(
+  () => localState,
+  (val) => emit("update:modelValue", val),
+  { deep: true }
+);
 </script>
 
 <template>
@@ -15,7 +32,7 @@ defineProps<{
     </CardHeader>
     <CardContent class="space-y-2">
       <RadioGroup
-        v-model="newForm.config.trigger.type"
+        v-model="localState.form.config.trigger.type"
         class="flex flex-col space-y-3"
       >
         <div class="flex items-center gap-x-3">
@@ -23,8 +40,8 @@ defineProps<{
           <Label for="delay" class="font-normal flex items-center gap-x-2">
             <span>Wait</span>
             <Input
-              v-model="triggerValues.delay"
-              :disabled="newForm.config.trigger.type !== 'delay'"
+              v-model="localState.triggers.delay"
+              :disabled="localState.form.config.trigger.type !== 'delay'"
               class="w-16"
               type="number"
             />
@@ -37,8 +54,8 @@ defineProps<{
           <Label for="scroll" class="font-normal flex items-center gap-x-2">
             <span>Show when user scrolls to</span>
             <Select
-              v-model="triggerValues.scroll"
-              :disabled="newForm.config.trigger.type !== 'scroll'"
+              v-model="localState.triggers.scroll"
+              :disabled="localState.form.config.trigger.type !== 'scroll'"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Choose a scroll trigger" />
@@ -70,7 +87,7 @@ defineProps<{
           </div>
 
           <div
-            v-if="newForm.config.trigger.type === 'floating-button'"
+            v-if="localState.form.config.trigger.type === 'floating-button'"
             v-motion-fade
             class="flex gap-4 my-2"
           >
@@ -113,7 +130,7 @@ defineProps<{
       </CardDescription>
     </CardHeader>
     <CardContent class="space-y-2">
-      <Select v-model="newForm.config.frequency">
+      <Select v-model="localState.form.config.frequency">
         <SelectTrigger>
           <SelectValue placeholder="Choose a frequency" />
         </SelectTrigger>
@@ -142,21 +159,21 @@ defineProps<{
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-mobile"
-          v-model="newForm.config.visibility.mobile"
+          v-model="localState.form.config.visibility.mobile"
         />
         <Label for="visibility-mobile">Hide on mobile devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-tablet"
-          v-model="newForm.config.visibility.tablet"
+          v-model="localState.form.config.visibility.tablet"
         />
         <Label for="visibility-tablet">Hide on tablet devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-desktop"
-          v-model="newForm.config.visibility.desktop"
+          v-model="localState.form.config.visibility.desktop"
         />
         <Label for="visibility-desktop">Hide on desktop devices</Label>
       </div>

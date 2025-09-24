@@ -34,6 +34,9 @@ import {
 } from "@/components/ui/form";
 import { ref } from "vue";
 
+definePageMeta({
+  layout: 'lead',
+});
 // sample leads
 const allLeads = [
   {
@@ -239,7 +242,7 @@ function applyFilters() {
         </Button>
         <Button
           variant="outline"
-          class="border-yellow-500 text-yellow-600 cursor-pointer"
+          class="cursor-pointer"
         >
           Export Selected
         </Button>
