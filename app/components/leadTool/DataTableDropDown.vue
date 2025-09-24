@@ -46,7 +46,7 @@ async function handleDelete() {
           </DropdownMenuItem>
 
           <DropdownMenuItem>
-            <NuxtLink to="/dashboard/lead-tools/all-leads/lead-details" class="flex gap-2 items-center">
+            <NuxtLink to="/dashboard/leads/lead-details" class="flex gap-2 items-center">
               <Icon name="lucide:external-link" />
               <span>Preview Lead</span>
             </NuxtLink>

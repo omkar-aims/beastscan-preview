@@ -58,6 +58,11 @@ const newForm = ref({
   },
 });
 
+const popupConfig = reactive({
+  form: newForm,
+  triggers: triggerValues,
+})
+
 // Watch for trigger value change
 watch(
   triggerValues,
@@ -155,8 +160,7 @@ watch(
 
               <div v-if="stepIndex === 3" v-motion-fade>
                 <FormsWizardStepThree
-                  :new-form="newForm"
-                  :trigger-values="triggerValues"
+                  v-model="popupConfig"
                 />
               </div>
 
