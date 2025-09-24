@@ -205,19 +205,19 @@
     }
   }
   @keyframes accordion-down {
-  from {
-    height: 0;
+    from {
+      height: 0;
     }
-  to {
-    height: var(--reka-accordion-content-height);
+    to {
+      height: var(--reka-accordion-content-height);
     }
   }
   @keyframes accordion-up {
-  from {
-    height: var(--reka-accordion-content-height);
+    from {
+      height: var(--reka-accordion-content-height);
     }
-  to {
-    height: 0;
+    to {
+      height: 0;
     }
   }
 }
@@ -279,4 +279,8 @@
   --colorPickerShadowOut: 0px 4px 6px -1px hsl(0 0% 0% / 0.6) !important;
   --colorPickerShadowIn: 0px 2px 4px -1px hsl(0 0% 100% / 0.1) !important;
   --colorPickerSlider: oklch(0.6537 0.2255 3.3664) !important;
+}
+
+.CP-sandbox__component {
+  z-index: 100 !important;
 }

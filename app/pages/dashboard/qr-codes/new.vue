@@ -146,9 +146,11 @@ watch(
           <div class="flex flex-col gap-4 mt-4">
             <div v-if="stepIndex === 1">
               <CampaignWizardTypeSelector
-                :handle-change="(type: CampaignType) => {
-                newCampaign.type = type;
-                nextStep()
+                :handle-change="(type: CampaignType | '') => {
+                  if(type) {
+                    newCampaign.type = type;
+                    nextStep()
+                  } 
               }"
               />
             </div>

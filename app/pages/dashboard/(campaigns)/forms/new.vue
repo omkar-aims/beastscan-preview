@@ -1,0 +1,177 @@
+<script setup lang="ts">
+const stepIndex = ref(1);
+
+const steps = [
+  {
+    step: 1,
+    title: "Template",
+    description: "Choose a form template",
+    icon: "lucide:layers",
+  },
+  {
+    step: 2,
+    title: "Design",
+    description: "Customize your form",
+    icon: "lucide:palette",
+    expandable: true,
+  },
+  {
+    step: 3,
+    title: "Configure",
+    description: "Configure your form",
+    icon: "lucide:edit-3",
+  },
+  {
+    step: 4,
+    title: "Review",
+    description: "Review your form",
+    icon: "lucide:check-circle",
+  },
+];
+
+const triggerValues = ref({
+  delay: "5",
+  scroll: "50",
+});
+
+const newForm = ref({
+  templateName: "",
+  formName: "",
+
+  theme: {},
+
+  config: {
+    trigger: {
+      type: "delay",
+      value: "5",
+    },
+    frequency: "always",
+    schedule: {
+      startDate: null,
+      endDate: null,
+    },
+    visibility: {
+      mobile: true,
+      tablet: true,
+      desktop: true,
+    },
+  },
+});
+
+// Watch for trigger value change
+watch(
+  triggerValues,
+  (values) => {
+    newForm.value.config.trigger.value =
+      newForm.value.config.trigger.type === "delay"
+        ? values.delay
+        : values.scroll;
+  },
+  { deep: true }
+);
+</script>
+
+<template>
+  <section>
+    <Form keep-values>
+      <Stepper
+        v-slot="{ nextStep }"
+        v-model="stepIndex"
+        :linear="true"
+        class="w-full"
+      >
+        <div class="w-full">
+          <Card>
+            <CardContent class="flex w-full flex-start gap-2">
+              <StepperItem
+                v-for="(step, i) in steps"
+                :key="step.step"
+                v-slot="{ state }"
+                class="relative flex w-full flex-col items-center justify-center"
+                :step="step.step"
+              >
+                <StepperSeparator
+                  v-if="step.step !== steps[steps.length - 1]?.step"
+                  class="absolute left-[calc(50%+20px)] right-[calc(-50%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary"
+                />
+
+                <StepperTrigger as-child>
+                  <Button
+                    :variant="
+                      state === 'completed' || state === 'active'
+                        ? 'default'
+                        : 'outline'
+                    "
+                    size="icon"
+                    class="z-10 rounded-xs shrink-0"
+                    :class="[
+                      state === 'active' &&
+                        'ring-2 ring-ring ring-offset-2 ring-offset-background',
+                    ]"
+                    :disabled="state !== 'completed'"
+                  >
+                    <Icon
+                      v-if="state === 'completed'"
+                      name="lucide:circle-check-big"
+                    />
+                    <Icon v-else-if="state === 'active'" :name="step.icon" />
+                    <span v-else>{{ i + 1 }}</span>
+                  </Button>
+                </StepperTrigger>
+                <div class="flex flex-col items-center text-center">
+                  <StepperTitle
+                    :class="[state === 'active' && 'text-primary']"
+                    class="text-sm font-semibold transition lg:text-base"
+                  >
+                    {{ step.title }}
+                  </StepperTitle>
+                  <StepperDescription
+                    :class="[state === 'active' && 'text-primary']"
+                    class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
+                  >
+                    {{ step.description }}
+                  </StepperDescription>
+                </div>
+              </StepperItem>
+            </CardContent>
+          </Card>
+
+          <div :class="stepIndex > 1 ? 'grid grid-cols-[1fr_25%] gap-4' : ''">
+            <div class="flex flex-col gap-4 mt-4">
+              <div v-if="stepIndex === 1">
+                <FormsWizardStepOne
+                  :handle-select="
+                    (name) => {
+                      newForm.templateName = name;
+                      nextStep();
+                    }
+                  "
+                />
+              </div>
+
+              <div v-if="stepIndex === 2" v-motion-fade>
+                <FormsWizardStepTwo />
+              </div>
+
+              <div v-if="stepIndex === 3" v-motion-fade>
+                <FormsWizardStepThree
+                  :new-form="newForm"
+                  :trigger-values="triggerValues"
+                />
+              </div>
+
+              <div v-if="stepIndex === 4" v-motion-fade>
+                <FormsWizardStepFour />
+              </div>
+            </div>
+
+            <FormsCreationPreview
+              :step-index="stepIndex"
+              :next-step="nextStep"
+            />
+          </div>
+        </div>
+      </Stepper>
+    </Form>
+  </section>
+</template>
