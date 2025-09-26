@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+useHead({
+  title: "Show-Segment",
+});
+
 const activeTab = ref("segmentDetails");
 
 const tabs = [

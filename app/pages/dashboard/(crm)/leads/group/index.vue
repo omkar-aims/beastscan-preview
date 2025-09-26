@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+
 import { NuxtLink } from "#components";
 import {
   ChevronDown,
@@ -17,15 +9,15 @@ import {
 } from "lucide-vue-next";
 
 useHead({
-  title: "Segments",
+  title: "Groups",
 });
 
 definePageMeta({
   layout: "lead",
 });
 
-// Sample segment data
-interface Segment {
+// Sample group data
+interface Group {
   id: number;
   name: string;
   createdAt: string;
@@ -34,7 +26,7 @@ interface Segment {
   clickRate: number;
 }
 
-const segments = ref<Segment[]>([
+const groups = ref<Group[]>([
   {
     id: 1,
     name: "Pedro Duarte",
@@ -45,7 +37,7 @@ const segments = ref<Segment[]>([
   },
   {
     id: 2,
-    name: "Segment A",
+    name: "Group A",
     createdAt: "2025-07-01T09:30:00Z",
     subscribers: 150,
     openRate: 62,
@@ -53,7 +45,7 @@ const segments = ref<Segment[]>([
   },
   {
     id: 3,
-    name: "Segment B",
+    name: "Group B",
     createdAt: "2025-08-03T15:00:00Z",
     subscribers: 200,
     openRate: 45,
@@ -63,12 +55,12 @@ const segments = ref<Segment[]>([
 
 // search & sort state
 const searchQuery = ref("");
-const sortBy = ref("Segment name");
+const sortBy = ref("Group name");
 const sortOrder = ref<"asc" | "desc">("desc"); // default: newest first
 
 // Sorting logic
-const sortedSegments = computed(() => {
-  const filtered = segments.value.filter((s) =>
+const sortedGruops = computed(() => {
+  const filtered = groups.value.filter((s) =>
     s.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 
@@ -76,7 +68,7 @@ const sortedSegments = computed(() => {
     let valA: any, valB: any;
 
     switch (sortBy.value) {
-      case "Segment name":
+      case "Group name":
         valA = a.name.toLowerCase();
         valB = b.name.toLowerCase();
         break;
@@ -111,17 +103,18 @@ const sortedSegments = computed(() => {
   <div>
     <!-- Header -->
     <div
-      class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-6"
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6"
     >
-      <h1 class="text-2xl font-semibold">Segments</h1>
+      <h1 class="text-xl font-semibold">Groups</h1>
+
       <div class="flex gap-2 w-full md:w-auto">
         <!-- Search -->
         <Input
           v-model="searchQuery"
-          placeholder="Search segment"
+          placeholder="Search groups..."
           class="w-full md:w-64"
         />
-
+        
         <!-- Sort dropdown -->
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
@@ -130,28 +123,29 @@ const sortedSegments = computed(() => {
               <ChevronDown class="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem @click="sortBy = 'Segment name'"
-              >Segment name</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="sortBy = 'Date created'"
-              >Date created</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="sortBy = 'Subscribers'"
-              >Subscribers</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="sortBy = 'Open rate'"
-              >Open rate</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="sortBy = 'Click rate'"
-              >Click rate</DropdownMenuItem
-            >
+          <DropdownMenuContent align="end" class="w-40">
+            <DropdownMenuItem @click="sortBy = 'Group name'">
+              Group name
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Date created'">
+              Date created
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Subscribers'">
+              Subscribers
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Open rate'">
+              Open rate
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Click rate'">
+              Click rate
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <!-- Sort toggle button -->
+        <!-- Sort toggle -->
         <Button
           variant="outline"
+          size="icon"
           @click="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'"
         >
           <ArrowUpNarrowWide v-if="sortOrder === 'asc'" class="h-4 w-4" />
@@ -160,41 +154,44 @@ const sortedSegments = computed(() => {
       </div>
     </div>
 
-    <!-- Segment List -->
-    <div v-if="sortedSegments.length > 0" class="space-y-4">
+    <!-- Group List -->
+    <div v-if="sortedGruops.length > 0" class="space-y-3">
       <div
-        v-for="segment in sortedSegments"
-        :key="segment.id"
-        class="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-md hover:bg-muted/50"
+        v-for="group in sortedGruops"
+        :key="group.id"
+        class="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg"
       >
         <!-- Left info -->
         <div class="flex flex-col gap-1">
-          <span class="font-medium">{{ segment.name }}</span>
+          <span class="font-medium">{{ group.name }}</span>
           <span class="text-xs text-muted-foreground">
-            Created {{ new Date(segment.createdAt).toLocaleString() }}
+            Created {{ new Date(group.createdAt).toLocaleDateString() }}
           </span>
-          <!-- <Button size="sm" variant="secondary" class="mt-2 w-fit">View segment</Button> -->
-          <NuxtLink class="primary cursor-pointer mt-4" to="dashboard/leads/lead-details">
-            View Segment</NuxtLink
+          <NuxtLink
+            to="dashboard/leads/lead-details"
+            class="text-primary text-sm mt-2"
           >
+            View Group
+          </NuxtLink>
         </div>
 
         <!-- Right stats -->
-        <div class="flex gap-8 mt-4 md:mt-0 text-center">
-          <div class="pl-6 border-l">
-            <p class="font-medium">{{ segment.subscribers }}</p>
-            <p class="text-xs text-muted-foreground">Subscribers</p>
+        <div class="flex gap-6 mt-4 md:mt-0 text-center text-sm">
+          <div class="pl-4 border-l">
+            <p class="font-medium">{{ group.subscribers }}</p>
+            <p class="text-muted-foreground">Subscribers</p>
           </div>
-          <div class="pl-6 border-l">
-            <p class="font-medium">{{ segment.openRate }}%</p>
-            <p class="text-xs text-muted-foreground">Open rate</p>
+          <div class="pl-4 border-l">
+            <p class="font-medium">{{ group.openRate }}%</p>
+            <p class="text-muted-foreground">Open rate</p>
           </div>
-          <div class="pl-6 border-l flex items-center gap-2">
+          <div class="pl-4 border-l flex items-center gap-2">
             <div>
-              <p class="font-medium">{{ segment.clickRate }}%</p>
-              <p class="text-xs text-muted-foreground">Click rate</p>
+              <p class="font-medium">{{ group.clickRate }}%</p>
+              <p class="text-muted-foreground">Click rate</p>
             </div>
-            <!-- Three dots menu -->
+
+            <!-- Menu -->
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <Button variant="ghost" size="icon">
@@ -217,10 +214,11 @@ const sortedSegments = computed(() => {
       v-else
       class="flex flex-col items-center justify-center py-16 text-center"
     >
-      <p class="text-muted-foreground mb-4">No segments available</p>
-      <NuxtLink to="/segments/add">
-        <Link>Add Segment</Link>
+      <p class="text-muted-foreground mb-4">No groups found</p>
+      <NuxtLink to="/dashboard/leads/group/new-group" class="text-primary">
+        Add Group
       </NuxtLink>
     </div>
   </div>
 </template>
+
