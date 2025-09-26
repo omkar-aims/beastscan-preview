@@ -110,7 +110,7 @@ watch(
                         : 'outline'
                     "
                     size="icon"
-                    class="z-10 rounded-xs shrink-0"
+                    class="z-10 rounded-full shrink-0"
                     :class="[
                       state === 'active' &&
                         'ring-2 ring-ring ring-offset-2 ring-offset-background',

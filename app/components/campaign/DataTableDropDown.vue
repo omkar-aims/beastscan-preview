@@ -60,7 +60,7 @@ async function handleDelete() {
           <DropdownMenuItem>
             <NuxtLink
               class="flex gap-2 items-center w-full"
-              to="./campaigns/overview"
+              to="./qr-codes/overview"
             >
               <Icon name="lucide:activity" />
               <span>Analytics</span>

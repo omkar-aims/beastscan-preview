@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { TrendingUp, TrendingDown } from "lucide-vue-next";
+
 interface Props {
   label: string;
   value: number | string;
@@ -24,17 +26,11 @@ const props = defineProps<Props>();
           v-if="props.trend"
           :class="[
             'flex items-center gap-2',
-            props.trendDirection === 'up'
-              ? 'text-success-foreground'
-              : 'text-destructive-foreground',
+            props.trendDirection === 'up' ? 'text-success' : 'text-destructive',
           ]"
         >
-          <Icon
-            v-if="props.trendDirection === 'up'"
-            name="lucide:trending-up"
-            class="text-xl"
-          />
-          <Icon v-else name="lucide:trending-down" class="text-xl" />
+          <TrendingUp v-if="props.trendDirection === 'up'" class="text-xl" />
+          <TrendingDown v-else class="text-xl" />
           <span class="text-lg font-semibold">{{ props.trend }}</span>
         </div>
       </AppRow>

@@ -2,6 +2,6 @@
 const { redirect } = useRedirectMiddleware();
 
 definePageMeta({
-  middleware: [redirect("/dashboard/forms/pop-ups")],
+  middleware: [redirect("/dashboard/forms/my-form/overview")],
 });
 </script>

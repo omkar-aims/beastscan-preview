@@ -37,10 +37,10 @@ const triggerValues = ref({
 const newForm = ref({
   templateName: "",
   formName: "",
-
+  formDescription: "",
   theme: {},
 
-  config: {
+  behaviour: {
     trigger: {
       type: "delay",
       value: "5",
@@ -61,14 +61,14 @@ const newForm = ref({
 const popupConfig = reactive({
   form: newForm,
   triggers: triggerValues,
-})
+});
 
 // Watch for trigger value change
 watch(
   triggerValues,
   (values) => {
-    newForm.value.config.trigger.value =
-      newForm.value.config.trigger.type === "delay"
+    newForm.value.behaviour.trigger.value =
+      newForm.value.behaviour.trigger.type === "delay"
         ? values.delay
         : values.scroll;
   },
@@ -108,7 +108,7 @@ watch(
                         : 'outline'
                     "
                     size="icon"
-                    class="z-10 rounded-xs shrink-0"
+                    class="z-10 rounded-full shrink-0"
                     :class="[
                       state === 'active' &&
                         'ring-2 ring-ring ring-offset-2 ring-offset-background',
@@ -159,9 +159,7 @@ watch(
               </div>
 
               <div v-if="stepIndex === 3" v-motion-fade>
-                <FormsWizardStepThree
-                  v-model="popupConfig"
-                />
+                <FormsWizardStepThree v-model="popupConfig" />
               </div>
 
               <div v-if="stepIndex === 4" v-motion-fade>

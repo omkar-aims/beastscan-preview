@@ -32,7 +32,6 @@ const dynamicButton = computed(() => {
 </script>
 
 <template>
-  <!-- Reuse everything from default.vue -->
   <DefaultLayout>
     <div class="px-4 py-2">
       <div class="flex justify-between items-center mb-4">
@@ -50,25 +49,23 @@ const dynamicButton = computed(() => {
       </div>
 
       <nav class="flex pt-6 mb-6 space-x-6">
-  <NuxtLink
-    v-for="tab in tabs"
-    :key="tab.path"
-    :to="tab.path"
-    class="py-1"
-  >
-    <span
-      class="pb-1 border-b-2 border-transparent hover:text-primary hover:border-primary"
-      :class="{
-        'border-b-primary text-primary': $route.path === tab.path
-      }"
-    >
-      {{ tab.name }}
-    </span>
-  </NuxtLink>
-</nav>
+        <NuxtLink
+          v-for="tab in tabs"
+          :key="tab.path"
+          :to="tab.path"
+          class="py-1"
+        >
+          <span
+            class="pb-1 border-b-2 border-transparent hover:text-primary hover:border-primary"
+            :class="{
+              'border-b-primary text-primary': $route.path === tab.path,
+            }"
+          >
+            {{ tab.name }}
+          </span>
+        </NuxtLink>
+      </nav>
 
-
-      <!-- Final slot (page content) -->
       <slot />
     </div>
   </DefaultLayout>
