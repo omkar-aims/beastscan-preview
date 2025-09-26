@@ -6,12 +6,21 @@ import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 import { Button } from "@/components/ui/button";
 import DataTableDropDown from "@/components/leadTool/DataTableDropDown.vue";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-vue-next";
+import { Label } from "@/components/ui/label"; // ✅ make sure Label is imported
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 import type { LeadDetails } from "~~/server/data/leaddata";
 import { leadData } from "~~/server/data/leaddata";
+
 const showDeleteDialog = ref<boolean>(false);
-const showFilters = ref(false);
 const data = ref(leadData.slice());
 
 definePageMeta({
@@ -89,7 +98,6 @@ const clickRateMaxInput = numberStringComputed(
 );
 
 // Filtering logic
-
 const filteredData = computed(() => {
   return data.value.filter((row) => {
     if (
@@ -181,7 +189,6 @@ const columns: ColumnDef<LeadDetails>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const leadDeatils = row.original;
-
       return h(
         "div",
         { class: "relative" },
@@ -199,7 +206,6 @@ const columns: ColumnDef<LeadDetails>[] = [
 ];
 
 // Helpers
-
 function clearFilters() {
   filters.value = {
     name: "",
@@ -222,8 +228,108 @@ function clearFilters() {
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
     >
       <div class="flex w-full justify-end items-center">
-        <!-- Filter Button -->
-        <Button variant="outline" @click="showFilters = true">Smart Filters</Button>
+        <!-- ✅ Sheet Trigger -->
+        <Sheet>
+          <SheetTrigger as-child>
+            <Button variant="outline">Smart Filters</Button>
+          </SheetTrigger>
+
+          <SheetContent side="right" class="w-full sm:w-96 p-4 flex flex-col">
+            <!-- Header -->
+            <SheetHeader>
+              <SheetTitle class="text-lg font-semibold">Filters</SheetTitle>
+            </SheetHeader>
+
+            <!-- Filter form -->
+            <div class="flex-1 mt-6 space-y-6">
+              <!-- Name -->
+              <div class="flex flex-col gap-2">
+                <Label>Filter By Name</Label>
+                <Input v-model="filters.name" placeholder="Eg. John Doe" />
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col gap-2">
+                <Label>Filter By Email</Label>
+                <Input
+                  v-model="filters.email"
+                  placeholder="Eg. example@gmail.com"
+                />
+              </div>
+
+              <!-- Source -->
+              <div class="flex flex-col gap-2">
+                <Label>Filter By Source</Label>
+                <Input v-model="filters.source" placeholder="Source Name" />
+              </div>
+
+              <!-- Emails Sent -->
+              <div class="flex flex-col gap-2">
+                <Label>Email Sent (Min / Max)</Label>
+                <div class="flex gap-3">
+                  <Input
+                    v-model="emailsSentMinInput"
+                    type="number"
+                    placeholder="Min"
+                    class="flex-1"
+                  />
+                  <Input
+                    v-model="emailsSentMaxInput"
+                    type="number"
+                    placeholder="Max"
+                    class="flex-1"
+                  />
+                </div>
+              </div>
+
+              <!-- Open Rate -->
+              <div class="flex flex-col gap-2">
+                <Label>Open Rate % (Min / Max)</Label>
+                <div class="flex gap-3">
+                  <Input
+                    v-model="openRateMinInput"
+                    type="number"
+                    placeholder="Min"
+                    class="flex-1"
+                  />
+                  <Input
+                    v-model="openRateMaxInput"
+                    type="number"
+                    placeholder="Max"
+                    class="flex-1"
+                  />
+                </div>
+              </div>
+
+              <!-- Click Rate -->
+              <div class="flex flex-col gap-2">
+                <Label>Click Rate % (Min / Max)</Label>
+                <div class="flex gap-3">
+                  <Input
+                    v-model="clickRateMinInput"
+                    type="number"
+                    placeholder="Min"
+                    class="flex-1"
+                  />
+                  <Input
+                    v-model="clickRateMaxInput"
+                    type="number"
+                    placeholder="Max"
+                    class="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer buttons -->
+            <SheetFooter class="mt-8 flex justify-between">
+              <Button variant="ghost" @click="clearFilters">Clear</Button>
+              <SheetClose as-child>
+                <Button>Apply</Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
 
@@ -232,138 +338,6 @@ function clearFilters() {
       :data="filteredData"
       :columns="columns"
       :allow-import-export="false"
-      
     />
-
-    <!-- Slide-in Filter Panel -->
-    <transition name="slide">
-      <div v-if="showFilters" class="fixed inset-0 z-50 flex justify-end">
-        <!-- Background overlay -->
-        <div
-          class="absolute inset-0 bg-black/40"
-          @click="showFilters = false"
-        >
-        </div>
-
-        <!-- Drawer panel -->
-        <div
-          class="relative bg-white dark:bg-neutral-900 w-full sm:w-96 h-full shadow-xl p-6 overflow-y-auto transition-transform"
-        >
-          <!-- Close button -->
-          <button
-            class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white cursor-pointer"
-            @click="showFilters = false"
-          >
-            <X class="w-6 h-6" />
-          </button>
-
-          <h2 class="text-xl font-semibold mb-4">Filters</h2>
-
-          <!-- Filter form -->
-          <div class="space-y-6">
-            <!-- Name -->
-            <div>
-              <Label class="pb-1">Filter By Name</Label>
-              <Input v-model="filters.name" placeholder="Eg. John Doe" />
-            </div>
-
-            <!-- Email -->
-            <div>
-              <Label class="pb-1">Filter By Email</Label>
-              <Input
-                v-model="filters.email"
-                placeholder="Eg. example@gmail.com"
-              />
-            </div>
-
-            <!-- Source -->
-            <div>
-              <Label class="pb-1">Filter By Source</Label>
-              <Input v-model="filters.source" placeholder="Source Name" />
-            </div>
-
-            <!-- Emails Sent -->
-            <div>
-              <Label class="pb-1">Email Sent (Min/Max)</Label>
-              <div class="flex gap-2">
-                <Input
-                  v-model="emailsSentMinInput"
-                  type="number"
-                  placeholder="Min"
-                />
-                <Input
-                  v-model="emailsSentMaxInput"
-                  type="number"
-                  placeholder="Max"
-                />
-              </div>
-            </div>
-
-            <!-- Open Rate -->
-            <div>
-              <Label class="pb-1">Open Rate % (Min/Max)</Label>
-              <div class="flex gap-2">
-                <Input
-                  v-model="openRateMinInput"
-                  type="number"
-                  placeholder="Min"
-                />
-                <Input
-                  v-model="openRateMaxInput"
-                  type="number"
-                  placeholder="Max"
-                />
-              </div>
-            </div>
-
-            <!-- Click Rate -->
-            <div>
-              <Label class="pb-1">Click Rate % (Min/Max)</Label>
-              <div class="flex gap-2">
-                <Input
-                  v-model="clickRateMinInput"
-                  type="number"
-                  placeholder="Min"
-                />
-                <Input
-                  v-model="clickRateMaxInput"
-                  type="number"
-                  placeholder="Max"
-                />
-              </div>
-            </div>
-          </div>
-
-          <!-- Footer buttons -->
-          <div class="flex justify-between mt-6">
-            <Button variant="ghost" @click="clearFilters">Clear</Button>
-            <Button @click="showFilters = false">Apply</Button>
-          </div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
-
-<style scoped>
-/* 🔥 Slide transition */
-.slide-enter-from {
-  transform: translateX(100%);
-}
-.slide-enter-active {
-  transition: transform 0.3s ease;
-}
-.slide-enter-to {
-  transform: translateX(0%);
-}
-
-.slide-leave-from {
-  transform: translateX(0%);
-}
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-.slide-leave-to {
-  transform: translateX(100%);
-}
-</style>

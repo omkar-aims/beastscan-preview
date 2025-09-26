@@ -1,182 +1,113 @@
 <script setup lang="ts">
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-} from "@/components/ui/form";
-import { ref } from "vue";
+import { ref } from "vue"
+import { useHead } from "#imports"
 
-definePageMeta({
-  layout: 'lead',
-});
+// shadcn components
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+
+// page metadata
+useHead({ title: "Clean-up" })
+definePageMeta({ layout: "lead" })
+
 // sample leads
 const allLeads = [
-  {
-    id: 1,
-    name: "Anna Smith",
-    email: "anna@example.com",
-    lastActivity: "2024-01-03",
-    emailOpens: 0,
-    tags: ["Spring"],
-  },
-  {
-    id: 2,
-    name: "John Miller",
-    email: "john@example.com",
-    lastActivity: "2023-11-12",
-    emailOpens: 1,
-    tags: ["Campaign A", "VIP"],
-  },
-  {
-    id: 3,
-    name: "Jane Doe",
-    email: "jane@example.com",
-    lastActivity: "2024-06-20",
-    emailOpens: 5,
-    tags: ["Website"],
-  },
-];
+  { id: 1, name: "Anna Smith", email: "anna@example.com", lastActivity: "2024-01-03", emailOpens: 0, tags: ["Spring"] },
+  { id: 2, name: "John Miller", email: "john@example.com", lastActivity: "2023-11-12", emailOpens: 1, tags: ["Campaign A", "VIP"] },
+]
 
-// filter state
+// filters state
 const filters = ref({
-  lastActivity: "",
+  lastActivity: null as Date | null,
   emailOpens: "",
   tags: "",
-});
+})
 
-const leads = ref(allLeads);
+const leads = ref([...allLeads])
 
-// apply filters
+// filter function
 function applyFilters() {
   leads.value = allLeads.filter((lead) => {
-    let match = true;
+    let match = true
 
     // last activity filter
     if (filters.value.lastActivity) {
-      match =
-        match &&
-        new Date(lead.lastActivity) <= new Date(filters.value.lastActivity);
+      match = match && new Date(lead.lastActivity) <= filters.value.lastActivity
     }
 
     // email opens filter
     if (filters.value.emailOpens) {
-      match =
-        match &&
-        lead.emailOpens < parseInt(filters.value.emailOpens as string, 10);
+      match = match && lead.emailOpens < parseInt(filters.value.emailOpens, 10)
     }
 
     // tags filter
     if (filters.value.tags) {
-      const tagsArray = filters.value.tags
-        .split(",")
-        .map((t) => t.trim().toLowerCase());
+      const tagsArray = filters.value.tags.split(",").map((t) => t.trim().toLowerCase())
       match =
         match &&
         tagsArray.every((tag) =>
           lead.tags.some((leadTag) => leadTag.toLowerCase().includes(tag))
-        );
+        )
     }
 
-    return match;
-  });
+    return match
+  })
 }
 </script>
 
 <template>
-  <div class="space-y-6 p-4">
-    <p class="text-3xl font-bold">Cleanup Inactive Leads</p>
+  <div class="space-y-6">
+    <h1 class="text-2xl font-bold">Cleanup Inactive Leads</h1>
 
-    <!-- Filter Form -->
+    <!-- Filters -->
     <Card>
-      <CardContent>
-        <Form>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <!-- Date Input -->
-            <FormField name="lastActivity">
-              <FormItem>
-                <FormLabel>No activity since</FormLabel>
-                <FormControl>
-                  <Input
-                  v-model="filters.lastActivity"
-                    type="date"
-                    class="w-full"
-                  />
-                </FormControl>
-              </FormItem>
-            </FormField>
+      <CardContent class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <!-- Date Picker -->
+        <div class="space-y-2">
+          <label class="text-sm font-medium">No activity since</label>
+          <Popover>
+            <PopoverTrigger as-child>
+              <Button variant="outline" class="w-full justify-start text-left font-normal">
+                {{ filters.lastActivity ? filters.lastActivity.toLocaleDateString() : "Pick a date" }}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent class="p-0">
+              <Calendar v-model="filters.lastActivity" />
+            </PopoverContent>
+          </Popover>
+        </div>
 
-            <!-- Select Dropdown -->
-            <FormField name="emailOpens">
-              <FormItem>
-                <FormLabel>Email opened less than</FormLabel>
-                <FormControl>
-                  <Select v-model="filters.emailOpens">
-                    <SelectTrigger class="w-full">
-                      <SelectValue placeholder="2 times" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="2">2 times</SelectItem>
-                        <SelectItem value="3">3 times</SelectItem>
-                        <SelectItem value="5">5 times</SelectItem>
-                        <SelectItem value="0">Never</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            </FormField>
+        <!-- Email Opens Select -->
+        <div class="space-y-2">
+          <label class="text-sm font-medium">Email opened less than</label>
+          <Select v-model="filters.emailOpens">
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Choose" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">Never</SelectItem>
+              <SelectItem value="2">2 times</SelectItem>
+              <SelectItem value="3">3 times</SelectItem>
+              <SelectItem value="5">5 times</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-            <!-- Tags Input -->
-            <FormField name="tags">
-              <FormItem>
-                <FormLabel>Tags (optional)</FormLabel>
-                <FormControl>
-                  <Input
-                  v-model="filters.tags"
-                    type="text"
-                    placeholder="e.g. Summer, QR"
-                    class="w-full"
-                  />
-                </FormControl>
-              </FormItem>
-            </FormField>
-          </div>
-        </Form>
+        <!-- Tags Input -->
+        <div class="space-y-2">
+          <label class="text-sm font-medium">Tags (optional)</label>
+          <Input v-model="filters.tags" type="text" placeholder="e.g. Summer, VIP" />
+        </div>
       </CardContent>
 
-      <CardFooter class="flex justify-end">
-        <Button class="cursor-pointer" @click.prevent="applyFilters">
-          Find Inactive Leads
-        </Button>
+      <CardFooter class="flex justify-end p-4">
+        <Button @click="applyFilters">Find Inactive Leads</Button>
       </CardFooter>
     </Card>
 
@@ -184,8 +115,7 @@ function applyFilters() {
     <Card>
       <CardHeader>
         <CardTitle>
-          Found {{ leads.length }}
-          Inactive Lead{{ leads.length !== 1 ? "s" : "" }}
+          Found {{ leads.length }} Inactive Lead{{ leads.length !== 1 ? "s" : "" }}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -193,9 +123,7 @@ function applyFilters() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead class="w-[40px]">
-                  <Checkbox />
-                </TableHead>
+                <TableHead class="w-[40px]"></TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Last Activity</TableHead>
@@ -205,19 +133,17 @@ function applyFilters() {
             </TableHeader>
             <TableBody>
               <TableRow v-for="lead in leads" :key="lead.id">
-                <TableCell>
-                  <Checkbox />
-                </TableCell>
+                <TableCell><Checkbox /></TableCell>
                 <TableCell class="font-medium">{{ lead.name }}</TableCell>
                 <TableCell>{{ lead.email }}</TableCell>
                 <TableCell>{{ lead.lastActivity }}</TableCell>
                 <TableCell>{{ lead.emailOpens }}</TableCell>
                 <TableCell>
-                  <div class="flex gap-2">
+                  <div class="flex gap-2 flex-wrap">
                     <span
                       v-for="tag in lead.tags"
                       :key="tag"
-                      class="px-2 py-1 text-xs rounded bg-gray-200 text-gray-700"
+                      class="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700"
                     >
                       {{ tag }}
                     </span>
@@ -227,25 +153,13 @@ function applyFilters() {
             </TableBody>
           </Table>
         </div>
-
-        <!-- No matches -->
         <div v-else class="text-center text-gray-500 py-6">
           No matches found
         </div>
       </CardContent>
-      <CardFooter
-      v-if="leads.length > 0"
-        class="flex justify-between"
-      >
-        <Button variant="destructive" class="cursor-pointer">
-          Delete Selected
-        </Button>
-        <Button
-          variant="outline"
-          class="cursor-pointer"
-        >
-          Export Selected
-        </Button>
+      <CardFooter v-if="leads.length > 0" class="flex justify-between p-4">
+        <Button variant="destructive">Delete Selected</Button>
+        <Button variant="outline">Export Selected</Button>
       </CardFooter>
     </Card>
   </div>

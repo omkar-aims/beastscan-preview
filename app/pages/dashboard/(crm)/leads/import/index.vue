@@ -5,6 +5,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+useHead({
+  title: "Import Leads",
+});
+
 const activeTab = ref<"csv" | "manual">("csv")
 const transitionName = ref("slide-left")
 

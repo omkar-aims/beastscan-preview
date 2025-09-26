@@ -23,6 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+useHead({
+  title: "New-Segment",
+});
+
 const segmentName = ref("");
 const senderName = ref("");
 const senderEmail = ref("");

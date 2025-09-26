@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+useHead({
+  title: "Stats",
+});
+
 definePageMeta({
   layout: "lead",
 });
@@ -20,7 +24,6 @@ type RecentLead = {
   timestamp: string;
 };
 
-const leadMagnetName = "Newsletter Popup - Home";
 
 const topStats: Stat[] = [
   { label: "Total Views", value: 123 },
@@ -90,239 +93,179 @@ const recentLeads: RecentLead[] = [
 // convenience totals (static here; useful if you wire to real data later)
 const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
 </script>
-
 <template>
-  <!-- Whole dashboard wrapped in a shadcn Card -->
-  <div>
+  <div class="space-y-6">
+    <!-- Title -->
     <div>
-      <Card class="w-full border-0 shadow-none">
-        <CardHeader class="px-0 pb-4">
-          <CardTitle class="text-2xl md:text-3xl">
-            Lead Magnet Stats: "<span class="font-semibold">{{
-              leadMagnetName
-            }}</span
-            >"
-          </CardTitle>
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">
+        Lead Magnet Stats
+      </h1>
+    </div>
+
+    <!-- Top Stats -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6"
+    >
+      <Card
+        v-for="s in topStats"
+        :key="s.label"
+        class="rounded-xl"
+      >
+        <CardHeader class="pb-2">
+          <CardDescription class="text-base">
+            {{ s.label }}
+          </CardDescription>
         </CardHeader>
-
-        <CardContent class="px-0">
-          <!-- Top Stats -->
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6"
-          >
-            <Card v-for="s in topStats" :key="s.label" class="rounded-xl">
-              <CardHeader class="pb-2">
-                <CardDescription class="text-base">{{
-                  s.label
-                }}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div class="text-3xl font-semibold tracking-tight">
-                  {{ s.value }}
-                </div>
-              </CardContent>
-            </Card>
+        <CardContent>
+          <div class="text-3xl font-semibold tracking-tight">
+            {{ s.value }}
           </div>
-
-          <!-- Middle: Devices + Referrers -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6">
-            <!-- Device Type -->
-            <Card>
-              <CardHeader class="pb-2">
-                <CardTitle class="text-xl">Device Type</CardTitle>
-              </CardHeader>
-              <CardContent class="w-full flex justify-between items-center">
-                <div class="w-full flex justify-center">
-                  <DonutChart 
-                  index="device"
-                  :category="'leads'"
-                  :data="devices"
-                  :type="'pie'"
-                  />
-                </div>
-                <div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead class="w-1/2">Device</TableHead>
-                        <TableHead>Leads</TableHead>
-                        <TableHead class="text-right">%</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow v-for="row in devices" :key="row.device">
-                        <TableCell class="font-medium">{{
-                          row.device
-                        }}</TableCell>
-                        <TableCell>{{ row.leads }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ row.percent }}%</TableCell
-                        >
-                      </TableRow>
-                      <TableRow>
-                        <TableCell class="font-semibold">Total</TableCell>
-                        <TableCell class="font-semibold">{{
-                          totalLeads
-                        }}</TableCell>
-                        <TableCell class="text-right">100%</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-
-            <!-- Top Referrers -->
-            <Card>
-              <CardHeader class="pb-2">
-                <CardTitle class="text-xl">Top Referrers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead class="w-3/4">Referrer</TableHead>
-                      <TableHead class="text-right">Leads</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow v-for="row in referrers" :key="row.referrer">
-                      <TableCell class="font-medium">{{
-                        row.referrer
-                      }}</TableCell>
-                      <TableCell class="text-right">{{ row.leads }}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </div>
-
-          <!-- UTM Breakdown -->
-          <Card class="mt-6">
-            <CardHeader class="pb-2">
-              <CardTitle class="text-xl">UTM Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Top Campaigns -->
-                <div>
-                  <div class="font-medium mb-2">Top Campaigns</div>
-                  <Table>
-                    <TableBody>
-                      <TableRow v-for="c in utmCampaigns" :key="c.name">
-                        <TableCell class="w-2/3">{{ c.name }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ c.leads }} leads</TableCell
-                        >
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-
-                <!-- Top Sources -->
-                <div>
-                  <div class="font-medium mb-2">Top Sources</div>
-                  <Table>
-                    <TableBody>
-                      <TableRow v-for="s in utmSources" :key="s.name">
-                        <TableCell class="w-2/3">{{ s.name }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ s.leads }} leads</TableCell
-                        >
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-
-                <!-- Top Mediums -->
-                <div>
-                  <div class="font-medium mb-2">Top Mediums</div>
-                  <Table>
-                    <TableBody>
-                      <TableRow v-for="m in utmMediums" :key="m.name">
-                        <TableCell class="w-2/3">{{ m.name }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ m.leads }} leads</TableCell
-                        >
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-
-              <Separator class="my-4" />
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- UTM Terms -->
-                <div>
-                  <div class="font-medium mb-2">UTM Terms (Keywords)</div>
-                  <Table>
-                    <TableBody>
-                      <TableRow v-for="t in utmTerms" :key="t.name">
-                        <TableCell class="w-2/3">{{ t.name }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ t.leads }} leads</TableCell
-                        >
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-
-                <!-- UTM Content -->
-                <div>
-                  <div class="font-medium mb-2">UTM Content (A/B)</div>
-                  <Table>
-                    <TableBody>
-                      <TableRow v-for="c in utmContent" :key="c.name">
-                        <TableCell class="w-2/3">{{ c.name }}</TableCell>
-                        <TableCell class="text-right"
-                          >{{ c.leads }} leads</TableCell
-                        >
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <!-- Recent Leads -->
-          <Card class="mt-6">
-            <CardHeader class="pb-2">
-              <CardTitle class="text-xl">Recent Leads</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <!-- Scroll on small screens to keep layout tidy -->
-              <ScrollArea class="w-full">
-                <Table class="min-w-[640px] md:min-w-0">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead class="w-2/5">Email</TableHead>
-                      <TableHead class="w-1/5">Device</TableHead>
-                      <TableHead class="w-1/5">Page</TableHead>
-                      <TableHead class="w-1/5">Timestamp</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow
-                      v-for="lead in recentLeads"
-                      :key="lead.email + lead.timestamp"
-                    >
-                      <TableCell class="font-medium break-all">{{
-                        lead.email
-                      }}</TableCell>
-                      <TableCell>{{ lead.device }}</TableCell>
-                      <TableCell class="break-all">{{ lead.page }}</TableCell>
-                      <TableCell>{{ lead.timestamp }}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </CardContent>
-          </Card>
         </CardContent>
       </Card>
     </div>
+
+    <!-- Middle: Devices + Referrers -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      <!-- Device Type -->
+      <Card>
+        <CardHeader class="pb-2">
+          <CardTitle class="text-xl">Device Type</CardTitle>
+        </CardHeader>
+        <CardContent class="flex flex-col md:flex-row gap-6">
+          <div class="w-full md:w-1/2 flex justify-center">
+            <DonutChart
+              index="device"
+              :category="'leads'"
+              :data="devices"
+              :type="'pie'"
+            />
+          </div>
+          <div class="w-full md:w-1/2">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead class="w-1/2">Device</TableHead>
+                  <TableHead>Leads</TableHead>
+                  <TableHead class="text-right">%</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="row in devices" :key="row.device">
+                  <TableCell class="font-medium">
+                    {{ row.device }}
+                  </TableCell>
+                  <TableCell>{{ row.leads }}</TableCell>
+                  <TableCell class="text-right">
+                    {{ row.percent }}%
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell class="font-semibold">Total</TableCell>
+                  <TableCell class="font-semibold">
+                    {{ totalLeads }}
+                  </TableCell>
+                  <TableCell class="text-right">100%</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- Top Referrers -->
+      <Card>
+        <CardHeader class="pb-2">
+          <CardTitle class="text-xl">Top Referrers</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead class="w-3/4">Referrer</TableHead>
+                <TableHead class="text-right">Leads</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="row in referrers" :key="row.referrer">
+                <TableCell class="font-medium">
+                  {{ row.referrer }}
+                </TableCell>
+                <TableCell class="text-right">{{ row.leads }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- UTM Breakdown -->
+    <Card>
+      <CardHeader class="pb-2">
+        <CardTitle class="text-xl">UTM Breakdown</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs default-value="topCampaigns">
+          <TabsList class="flex flex-wrap">
+            <TabsTrigger value="topCampaigns">Top Campaigns</TabsTrigger>
+            <TabsTrigger value="topSources">Top Sources</TabsTrigger>
+            <TabsTrigger value="topMediums">Top Mediums</TabsTrigger>
+            <TabsTrigger value="utmTerms">UTM Terms</TabsTrigger>
+            <TabsTrigger value="utmContent">UTM Content</TabsTrigger>
+          </TabsList>
+          <TabsContent value="topCampaigns">
+            <BarChart :data="utmCampaigns" index="name" :categories="['leads']" />
+          </TabsContent>
+          <TabsContent value="topSources">
+            <BarChart :data="utmSources" index="name" :categories="['leads']" />
+          </TabsContent>
+          <TabsContent value="topMediums">
+            <BarChart :data="utmMediums" index="name" :categories="['leads']" />
+          </TabsContent>
+          <TabsContent value="utmTerms">
+            <BarChart :data="utmTerms" index="name" :categories="['leads']" />
+          </TabsContent>
+          <TabsContent value="utmContent">
+            <BarChart :data="utmContent" index="name" :categories="['leads']" />
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+
+    <!-- Recent Leads -->
+    <Card>
+      <CardHeader class="pb-2">
+        <CardTitle class="text-xl">Recent Leads</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea class="w-full">
+          <Table class="min-w-[640px] md:min-w-0">
+            <TableHeader>
+              <TableRow>
+                <TableHead class="w-2/5">Email</TableHead>
+                <TableHead class="w-1/5">Device</TableHead>
+                <TableHead class="w-1/5">Page</TableHead>
+                <TableHead class="w-1/5">Timestamp</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow
+                v-for="lead in recentLeads"
+                :key="lead.email + lead.timestamp"
+              >
+                <TableCell class="font-medium break-all">
+                  {{ lead.email }}
+                </TableCell>
+                <TableCell>{{ lead.device }}</TableCell>
+                <TableCell class="break-all">{{ lead.page }}</TableCell>
+                <TableCell>{{ lead.timestamp }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   </div>
 </template>
+
+
+
