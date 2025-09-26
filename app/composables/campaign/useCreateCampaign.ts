@@ -11,7 +11,7 @@ export function useCreateCampaign() {
         body: { ...newCampaign, mode: "dynamic", createdAt: new Date() },
       }),
     onSuccess() {
-      navigateTo("/dashboard/campaigns");
+      navigateTo("/dashboard/qr-codes");
     },
   });
 }

@@ -1,77 +1,58 @@
 <script setup lang="ts">
+import {
+  Megaphone,
+  FileText,
+  Globe,
+  Gift,
+  Store,
+  Users,
+  UserRoundCheck,
+  Mail,
+  LayoutDashboard,
+  QrCode,
+  ChevronRight,
+} from "lucide-vue-next";
+
 const menu = [
   {
-    title: "menu.campaigns",
-    icon: "lucide:megaphone",
+    title: "Campaigns",
+    icon: Megaphone,
     items: [
       {
-        title: "menu.forms",
+        title: "Forms",
         url: "dashboard/forms",
-        icon: "lucide:file-text",
+        icon: FileText,
       },
       {
-        title: "menu.sites",
-        url: "dashboard/sites",
-        icon: "lucide:globe",
+        title: "Pages",
+        url: "dashboard/pages",
+        icon: Globe,
       },
       {
-        title: "menu.vcards",
-        url: "dashboard/vcards",
-        icon: "lucide:id-card",
+        title: "Loyalty",
+        url: "dashboard/loyalty",
+        icon: Gift,
+      },
+      {
+        title: "Store",
+        url: "dashboard/store",
+        icon: Store,
       },
     ],
   },
   {
-    title: "menu.crm",
-    icon: "lucide:users",
+    title: "CRM",
+    icon: Users,
     items: [
       {
-        title: "menu.leads",
+        title: "Leads",
         url: "dashboard/leads",
-        icon: "lucide:user-round-check",
+        icon: UserRoundCheck,
       },
       {
-        title: "menu.mailer",
+        title: "Mailer",
         url: "dashboard/mailer",
-        icon: "lucide:mail",
-      },
-    ],
-  },
-  {
-    title: "menu.store",
-    icon: "lucide:shopping-bag",
-    items: [
-      {
-        title: "menu.products",
-        url: "dashboard/products",
-        icon: "lucide:package",
-      },
-      {
-        title: "menu.ecommerce",
-        url: "dashboard/e-commerce",
-        icon: "lucide:shopping-cart",
-      },
-    ],
-  },
-  {
-    title: "menu.loyalty",
-    icon: "lucide:tag",
-    items: [
-      {
-        title: "menu.stampCards",
-        url: "dashboard/stamp-cards",
-        icon: "lucide:ticket",
-      },
-      {
-        title: "menu.giftCards",
-        url: "dashboard/gift-cards",
-        icon: "lucide:gift",
-      },
-      { title: "menu.offersList", url: "offers/list", icon: "lucide:tags" },
-      {
-        title: "menu.giveaway",
-        url: "dashboard/giveaway",
-        icon: "lucide:party-popper",
+        icon: Mail,
       },
     ],
   },
@@ -89,28 +70,29 @@ const menu = [
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>
+              <SidebarMenuButton as-child>
                 <NuxtLink
                   to="/dashboard"
-                  class="w-full flex items-center gap-2"
+                  class="w-full flex items-center gap-2 transition-colors duration-200"
                 >
-                  <Icon name="lucide:layout-dashboard" />
+                  <LayoutDashboard class="w-4 h-4" />
                   Dashboard
                 </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton class="flex items-center gap-2">
+              <SidebarMenuButton as-child>
                 <NuxtLink
                   to="/dashboard/qr-codes"
-                  class="w-full flex items-center gap-2"
+                  class="w-full flex items-center gap-2 transition-colors duration-200"
                 >
-                  <Icon name="lucide:qr-code" />
+                  <QrCode class="w-4 h-4" />
                   QR codes
                 </NuxtLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+
           <SidebarMenu>
             <Collapsible
               v-for="item in menu"
@@ -121,35 +103,36 @@ const menu = [
               <SidebarMenuItem>
                 <CollapsibleTrigger as-child>
                   <SidebarMenuButton
-                    class="flex justify-between cursor-pointer"
+                    class="flex justify-between cursor-pointer transition-colors duration-200"
                   >
                     <div class="flex items-center gap-2">
-                      <Icon :name="item.icon" />
-                      {{ $t(item.title) }}
+                      <component :is="item.icon" class="w-4 h-4" />
+                      {{ item.title }}
                     </div>
-                    <Icon name="lucide:chevron-right" />
+                    <ChevronRight class="w-4 h-4" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
+
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     <SidebarMenuSubItem
                       v-for="subItem in item.items"
                       :key="subItem.title"
                     >
-                      <SidebarMenuSubButton>
+                      <SidebarMenuSubButton as-child>
                         <NuxtLink
                           :to="`/${subItem.url}`"
-                          class="w-full flex items-center gap-2"
+                          class="w-full flex items-center gap-2 transition-colors duration-200"
                         >
-                          <Icon :name="subItem.icon" />
-                          {{ $t(subItem.title) }}
+                          <component :is="subItem.icon" class="w-4 h-4" />
+                          {{ subItem.title }}
                         </NuxtLink>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   </SidebarMenuSub>
                 </CollapsibleContent>
-              </SidebarMenuItem></Collapsible
-            >
+              </SidebarMenuItem>
+            </Collapsible>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>

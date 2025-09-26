@@ -30,9 +30,11 @@ const props = withDefaults(
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     allowImportExport?: boolean;
+    allowSearch?: boolean;
   }>(),
   {
     allowImportExport: true,
+    allowSearch: true,
   }
 );
 
@@ -82,9 +84,15 @@ const { exportCSV } = useExportCSV();
 <template>
   <div>
     <div
+      v-if="allowSearch && allowImportExport"
       class="flex md:items-center justify-between flex-col md:flex-row py-4 gap-2"
     >
-      <Input v-model="globalFilter" class="max-w-sm" placeholder="Search" />
+      <Input
+        v-if="allowSearch"
+        v-model="globalFilter"
+        class="max-w-sm"
+        placeholder="Search"
+      />
       <AppRow direction="horizontal">
         <AlertDialog>
           <AlertDialogTrigger>
@@ -159,7 +167,7 @@ const { exportCSV } = useExportCSV();
         </Button>
       </AppRow>
     </div>
-    <div class="border">
+    <div class="rounded-md border shadow-sm">
       <Table>
         <TableHeader>
           <TableRow

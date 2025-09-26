@@ -1,6 +1,5 @@
 <template>
   <Card>
-    <!-- Theme Header -->
     <CardHeader>
       <CardTitle>Theme</CardTitle>
       <CardDescription>

@@ -32,7 +32,7 @@ watch(
     </CardHeader>
     <CardContent class="space-y-2">
       <RadioGroup
-        v-model="localState.form.config.trigger.type"
+        v-model="localState.form.behaviour.trigger.type"
         class="flex flex-col space-y-3"
       >
         <div class="flex items-center gap-x-3">
@@ -41,7 +41,7 @@ watch(
             <span>Wait</span>
             <Input
               v-model="localState.triggers.delay"
-              :disabled="localState.form.config.trigger.type !== 'delay'"
+              :disabled="localState.form.behaviour.trigger.type !== 'delay'"
               class="w-16"
               type="number"
             />
@@ -55,7 +55,7 @@ watch(
             <span>Show when user scrolls to</span>
             <Select
               v-model="localState.triggers.scroll"
-              :disabled="localState.form.config.trigger.type !== 'scroll'"
+              :disabled="localState.form.behaviour.trigger.type !== 'scroll'"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Choose a scroll trigger" />
@@ -87,7 +87,7 @@ watch(
           </div>
 
           <div
-            v-if="localState.form.config.trigger.type === 'floating-button'"
+            v-if="localState.form.behaviour.trigger.type === 'floating-button'"
             v-motion-fade
             class="flex gap-4 my-2"
           >
@@ -130,7 +130,7 @@ watch(
       </CardDescription>
     </CardHeader>
     <CardContent class="space-y-2">
-      <Select v-model="localState.form.config.frequency">
+      <Select v-model="localState.form.behaviour.frequency">
         <SelectTrigger>
           <SelectValue placeholder="Choose a frequency" />
         </SelectTrigger>
@@ -159,21 +159,21 @@ watch(
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-mobile"
-          v-model="localState.form.config.visibility.mobile"
+          v-model="localState.form.behaviour.visibility.mobile"
         />
         <Label for="visibility-mobile">Hide on mobile devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-tablet"
-          v-model="localState.form.config.visibility.tablet"
+          v-model="localState.form.behaviour.visibility.tablet"
         />
         <Label for="visibility-tablet">Hide on tablet devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-desktop"
-          v-model="localState.form.config.visibility.desktop"
+          v-model="localState.form.behaviour.visibility.desktop"
         />
         <Label for="visibility-desktop">Hide on desktop devices</Label>
       </div>
