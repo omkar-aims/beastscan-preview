@@ -27,7 +27,7 @@ const dynamicButton = computed(() => {
         text: "Create New Segment",
         to: "/dashboard/leads/segment/new-segment",
       };
-       case "/dashboard/leads/group":
+    case "/dashboard/leads/group":
       return {
         visible: true,
         text: "Create New Group",
