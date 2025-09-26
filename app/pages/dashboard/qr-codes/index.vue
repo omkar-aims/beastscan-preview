@@ -117,14 +117,14 @@ const columns: ColumnDef<Campaign>[] = [
       </div>
     </template>
     <template v-if="campaigns && campaigns?.length > 0">
-      <div>
+      <AppRow>
         <AppHeading :level="3">Your Campaigns</AppHeading>
         <DataTable
           :data="campaigns"
           :columns="columns"
           :allow-import-export="false"
         />
-      </div>
+      </AppRow>
     </template>
   </div>
 </template>

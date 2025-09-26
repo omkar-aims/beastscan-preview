@@ -20,22 +20,22 @@ const menu = [
     items: [
       {
         title: "Forms",
-        url: "dashboard/forms",
+        url: "/dashboard/forms",
         icon: FileText,
       },
       {
         title: "Pages",
-        url: "dashboard/pages",
+        url: "/dashboard/pages",
         icon: Globe,
       },
       {
         title: "Loyalty",
-        url: "dashboard/loyalty",
+        url: "/dashboard/loyalty",
         icon: Gift,
       },
       {
         title: "Store",
-        url: "dashboard/store",
+        url: "/dashboard/store",
         icon: Store,
       },
     ],
@@ -46,17 +46,27 @@ const menu = [
     items: [
       {
         title: "Leads",
-        url: "dashboard/leads",
+        url: "/dashboard/leads",
         icon: UserRoundCheck,
       },
       {
         title: "Mailer",
-        url: "dashboard/mailer",
+        url: "/dashboard/mailer",
         icon: Mail,
       },
     ],
   },
 ];
+
+const route = useRoute();
+
+function isActive(path: string) {
+  if (path === "/dashboard") {
+    return route.path === path;
+  }
+
+  return route.path === path || route.path.startsWith(path + "/");
+}
 </script>
 
 <template>
@@ -67,10 +77,10 @@ const menu = [
 
     <SidebarContent>
       <SidebarGroup>
-        <SidebarGroupContent>
+        <SidebarGroupContent class="space-y-1">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton as-child>
+              <SidebarMenuButton as-child :is-active="isActive('/dashboard')">
                 <NuxtLink
                   to="/dashboard"
                   class="w-full flex items-center gap-2 transition-colors duration-200"
@@ -81,7 +91,10 @@ const menu = [
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton as-child>
+              <SidebarMenuButton
+                as-child
+                :is-active="isActive('/dashboard/qr-codes')"
+              >
                 <NuxtLink
                   to="/dashboard/qr-codes"
                   class="w-full flex items-center gap-2 transition-colors duration-200"
@@ -97,7 +110,7 @@ const menu = [
             <Collapsible
               v-for="item in menu"
               :key="item.title"
-              :default-open="false"
+              :default-open="true"
               class="group/collapsible"
             >
               <SidebarMenuItem>
@@ -119,9 +132,12 @@ const menu = [
                       v-for="subItem in item.items"
                       :key="subItem.title"
                     >
-                      <SidebarMenuSubButton as-child>
+                      <SidebarMenuSubButton
+                        as-child
+                        :is-active="isActive(subItem.url)"
+                      >
                         <NuxtLink
-                          :to="`/${subItem.url}`"
+                          :to="subItem.url"
                           class="w-full flex items-center gap-2 transition-colors duration-200"
                         >
                           <component :is="subItem.icon" class="w-4 h-4" />
