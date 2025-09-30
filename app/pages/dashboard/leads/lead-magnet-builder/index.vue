@@ -80,7 +80,7 @@ const currentForms = computed(() =>
 </script>
 
 <template>
-  <div >
+  <div>
     <section class="w-full space-y-6">
       <!-- Header -->
       <div class="flex items-center justify-between">
@@ -92,7 +92,7 @@ const currentForms = computed(() =>
 
       <!-- Tabs -->
       <div
-        class="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4 "
+        class="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4"
       >
         <Tabs v-model="activeTab" class="w-full max-w-md">
           <TabsList class="w-full">
@@ -108,96 +108,99 @@ const currentForms = computed(() =>
 
       <!-- Content -->
       <Transition name="content-slide" mode="out-in">
-  <div :key="activeTab" class="mt-4">
-    <!-- Empty state -->
-    <div
-      v-if="currentForms.length === 0"
-      class="rounded-lg border p-8 text-center text-muted-foreground"
-    >
-      No {{ activeTab === "embedded" ? "embedded" : "popup" }} forms yet.
-    </div>
-
-    <!-- Forms Grid -->
-    <TransitionGroup
-      name="card-fade"
-      tag="div"
-      class="grid grid-cols-1 md:grid-cols-2 gap-4"
-    >
-      <Card
-        v-for="form in currentForms"
-        :key="form.id"
-        class="border shadow-sm"
-      >
-        <!-- Header -->
-        <CardHeader class="flex flex-row justify-between items-start">
-          <div>
-            <div class="flex items-center gap-2">
-              <CardTitle class="!text-base text-primary">
-                {{ form.title }}
-              </CardTitle>
-              <Badge variant="default">
-                {{ form.type === "embedded" ? "Embedded" : "Popup" }}
-              </Badge>
-            </div>
-            <CardDescription class="text-muted-foreground">
-              Segment: {{ form.segment }}
-            </CardDescription>
+        <div :key="activeTab" class="mt-4">
+          <!-- Empty state -->
+          <div
+            v-if="currentForms.length === 0"
+            class="rounded-lg border p-8 text-center text-muted-foreground"
+          >
+            No {{ activeTab === "embedded" ? "embedded" : "popup" }} forms yet.
           </div>
 
-          <div class="text-sm text-muted-foreground text-right space-y-2">
-            <p>Created: {{ form.createdAt }}</p>
-            <div class="flex gap-2 justify-end">
-              <Button variant="secondary" size="sm">Edit</Button>
-            </div>
-          </div>
-        </CardHeader>
+          <!-- Forms Grid -->
+          <TransitionGroup
+            name="card-fade"
+            tag="div"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <Card
+              v-for="form in currentForms"
+              :key="form.id"
+              class="border shadow-sm"
+            >
+              <!-- Header -->
+              <CardHeader class="flex flex-row justify-between items-start">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <CardTitle class="!text-base text-primary">
+                      {{ form.title }}
+                    </CardTitle>
+                    <Badge variant="default">
+                      {{ form.type === "embedded" ? "Embedded" : "Popup" }}
+                    </Badge>
+                  </div>
+                  <CardDescription class="text-muted-foreground">
+                    Segment: {{ form.segment }}
+                  </CardDescription>
+                </div>
 
-        <!-- Stats -->
-        <CardContent class="space-y-4">
-          <p>{{ form.description }}</p>
+                <div class="text-sm text-muted-foreground text-right space-y-2">
+                  <p>Created: {{ form.createdAt }}</p>
+                  <div class="flex gap-2 justify-end">
+                    <Button variant="secondary" size="sm">Edit</Button>
+                  </div>
+                </div>
+              </CardHeader>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card>
-              <CardContent class="p-4 text-center">
-                <p class="font-semibold text-primary">{{ form.views }}</p>
-                <p class="text-sm text-muted-foreground">Views</p>
+              <!-- Stats -->
+              <CardContent class="space-y-4">
+                <p>{{ form.description }}</p>
+
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"
+                >
+                  <Card>
+                    <CardContent class="p-4 text-center">
+                      <p class="font-semibold text-primary">{{ form.views }}</p>
+                      <p class="text-sm text-muted-foreground">Views</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent class="p-4 text-center">
+                      <p class="font-semibold text-primary">{{ form.leads }}</p>
+                      <p class="text-sm text-muted-foreground">Leads</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent class="p-4 text-center">
+                      <p class="font-semibold text-primary">
+                        {{ form.conversion }}
+                      </p>
+                      <p class="text-sm text-muted-foreground">Conversion</p>
+                    </CardContent>
+                  </Card>
+                </div>
               </CardContent>
+
+              <!-- Footer -->
+              <CardFooter class="flex justify-between">
+                <Button variant="outline" size="sm" class="text-primary">
+                  Preview
+                </Button>
+                <Button variant="outline" size="sm" class="text-primary">
+                  {{
+                    form.type === "embedded"
+                      ? "Copy Embed Code"
+                      : "Copy Embed Script"
+                  }}
+                </Button>
+              </CardFooter>
             </Card>
-
-            <Card>
-              <CardContent class="p-4 text-center">
-                <p class="font-semibold text-primary">{{ form.leads }}</p>
-                <p class="text-sm text-muted-foreground">Leads</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent class="p-4 text-center">
-                <p class="font-semibold text-primary">{{ form.conversion }}</p>
-                <p class="text-sm text-muted-foreground">Conversion</p>
-              </CardContent>
-            </Card>
-          </div>
-        </CardContent>
-
-        <!-- Footer -->
-        <CardFooter class="flex justify-between">
-          <Button variant="outline" size="sm" class="text-primary">
-            Preview
-          </Button>
-          <Button variant="outline" size="sm" class="text-primary">
-            {{
-              form.type === "embedded"
-                ? "Copy Embed Code"
-                : "Copy Embed Script"
-            }}
-          </Button>
-        </CardFooter>
-      </Card>
-    </TransitionGroup>
-  </div>
-</Transition>
-
+          </TransitionGroup>
+        </div>
+      </Transition>
     </section>
   </div>
 </template>
@@ -240,4 +243,3 @@ const currentForms = computed(() =>
   scrollbar-gutter: stable;
 }
 </style>
-  

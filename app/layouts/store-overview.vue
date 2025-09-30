@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { AppWindow, PictureInPicture2 } from "lucide-vue-next";
 import Default from "./default.vue";
 
+import { Store, Package, BarChart2, Settings } from "lucide-vue-next";
+
 const tabs = [
-  { label: "Pop-ups", to: "/dashboard/forms/pop-ups", icon: PictureInPicture2 },
-  { label: "Embeded", to: "/dashboard/forms/embeded", icon: AppWindow },
+  { label: "Store", to: "/dashboard/store", icon: Store },
+  { label: "Products", to: "/dashboard/store/products", icon: Package },
+  { label: "Analytics", to: "/dashboard/store/analytics", icon: BarChart2 },
+  { label: "Settings", to: "/dashboard/store/settings", icon: Settings },
 ];
 </script>
 

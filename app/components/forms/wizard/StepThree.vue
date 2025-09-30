@@ -1,23 +1,31 @@
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue: {
-    form: any;
-    triggers: any;
-  };
-}>();
+const newFormStore = useNewFormStore();
 
-const emit = defineEmits<{
-  (e: "update:modelValue", value: { form: any; triggers: any }): void;
-}>();
-
-const localState = reactive({
-  form: { ...props.modelValue.form },
-  triggers: { ...props.modelValue.triggers },
+const triggerValues = ref({
+  delay: "5",
+  scroll: "50",
+  floatingButton: {
+    icon: "bi:cart",
+    label: "",
+  },
 });
 
 watch(
-  () => localState,
-  (val) => emit("update:modelValue", val),
+  triggerValues,
+  (values) => {
+    const triggerType = newFormStore.form.behaviour.trigger.type;
+
+    if (triggerType === "delay") {
+      newFormStore.form.behaviour.trigger.value = values.delay;
+    } else if (triggerType === "scroll") {
+      newFormStore.form.behaviour.trigger.value = values.scroll;
+    } else if (triggerType === "floating-button") {
+      newFormStore.form.behaviour.trigger.value = {
+        icon: values.floatingButton.icon,
+        label: values.floatingButton.label,
+      };
+    }
+  },
   { deep: true }
 );
 </script>
@@ -32,7 +40,7 @@ watch(
     </CardHeader>
     <CardContent class="space-y-2">
       <RadioGroup
-        v-model="localState.form.behaviour.trigger.type"
+        v-model="newFormStore.form.behaviour.trigger.type"
         class="flex flex-col space-y-3"
       >
         <div class="flex items-center gap-x-3">
@@ -40,8 +48,8 @@ watch(
           <Label for="delay" class="font-normal flex items-center gap-x-2">
             <span>Wait</span>
             <Input
-              v-model="localState.triggers.delay"
-              :disabled="localState.form.behaviour.trigger.type !== 'delay'"
+              v-model="triggerValues.delay"
+              :disabled="newFormStore.form.behaviour.trigger.type !== 'delay'"
               class="w-16"
               type="number"
             />
@@ -54,8 +62,8 @@ watch(
           <Label for="scroll" class="font-normal flex items-center gap-x-2">
             <span>Show when user scrolls to</span>
             <Select
-              v-model="localState.triggers.scroll"
-              :disabled="localState.form.behaviour.trigger.type !== 'scroll'"
+              v-model="triggerValues.scroll"
+              :disabled="newFormStore.form.behaviour.trigger.type !== 'scroll'"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Choose a scroll trigger" />
@@ -87,12 +95,15 @@ watch(
           </div>
 
           <div
-            v-if="localState.form.behaviour.trigger.type === 'floating-button'"
+            v-if="
+              newFormStore.form.behaviour.trigger.type === 'floating-button'
+            "
             v-motion-fade
             class="flex gap-4 my-2"
           >
-            <IconPicker />
+            <IconPicker v-model="triggerValues.floatingButton.icon" />
             <Input
+              v-model="triggerValues.floatingButton.label"
               placeholder="Enter label (Leave empty for no label)"
               class="w-xs"
             />
@@ -130,7 +141,7 @@ watch(
       </CardDescription>
     </CardHeader>
     <CardContent class="space-y-2">
-      <Select v-model="localState.form.behaviour.frequency">
+      <Select v-model="newFormStore.form.behaviour.frequency">
         <SelectTrigger>
           <SelectValue placeholder="Choose a frequency" />
         </SelectTrigger>
@@ -159,24 +170,30 @@ watch(
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-mobile"
-          v-model="localState.form.behaviour.visibility.mobile"
+          v-model="newFormStore.form.behaviour.visibility.mobile"
         />
         <Label for="visibility-mobile">Hide on mobile devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-tablet"
-          v-model="localState.form.behaviour.visibility.tablet"
+          v-model="newFormStore.form.behaviour.visibility.tablet"
         />
         <Label for="visibility-tablet">Hide on tablet devices</Label>
       </div>
       <div class="flex items-center space-x-2">
         <Switch
           id="visibility-desktop"
-          v-model="localState.form.behaviour.visibility.desktop"
+          v-model="newFormStore.form.behaviour.visibility.desktop"
         />
         <Label for="visibility-desktop">Hide on desktop devices</Label>
       </div>
     </CardContent>
+
+    <CardFooter>
+      <CardAction>
+        <slot />
+      </CardAction>
+    </CardFooter>
   </Card>
 </template>

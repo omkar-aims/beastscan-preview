@@ -75,7 +75,9 @@ const campaigns: Campaign[] = [
         <Button> Create New Campaign </Button>
       </div>
     </div>
-    <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+    <div
+      class="grid lg:grid-cols-3 2xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6"
+    >
       <Card
         v-for="data in campaigns"
         :key="data.id"

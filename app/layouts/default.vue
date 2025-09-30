@@ -50,14 +50,15 @@ const route = useRoute();
         </header>
         <Separator orientation="horizontal" class="h-4" />
 
-        <main
+        <div
+          id="main"
           :class="[
             route.path !== '/dashboard/builder' ? 'p-4 h-screen' : '',
             'h-min overflow-y-auto pb-[10%] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
           ]"
         >
           <slot />
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   </div>

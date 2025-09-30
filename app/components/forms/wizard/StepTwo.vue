@@ -73,5 +73,11 @@
         <Input id="formButtonLabel" />
       </div>
     </CardContent>
+
+    <CardFooter>
+      <CardAction>
+        <slot />
+      </CardAction>
+    </CardFooter>
   </Card>
 </template>
