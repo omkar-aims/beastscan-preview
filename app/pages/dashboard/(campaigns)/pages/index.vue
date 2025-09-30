@@ -1,5 +1,7 @@
-<template>
-  <div>
-    <h1>Hello World</h1>
-  </div>
-</template>
+<script setup lang="ts">
+const { redirect } = useRedirectMiddleware();
+
+definePageMeta({
+  middleware: [redirect("/dashboard/pages/landing")],
+});
+</script>

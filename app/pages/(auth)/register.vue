@@ -15,7 +15,7 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const { register, error } = useRegister()
+const { register, error } = useRegister();
 
 const form = useForm({
   validationSchema: toTypedSchema(registrationSchema),
@@ -23,29 +23,28 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   const payload = {
-    type: 'user',
-    locale: navigator.language.split('-')[0],
+    type: "user",
+    locale: navigator.language.split("-")[0],
     email: values.email,
     password: values.password,
   };
 
-  const user = await register(payload); 
+  const user = await register(payload);
 
-  if (user && user.status === 'ok') {
-    toast.success("Register Sucessfuly")
-    return navigateTo('/login');
+  if (user && user.status === "ok") {
+    toast.success("Register Sucessfuly");
+    return navigateTo("/login");
   } else {
-    error.value = user?.result?.message || 'Something went wrong';
+    error.value = user?.result?.message || "Something went wrong";
     form.resetForm();
   }
 });
-
 </script>
 
 <template>
   <div class="w-full min-h-dvh lg:grid lg:grid-cols-2">
     <div class="flex items-center justify-center py-12">
-      <div class="mx-auto grid max-w-[350px] gap-6">
+      <div class="mx-auto grid gap-6">
         <div class="grid gap-1 text-center">
           <AppLogo />
           <h1 class="text-3xl font-bold">Create new account</h1>
@@ -64,9 +63,8 @@ const onSubmit = form.handleSubmit(async (values) => {
             {{ error }}
           </AlertDescription>
         </Alert>
-       
 
-        <form class="grid gap-4" @submit.prevent="onSubmit" >
+        <form class="grid gap-4" @submit.prevent="onSubmit">
           <FormField v-slot="{ componentField }" name="email">
             <FormItem class="grid gap-2">
               <FormLabel> Email </FormLabel>
@@ -90,7 +88,6 @@ const onSubmit = form.handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
 
           <Button type="submit" class="w-full">
             <span>Register</span>

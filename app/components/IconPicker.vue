@@ -1,6 +1,4 @@
-<script setup>
-import { Search } from "lucide-vue-next";
-
+<script setup lang="ts">
 const icons = [
   "bi:house",
   "bi:bell",
@@ -50,10 +48,47 @@ const icons = [
   "bi:clock",
   "bi:lightbulb",
   "bi:plug",
+  "bi:share",
+  "bi:chat-dots",
+  "bi:chat-heart",
+  "bi:hand-thumbs-up",
+  "bi:hand-thumbs-down",
+  "bi:hand-index-thumb",
+  "bi:phone",
+  "bi:camera-video",
+  "bi:camera-reels",
+  "bi:camera-fill",
+  "bi:plus-circle",
+  "bi:pencil-square",
+  "bi:save",
+  "bi:send",
+  "bi:star-fill",
+  "bi:facebook",
+  "bi:twitter",
+  "bi:instagram",
+  "bi:linkedin",
+  "bi:youtube",
+  "bi:tiktok",
+  "bi:whatsapp",
+  "bi:snapchat",
+  "bi:pinterest",
+  "bi:reddit",
+  "bi:telegram",
+  "bi:discord",
 ];
 
+const props = defineProps<{
+  modelValue: string;
+}>();
+
+const emit = defineEmits(["update:modelValue"]);
+
 const search = ref("");
-const selectedIcon = ref("");
+
+const selectedIcon = computed({
+  get: () => props.modelValue,
+  set: (val: string) => emit("update:modelValue", val),
+});
 
 const filteredIcons = computed(() => {
   if (!search.value) return icons;
@@ -62,7 +97,7 @@ const filteredIcons = computed(() => {
   );
 });
 
-function selectIcon(icon) {
+function selectIcon(icon: string) {
   selectedIcon.value = icon;
 }
 </script>

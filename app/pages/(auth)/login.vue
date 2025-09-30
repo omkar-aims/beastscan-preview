@@ -32,7 +32,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 <template>
   <div class="w-full min-h-dvh lg:grid lg:grid-cols-2">
     <div class="flex items-center justify-center py-12">
-      <div class="mx-auto grid max-w-[350px] gap-6">
+      <div class="mx-auto grid gap-6">
         <div class="grid gap-1 text-center">
           <AppLogo />
           <h1 class="text-3xl font-bold">Sign in to your account</h1>

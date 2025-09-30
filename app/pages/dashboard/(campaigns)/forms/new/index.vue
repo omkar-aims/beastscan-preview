@@ -1,79 +1,48 @@
 <script setup lang="ts">
-const stepIndex = ref(1);
+import { ChevronRight } from "lucide-vue-next";
 
 const steps = [
   {
     step: 1,
-    title: "Template",
-    description: "Choose a form template",
-    icon: "lucide:layers",
+    title: "Goal",
+    description: "Choose your goal",
+    icon: "lucide:target",
   },
   {
     step: 2,
-    title: "Design",
-    description: "Customize your form",
-    icon: "lucide:palette",
-    expandable: true,
+    title: "Template",
+    description: "Pick a template",
+    icon: "lucide:layers",
   },
   {
     step: 3,
-    title: "Configure",
-    description: "Configure your form",
-    icon: "lucide:edit-3",
+    title: "Quick Style",
+    description: "Apply quick styles",
+    icon: "lucide:palette",
   },
   {
     step: 4,
-    title: "Review",
-    description: "Review your form",
-    icon: "lucide:check-circle",
+    title: "Behaviour",
+    description: "Set form behaviour",
+    icon: "lucide:zap",
+  },
+  {
+    step: 5,
+    title: "Final",
+    description: "Review & finish",
+    icon: "lucide:circle-check-big",
   },
 ];
 
-const triggerValues = ref({
-  delay: "5",
-  scroll: "50",
+const stepIndex = ref(1);
+
+useRouteStepSync(stepIndex);
+
+watch(stepIndex, () => {
+  const mainContainer = document.querySelector("#main");
+  if (!mainContainer) return;
+  mainContainer.scrollTo({ top: 0, behavior: "smooth" });
 });
-
-const newForm = ref({
-  templateName: "",
-  formName: "",
-  formDescription: "",
-  theme: {},
-
-  behaviour: {
-    trigger: {
-      type: "delay",
-      value: "5",
-    },
-    frequency: "always",
-    schedule: {
-      startDate: null,
-      endDate: null,
-    },
-    visibility: {
-      mobile: true,
-      tablet: true,
-      desktop: true,
-    },
-  },
-});
-
-const popupConfig = reactive({
-  form: newForm,
-  triggers: triggerValues,
-});
-
-// Watch for trigger value change
-watch(
-  triggerValues,
-  (values) => {
-    newForm.value.behaviour.trigger.value =
-      newForm.value.behaviour.trigger.type === "delay"
-        ? values.delay
-        : values.scroll;
-  },
-  { deep: true }
-);
 </script>
 
 <template>
@@ -141,36 +110,42 @@ watch(
             </CardContent>
           </Card>
 
-          <div :class="stepIndex > 1 ? 'grid grid-cols-[1fr_25%] gap-4' : ''">
+          <div :class="stepIndex > 2 ? 'grid grid-cols-[1fr_25%] gap-4' : ''">
             <div class="flex flex-col gap-4 mt-4">
               <div v-if="stepIndex === 1">
-                <FormsWizardStepOne
-                  :handle-select="
-                    (name) => {
-                      newForm.templateName = name;
-                      nextStep();
-                    }
-                  "
-                />
+                <FormsWizardStepZero :next-step="nextStep" />
               </div>
 
-              <div v-if="stepIndex === 2" v-motion-fade>
-                <FormsWizardStepTwo />
+              <div v-if="stepIndex === 2">
+                <FormsWizardStepOne :next-step="nextStep" />
               </div>
 
               <div v-if="stepIndex === 3" v-motion-fade>
-                <FormsWizardStepThree v-model="popupConfig" />
+                <FormsWizardStepTwo>
+                  <Button @click="nextStep">
+                    <span>Next</span>
+                    <ChevronRight />
+                  </Button>
+                </FormsWizardStepTwo>
               </div>
 
               <div v-if="stepIndex === 4" v-motion-fade>
+                <FormsWizardStepThree>
+                  <Button @click="nextStep">
+                    <span>Next</span>
+                    <ChevronRight />
+                  </Button>
+                </FormsWizardStepThree>
+              </div>
+
+              <div v-if="stepIndex === 5" v-motion-fade>
                 <FormsWizardStepFour />
               </div>
             </div>
 
-            <FormsCreationPreview
-              :step-index="stepIndex"
-              :next-step="nextStep"
-            />
+            <div v-if="stepIndex > 2" class="py-4 px-2">
+              <PhonePreview src="/preview.png" alt="New form preview" />
+            </div>
           </div>
         </div>
       </Stepper>

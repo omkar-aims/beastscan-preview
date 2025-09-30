@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { AppWindow, PictureInPicture2 } from "lucide-vue-next";
 import Default from "./default.vue";
+import { PanelTop, IdCard } from "lucide-vue-next";
 
 const tabs = [
-  { label: "Pop-ups", to: "/dashboard/forms/pop-ups", icon: PictureInPicture2 },
-  { label: "Embeded", to: "/dashboard/forms/embeded", icon: AppWindow },
+  { label: "Landing Page", to: "/dashboard/pages/landing", icon: PanelTop },
+  { label: "V-Card", to: "/dashboard/pages/vcard", icon: IdCard },
 ];
 </script>
 
