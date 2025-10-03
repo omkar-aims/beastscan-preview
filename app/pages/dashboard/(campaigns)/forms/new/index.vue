@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ChevronRight } from "lucide-vue-next";
+import { useScrollToTopWizard } from "~/composables/useScrollToTopWizard";
 
 const steps = [
   {
@@ -37,12 +38,7 @@ const steps = [
 const stepIndex = ref(1);
 
 useRouteStepSync(stepIndex);
-
-watch(stepIndex, () => {
-  const mainContainer = document.querySelector("#main");
-  if (!mainContainer) return;
-  mainContainer.scrollTo({ top: 0, behavior: "smooth" });
-});
+useScrollToTopWizard(stepIndex);
 </script>
 
 <template>
@@ -110,7 +106,7 @@ watch(stepIndex, () => {
             </CardContent>
           </Card>
 
-          <div :class="stepIndex > 2 ? 'grid grid-cols-[1fr_25%] gap-4' : ''">
+          <div :class="stepIndex > 2 ? 'grid grid-cols-[1fr_25%] gap-6' : ''">
             <div class="flex flex-col gap-4 mt-4">
               <div v-if="stepIndex === 1">
                 <FormsWizardStepZero :next-step="nextStep" />

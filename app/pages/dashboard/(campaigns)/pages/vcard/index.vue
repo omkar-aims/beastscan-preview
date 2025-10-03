@@ -15,7 +15,7 @@ const emptyResource = {
 
   link: {
     label: "Create New vCard",
-    url: "/dashboard/vcards/new",
+    url: "/dashboard/pages/vcard/new",
   },
 
   items: [

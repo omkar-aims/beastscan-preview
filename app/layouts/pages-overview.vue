@@ -13,12 +13,7 @@ const tabs = [
     <PageWithTabs :tabs="tabs">
       <template #title="{ activeTab }"> {{ activeTab?.label }} </template>
       <template #action="{ activeTab }">
-        <NuxtLink
-          :href="`${activeTab?.to.replace(
-            activeTab.label.toLowerCase(),
-            'new'
-          )}`"
-        >
+        <NuxtLink :href="`${activeTab?.to}/new`">
           <Button>Create New</Button>
         </NuxtLink>
       </template>

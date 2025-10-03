@@ -63,7 +63,7 @@ function selectFont(font) {
 <template>
   <Popover v-slot="{ close }">
     <PopoverTrigger as-child>
-      <Button variant="outline" class="flex items-center gap-2 w-xs">
+      <Button variant="outline" class="flex items-center gap-2 w-full">
         <span v-if="selectedFont" class="truncate max-w-[120px]">
           {{ selectedFont }}
         </span>
