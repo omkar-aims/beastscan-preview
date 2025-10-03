@@ -32,29 +32,33 @@ const onSubmit = handleSubmit((value) => {
 </script>
 
 <template>
-  <div v-motion-slide-bottom class="grid md:grid-cols-[1fr_30%] gap-8">
-    <div class="space-y-4">
-      <AppHeading :level="3">
-        🎉 Congratulations! Your campaign is ready
-      </AppHeading>
+  <div v-motion-fade class="grid md:grid-cols-[1fr_30%] gap-6 items-start">
+    <Card>
+      <CardContent>
+        <div class="space-y-4">
+          <AppHeading :level="3">
+            🎉 Congratulations! Your campaign is ready
+          </AppHeading>
 
-      <form class="space-y-4" @submit.prevent="onSubmit">
-        <FormField v-slot="{ componentField }" name="campaignName">
-          <FormItem class="grid gap-2">
-            <FormLabel>Enter a name for your campaign</FormLabel>
-            <FormControl>
-              <Input
-                v-bind="componentField"
-                placeholder="My Awesome Campaign"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
+          <form class="space-y-4" @submit.prevent="onSubmit">
+            <FormField v-slot="{ componentField }" name="campaignName">
+              <FormItem class="grid gap-2">
+                <FormLabel>Enter a name for your campaign</FormLabel>
+                <FormControl>
+                  <Input
+                    v-bind="componentField"
+                    placeholder="My Awesome Campaign"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
 
-        <StatefulButton :status="status"> Finish </StatefulButton>
-      </form>
-    </div>
+            <StatefulButton :status="status"> Finish </StatefulButton>
+          </form>
+        </div>
+      </CardContent>
+    </Card>
 
     <AppRow>
       <Card class="self-baseline w-full gap-2">

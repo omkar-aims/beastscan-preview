@@ -4,6 +4,10 @@ import type { ColumnDef } from "@tanstack/vue-table";
 import DataTableDropDown from "~/components/DataTableDropDown.vue";
 import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 
+definePageMeta({
+  layout: "qr-codes-overview",
+});
+
 const contacts: Contact[] = [
   {
     name: "Alice Johnson",
