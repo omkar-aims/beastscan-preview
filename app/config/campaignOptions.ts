@@ -212,74 +212,13 @@ export const campaignOptions: CampaignOption[] = [
     icon: "lucide:id-card",
     mode: "dynamic",
     formSchema: z.object({
-      profilePhoto: z
-        .string({ required_error: "Profile photo URL is required" })
-        .url("Must be a valid URL")
-        .describe("Profile Photo URL"),
-
-      name: z.object({
-        fullName: z
-          .string({ required_error: "Full name is required" })
-          .describe("Full Name"),
-
-        middleName: z.string().optional().describe("Middle Name"),
-
-        lastName: z.string().optional().describe("Last Name"),
-      }),
-
-      bio: z.string().optional().describe("Short Bio"),
-
-      job: z.object({
-        type: z.string().optional().describe("Job Type"),
-        company: z.string().optional().describe("Company"),
-      }),
-
-      phone: z.object({
-        personal: z.string().optional().describe("Personal Phone"),
-        business: z.string().optional().describe("Business Phone"),
-      }),
-
-      email: z.object({
-        personal: z
-          .string()
-          .email("Enter a valid personal email")
-          .optional()
-          .describe("Personal Email"),
-
-        business: z
-          .string()
-          .email("Enter a valid business email")
-          .optional()
-          .describe("Business Email"),
-      }),
-
-      address: z.string().optional().describe("Address"),
-
-      socialLinks: z
-        .array(
-          z.object({
-            mode: z
-              .enum([
-                "whatsapp",
-                "facebook",
-                "instagram",
-                "linkedin",
-                "twitter",
-                "tiktok",
-                "website",
-              ])
-              .describe("Social platform mode"),
-
-            url: z
-              .string()
-              .url("Enter a valid URL")
-              .describe("Social link URL"),
-          })
-        )
-        .optional()
-        .describe("Social links"),
-
-      callToAction: z.string().optional().describe("Call To Action"),
+      vcard: z
+        .enum([
+          "My Awesome Vcard 1",
+          "My Awesome Vcard 2",
+          "My Awesome Vcard 3",
+        ])
+        .describe("Select a Vcard"),
     }),
   },
   {
@@ -288,8 +227,9 @@ export const campaignOptions: CampaignOption[] = [
     icon: "lucide:text-cursor-input",
     mode: "dynamic",
     formSchema: z.object({
-      submitURL: z.string().url().describe("Submit URL"),
-      buttonLabel: z.string().describe("Button Label"),
+      form: z
+        .enum(["My Awesome form 1", "My Awesome form 2", "My Awesome form 3"])
+        .describe("Select a form"),
     }),
   },
   {

@@ -32,6 +32,10 @@ const locationData = [
   { location: "Tokyo", scans: 400 },
   { location: "Berlin", scans: 300 },
 ];
+
+definePageMeta({
+  layout: "qr-code-overview",
+});
 </script>
 
 <template>

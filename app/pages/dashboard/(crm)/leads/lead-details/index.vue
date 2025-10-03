@@ -228,7 +228,7 @@ const submissions: Submission[] = [
 
       <!-- Shared Tab Contents -->
       <TabsContent value="userInfo">
-        <div v-motion-slide-bottom>
+        <div v-motion-fade>
           <Card class="w-full mx-auto rounded-lg shadow-sm mb-2">
             <CardContent class="flex items-center justify-between px-4 py-2">
               <!-- Left Section -->
@@ -269,7 +269,7 @@ const submissions: Submission[] = [
             </CardContent>
           </Card>
         </div>
-        <div v-motion-slide-bottom>
+        <div v-motion-fade>
           <Card class="w-full shadow-sm rounded-lg">
             <CardContent>
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -314,7 +314,7 @@ const submissions: Submission[] = [
         </div></TabsContent
       >
       <TabsContent value="optIn"
-        ><div v-motion-slide-bottom>
+        ><div v-motion-fade>
           <Card class="w-full mx-auto rounded-lg shadow-sm">
             <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Left Column -->
@@ -363,7 +363,7 @@ const submissions: Submission[] = [
         </div></TabsContent
       >
       <TabsContent value="touchAttribution"
-        ><div v-motion-slide-bottom>
+        ><div v-motion-fade>
           <!-- Touch Attribution -->
           <Card class="w-full mx-auto rounded-lg shadow-sm">
             <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -421,7 +421,7 @@ const submissions: Submission[] = [
         </div></TabsContent
       >
       <TabsContent value="emailInteraction"
-        ><div v-motion-slide-bottom>
+        ><div v-motion-fade>
           <Card>
             <CardContent>
               <CardDescription>
@@ -479,7 +479,7 @@ const submissions: Submission[] = [
         </div></TabsContent
       >
       <TabsContent value="activity"
-        ><div v-motion-slide-bottom>
+        ><div v-motion-fade>
           <Card class="w-full mx-auto">
             <CardContent>
               <ul>
@@ -501,7 +501,7 @@ const submissions: Submission[] = [
         </div></TabsContent
       >
       <TabsContent value="response"
-        ><div v-motion-slide-bottom>
+        ><div v-motion-fade>
           <Card class="w-full mx-auto">
             <CardHeader>
               <CardTitle>Submitted Surveys & Quizzes</CardTitle>
@@ -558,9 +558,7 @@ const submissions: Submission[] = [
     <div class="mt-4 w-full flex flex-row justify-between">
       <div>
         <NuxtLink to="/dashboard/leads">
-          <Button
-            v-motion-slide-bottom
-            class="cursor-pointer rounded-lg px-4 py-2"
+          <Button v-motion-fade class="cursor-pointer rounded-lg px-4 py-2"
             >Back to All Leads</Button
           >
         </NuxtLink>

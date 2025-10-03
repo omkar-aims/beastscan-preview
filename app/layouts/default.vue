@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-
-const route = useRoute();
+import { Check } from "lucide-vue-next";
+const builderStore = useBuilderStore();
 </script>
 
 <template>
@@ -20,30 +19,18 @@ const route = useRoute();
           </div>
 
           <div class="flex items-center gap-3">
-            <NuxtLink
-              v-if="route.path === '/dashboard/qr-codes'"
-              to="/dashboard/qr-codes/new"
+            <Button
+              v-if="builderStore.isBuilderOpen"
+              @click="
+                () => {
+                  if (builderStore.action) builderStore.action();
+                }
+              "
             >
-              <Button>Add New</Button>
-            </NuxtLink>
-            <NuxtLink
-              v-if="route.path === '/dashboard/contacts'"
-              to="/dashboard/contacts/new"
-            >
-              <Button>Add New</Button>
-            </NuxtLink>
-            <NuxtLink
-              v-if="route.path === '/dashboard/campaigns'"
-              to="/dashboard/campaigns/new"
-            >
-              <Button>Create New</Button>
-            </NuxtLink>
-            <NuxtLink
-              v-if="route.path === '/dashboard/contacts'"
-              to="/dashboard/contacts/new"
-            >
-              <Button>Add New</Button>
-            </NuxtLink>
+              <Check />
+              <span>Done</span>
+            </Button>
+
             <AppThemeToggler />
             <UserProfileDropDown />
           </div>
@@ -53,7 +40,7 @@ const route = useRoute();
         <div
           id="main"
           :class="[
-            route.path !== '/dashboard/builder' ? 'p-4 h-screen' : '',
+            builderStore.isBuilderOpen ? 'h-screen' : 'p-4 h-screen',
             'h-min overflow-y-auto pb-[10%] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
           ]"
         >

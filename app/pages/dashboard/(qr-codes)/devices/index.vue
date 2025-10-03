@@ -6,6 +6,10 @@ import Badge from "~/components/ui/badge/Badge.vue";
 import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 import DataTableDropDown from "~/components/DataTableDropDown.vue";
 
+definePageMeta({
+  layout: "qr-codes-overview",
+});
+
 const devices: Device[] = [
   {
     name: "Keyhanger 001",
