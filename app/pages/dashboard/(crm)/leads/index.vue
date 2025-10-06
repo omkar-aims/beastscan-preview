@@ -225,9 +225,9 @@ function clearFilters() {
   <div>
     <!-- Header -->
     <div
-      class="flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 "
     >
-      <div class="flex w-full justify-end items-center">
+      <div class="flex w-full justify-end items-center mb-2">
         <!-- ✅ Sheet Trigger -->
         <Sheet>
           <SheetTrigger as-child>

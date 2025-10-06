@@ -113,7 +113,6 @@ const sortedSegments = computed(() => {
     <div
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-6"
     >
-      <h1 class="text-2xl font-semibold">Segments</h1>
       <div class="flex gap-2 w-full md:w-auto">
         <!-- Search -->
         <Input

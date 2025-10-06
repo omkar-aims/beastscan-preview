@@ -9,7 +9,12 @@ definePageMeta({
   layout: "lead",
 });
 
-type Stat = { label: string; value: number | string };
+interface Stat {
+  label: string;
+  value: string | number;
+  trend?: string;
+  trendDirection?: "up" | "down";
+}
 type DeviceRow = {
   device: "Mobile" | "Desktop" | "Tablet";
   leads: number;
@@ -24,11 +29,15 @@ type RecentLead = {
   timestamp: string;
 };
 
-
 const topStats: Stat[] = [
-  { label: "Total Views", value: 123 },
-  { label: "Total Leads", value: 356 },
-  { label: "Conversion Rate", value: "28.9%" },
+  { label: "Total Views", value: 123, trend: "12%", trendDirection: "up" },
+  { label: "Total Leads", value: 356, trend: "5%", trendDirection: "up" },
+  {
+    label: "Conversion Rate",
+    value: "28.9%",
+    trend: "2%",
+    trendDirection: "down",
+  },
   { label: "Last Lead", value: "2 hours ago" },
 ];
 
@@ -103,26 +112,16 @@ const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
     </div>
 
     <!-- Top Stats -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6"
-    >
-      <Card
-        v-for="s in topStats"
-        :key="s.label"
-        class="rounded-xl"
-      >
-        <CardHeader class="pb-2">
-          <CardDescription class="text-base">
-            {{ s.label }}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="text-3xl font-semibold tracking-tight">
-            {{ s.value }}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <KpiCard
+      v-for="stat in topStats"
+      :key="stat.label"
+      :label="stat.label"
+      :value="stat.value"
+      :trend="stat.trend"
+      :trend-direction="stat.trendDirection"
+    />
+  </div>
 
     <!-- Middle: Devices + Referrers -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
@@ -155,9 +154,7 @@ const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
                     {{ row.device }}
                   </TableCell>
                   <TableCell>{{ row.leads }}</TableCell>
-                  <TableCell class="text-right">
-                    {{ row.percent }}%
-                  </TableCell>
+                  <TableCell class="text-right"> {{ row.percent }}% </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell class="font-semibold">Total</TableCell>
@@ -213,7 +210,11 @@ const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
             <TabsTrigger value="utmContent">UTM Content</TabsTrigger>
           </TabsList>
           <TabsContent value="topCampaigns">
-            <BarChart :data="utmCampaigns" index="name" :categories="['leads']" />
+            <BarChart
+              :data="utmCampaigns"
+              index="name"
+              :categories="['leads']"
+            />
           </TabsContent>
           <TabsContent value="topSources">
             <BarChart :data="utmSources" index="name" :categories="['leads']" />
@@ -266,6 +267,3 @@ const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
     </Card>
   </div>
 </template>
-
-
-

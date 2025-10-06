@@ -1,52 +1,51 @@
 <script setup lang="ts">
-import DefaultLayout from "./default.vue";
-import TabsWithAction from "~/components/TabsWithAction.vue";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
+import { Trash, UserSquare2,UsersRound, Component , ChartNoAxesCombined} from "lucide-vue-next";
+import Default from "./default.vue";
 
 const tabs = [
-  { name: "All Leads", path: "/dashboard/leads" },
-  { name: "Segment", path: "/dashboard/leads/segment" },
-  { name: "Group", path: "/dashboard/leads/group" },
-  { name: "Stats", path: "/dashboard/leads/stats" },
-  { name: "Cleanup Inactives", path: "/dashboard/leads/clean-up" },
+  { label: "All Leads", to: "/dashboard/leads", icon: UserSquare2 },
+  { label: "Segment", to: "/dashboard/leads/segment", icon: Component },
+  { label: "Group", to: "/dashboard/leads/group", icon: UsersRound },
+  { label: "Stats", to: "/dashboard/leads/stats", icon: ChartNoAxesCombined },
+  { label: "Cleanup Inactives", to: "/dashboard/leads/clean-up", icon: Trash },
 ];
-
-const dynamicButton = computed(() => {
-  switch (route.path) {
-    case "/dashboard/leads":
-      return {
-        visible: true,
-        text: "Add Leads",
-        to: "/dashboard/leads/import",
-      };
-    case "/dashboard/leads/segment":
-      return {
-        visible: true,
-        text: "Create New Segment",
-        to: "/dashboard/leads/segment/new-segment",
-      };
-    case "/dashboard/leads/group":
-      return {
-        visible: true,
-        text: "Create New Group",
-        to: "/dashboard/leads/group/new-group",
-      };
-    default:
-      return { visible: false, text: "", to: "/" };
-  }
-});
 </script>
 
 <template>
-  <DefaultLayout>
-    <TabsWithAction
-      title="All Leads"
-      :tabs="tabs"
-      :dynamic-button="dynamicButton"
-    >
+  <Default>
+    <PageWithTabs :tabs="tabs">
+      <template #title="{ activeTab }">
+        {{ activeTab?.label }}
+      </template>
+
+      <!-- Dynamic Action Buttons -->
+      <template #action="{ activeTab }">
+        <div v-if="activeTab?.to === '/dashboard/leads'">
+          <NuxtLink to="/dashboard/leads/import">
+            <Button>
+              <Plus />
+              <span>Add Leads</span>
+            </Button>
+          </NuxtLink>
+        </div>
+
+        <div v-else-if="activeTab?.to === '/dashboard/leads/segment'">
+          <NuxtLink to="/dashboard/leads/segment/new-segment">
+            <Button>
+              <Plus />
+              <span>Create New Segment</span>
+            </Button>
+          </NuxtLink>
+        </div>
+
+        <div v-else-if="activeTab?.to === '/dashboard/leads/group'">
+          <GroupDialog />
+        </div>
+
+        <!-- No buttons for Stats or Cleanup Inactives -->
+      </template>
+
       <slot />
-    </TabsWithAction>
-  </DefaultLayout>
+    </PageWithTabs>
+  </Default>
 </template>

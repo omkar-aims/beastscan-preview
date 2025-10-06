@@ -1,147 +1,44 @@
 <script setup lang="ts">
-const layout = ref<"grid" | "list">("list");
+import CardContent from "~/components/ui/card/CardContent.vue";
 
-const mailerData = [
-  {
-    id: 1,
-    heading: "Newsletter Campaigns",
-    description: "Create, manage, and analyze your email campaigns with ease.",
-    total_count: 5,
-    button: [
-      { label: "View All Campaigns", link: "/dashboard/mailer/all-campaigns" },
-      { label: "Create New Campaign", link: "/dashboard/mailer/new-campaign" },
-    ],
-  },
-  {
-    id: 2,
-    heading: "Automations",
-    description:
-      "Set up automated email sequences to nurture your leads and customers.",
-    total_count: 3,
-    button: [
-      { label: "Create New Automation", link: "/" },
-      { label: "View All Automations", link: "/dashboard/mailer/automation" },
-    ],
-  },
-];
+useHead({
+  title: "Mailer",
+});
 
-const mailerAnalytics = [
-  {
-    id: 1,
-    heading: "Mailer Analytics",
-    description:
-      "Track open rates, click-through rates, and overall performance of your email campaigns.",
-    total_count: 1200,
-    button: ["View Detailed Analytics", "Export Data"],
-  },
+const data = [
+  { campaignName: "Campaign A", sent: 240, opened: 45, clicked: 12 },
+  { campaignName: "Campaign B", sent: 300, opened: 50, clicked: 15 },
+  { campaignName: "Campaign C", sent: 200, opened: 40, clicked: 10 },
+  { campaignName: "Campaign D", sent: 350, opened: 65, clicked: 22 },
+  { campaignName: "Campaign E", sent: 420, opened: 55, clicked: 18 },
+  { campaignName: "Campaign F", sent: 280, opened: 48, clicked: 14 },
+  { campaignName: "Campaign G", sent: 500, opened: 70, clicked: 30 },
+  { campaignName: "Campaign H", sent: 150, opened: 35, clicked: 19 },
+  { campaignName: "Campaign I", sent: 600, opened: 62, clicked: 25 },
+  { campaignName: "Campaign J", sent: 330, opened: 58, clicked: 20 },
+  { campaignName: "Campaign K", sent: 210, opened: 42, clicked: 11 },
 ];
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
+  <div>
     <div>
-      <h1 class="text-3xl font-semibold text-primary">All About Mailer</h1>
-      <p>
-        Handle All Your Newsletter Campaign, Automations and Mailer Analytics
-        Here
-      </p>
+      <p class="text-3xl text-primary">Mail Information</p>
     </div>
     <div>
-      <Tabs v-model="layout" class="self-end sm:self-auto left-0">
-        <TabsList class="bg-primary/20">
-          <TabsTrigger value="grid">
-            <Icon name="lucide:layout-grid" />
-          </TabsTrigger>
-          <TabsTrigger value="list">
-            <Icon name="lucide:layout-list" />
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </div>
-    <div>
-      <Card>
-        <CardContent v-for="data in mailerData" :key="data.id">
-          <Card
-            class="hover:bg-primary/5 transition-shadow duration-300 p-4 rounded-lg"
-          >
-            <div class="grid md:grid-cols-2 gap-4">
-              <CardHeader>
-                <CardTitle
-                  class="text-lg font-semibold text-primary flex items-center gap-2"
-                >
-                  {{ data.heading }}
-                </CardTitle>
-                <CardDescription class="text-sm">
-                  {{ data.description }}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                <div class="flex flex-col gap-4">
-                  <Card>
-                    <CardDescription>
-                      <span class="font-medium">Total:</span>
-                      <p class="text-3xl">
-                        <AnimatedCounter :value="data.total_count" />
-                      </p>
-                    </CardDescription>
-                  </Card>
-
-                  <div class="flex gap-4">
-                    <NuxtLink
-                      v-for="btn in data.button"
-                      :key="btn.label"
-                      :to="btn.link"
-                    >
-                      <Button variant="outline">
-                        {{ btn.label }}
-                      </Button>
-                    </NuxtLink>
-                  </div>
-                </div>
-              </CardContent>
-            </div>
-          </Card>
-        </CardContent>
-      </Card>
-    </div>
-    <div>
-      <Card>
-        <CardContent v-for="analytics in mailerAnalytics" :key="analytics.id">
-          <card
-            class="hover:bg-primary/5 transition-shadow duration-300 grid md:grid-cols-2 gap-4 p-4 rounded-lg"
-          >
-            <CardHeader>
-              <CardTitle
-                class="text-lg font-semibold text-primary flex items-center gap-2"
-              >
-                {{ analytics.heading }}
-              </CardTitle>
-              <CardDescription class="text-sm">
-                {{ analytics.description }}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div class="flex flex-col gap-4">
-                <Card>
-                  <card-description>
-                    <span class="font-medium">Total Emails Sent:</span>
-                    <p class="text-3xl">
-                      <AnimatedCounter :value="analytics.total_count" />
-                    </p>
-                  </card-description>
-                </Card>
-                <div class="flex gap-4">
-                  <Button
-                    v-for="btn in analytics.button"
-                    :key="btn"
-                    variant="outline"
-                    >{{ btn }}</Button
-                  >
-                </div>
-              </div>
-            </CardContent>
-          </card>
+      <Card class="mt-4 p-4 w-full">
+        <CardHeader class="mt-2">
+          <CardTitle class="text-xl">Campaign Performance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="w-full">
+            <BarChart
+              index="campaignName"
+              :data="data"
+              :categories="['clicked', 'opened', 'sent']"
+              :type="'stacked'"
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -3,44 +3,25 @@ import { ref, computed } from "vue";
 import { leadData } from "~~/server/data/leaddata"; // <-- your leads file
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import type { Condition } from "@/types/segment";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 
 useHead({
   title: "New-Segment",
 });
 
+const showLeads = ref(false)
 const segmentName = ref("");
 const senderName = ref("");
 const senderEmail = ref("");
 const requireDoubleOptIn = ref(false);
 
 const conditions = ref<Condition[]>([]);
-const matchType = ref<"ALL" | "ANY">("ALL"); // ALL => every condition must be true
+const matchType = ref<"ALL" | "ANY">("ALL"); 
 
-/* ---------------------------
-   Helper: fields available for filtering (exclude `id`)
-   --------------------------- */
 const fields = computed(() => {
   if (!leadData || leadData.length === 0) {
-    // fallback if no data
     return [
       "name",
       "email",
@@ -55,10 +36,6 @@ const fields = computed(() => {
   return Object.keys(leadData[0] ?? {}).filter(f => f !== "id");
 });
 
-/* ---------------------------
-   Field-type detection (explicit mapping for known fields)
-   types: "string" | "number" | "array" | "date" | "percentage"
-   --------------------------- */
 function getFieldType(field: string) {
   if (!field) return "string";
   // explicit known fields
@@ -67,7 +44,6 @@ function getFieldType(field: string) {
   if (field === "tags") return "array";
   if (field === "lastActivity") return "date";
 
-  // fallback to probing sample value
   const sample = (leadData[0] as any)?.[field];
   if (Array.isArray(sample)) return "array";
   if (typeof sample === "number") return "number";
@@ -75,9 +51,6 @@ function getFieldType(field: string) {
   return "string";
 }
 
-/* ---------------------------
-   Operator lists (value + label)
-   --------------------------- */
 function getOperators(field: string) {
   const t = getFieldType(field);
   switch (t) {
@@ -100,7 +73,6 @@ function getOperators(field: string) {
         { value: "on", label: "On" },
       ];
     default:
-      // string
       return [
         { value: "eq", label: "Equals" },
         { value: "neq", label: "Not equal" },
@@ -109,9 +81,6 @@ function getOperators(field: string) {
   }
 }
 
-/* ---------------------------
-   Helpers to parse numeric/percentage/date values
-   --------------------------- */
 function toNumberLoose(v: any): number | null {
   if (v === null || v === undefined || v === "") return null;
   const s = String(v).replace(/[^0-9.-]+/g, "");
@@ -125,14 +94,8 @@ function parseDate(v: any): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 
-/* ---------------------------
-   Evaluate a single condition against one lead
-   - incomplete conditions (missing field/operator/value) are ignored
-     (treated as "no-op" so they don't incorrectly filter leads)
-   --------------------------- */
 function applyCondition(lead: any, cond: Condition): boolean {
   if (!cond || !cond.field || !cond.condition || cond.value === "") {
-    // ignore incomplete condition
     return true;
   }
 
@@ -142,10 +105,8 @@ function applyCondition(lead: any, cond: Condition): boolean {
   const fieldType = getFieldType(field);
   const leadVal = lead[field];
 
-  // Safety: if lead doesn't have the field, treat as non-matching
   if (leadVal === undefined) return false;
 
-  // Percentage/number handling
   if (fieldType === "number" || fieldType === "percentage") {
     const leadNum = toNumberLoose(leadVal);
     const inputNum = toNumberLoose(rawValue);
@@ -156,7 +117,6 @@ function applyCondition(lead: any, cond: Condition): boolean {
     return false;
   }
 
-  // Array handling (tags)
   if (fieldType === "array") {
     if (!Array.isArray(leadVal)) return false;
     const valueLower = String(rawValue).toLowerCase();
@@ -168,13 +128,11 @@ function applyCondition(lead: any, cond: Condition): boolean {
     return false;
   }
 
-  // Date handling
   if (fieldType === "date") {
     const leadDate = parseDate(leadVal);
     const inputDate = parseDate(rawValue);
     if (!leadDate || !inputDate) return false;
 
-    // compare dates by day for "on"
     if (op === "on") {
       const a = leadDate.toISOString().split("T")[0];
       const b = inputDate.toISOString().split("T")[0];
@@ -185,7 +143,6 @@ function applyCondition(lead: any, cond: Condition): boolean {
     return false;
   }
 
-  // Default: string handling
   const leadStr = String(leadVal ?? "").toLowerCase();
   const inputStr = String(rawValue ?? "").toLowerCase();
   if (op === "eq") return leadStr === inputStr;
@@ -195,12 +152,6 @@ function applyCondition(lead: any, cond: Condition): boolean {
   return false;
 }
 
-/* ---------------------------
-   Filtered leads using only valid conditions
-   - valid condition = has field, operator, and a value (non-empty)
-   - when matchType = ALL => every valid condition must be true (AND)
-   - when matchType = ANY => any valid condition true (OR)
-   --------------------------- */
 const filteredLeads = computed(() => {
   const valid = conditions.value.filter(
     (c) => c.field && c.condition && c.value !== ""
@@ -212,9 +163,6 @@ const filteredLeads = computed(() => {
   });
 });
 
-/* ---------------------------
-   Preview text
-   --------------------------- */
 const previewMessage = computed(() => {
   const validCount = conditions.value.filter(
     (c) => c.field && c.condition && c.value !== ""
@@ -225,9 +173,6 @@ const previewMessage = computed(() => {
     : `Any one condition must be true (${filteredLeads.value.length} leads match).`;
 });
 
-/* ---------------------------
-   UI helpers / actions
-   --------------------------- */
 function addConditionGroup() {
   conditions.value.push({ field: "", condition: "", value: "" });
 }
@@ -244,7 +189,6 @@ function clearCondition(index: number) {
 function setField(index: number, field: string) {
   if (conditions.value[index]) {
     conditions.value[index].field = field;
-    // reset operator & value when field changes
     conditions.value[index].condition = "";
     conditions.value[index].value = "";
   }
@@ -256,9 +200,6 @@ function getInputTypeForField(field: string) {
   return "text";
 }
 
-/* ---------------------------
-   Final create: console.log full segment and matched leads
-   --------------------------- */
 function createSegment() {
   const valid = conditions.value.filter(
     (c) => c.field && c.condition && c.value !== ""
@@ -278,11 +219,12 @@ function createSegment() {
 
 <template>
   <div class="space-y-8 px-4">
-    <div class="w-full max-w-3xl mx-auto text-center">
-      <p class="text-primary font-semibold text-2xl">Create New Lead Segment</p>
+    <!-- Title -->
+    <div class="w-full mx-auto">
+      <p class="text-primary font-semibold text-3xl">Create New Lead Segment</p>
     </div>
 
-    <Card class="w-full max-w-3xl mx-auto shadow-md">
+    <Card class="w-full mx-auto shadow-md">
       <CardContent class="space-y-6">
         <Form class="space-y-6">
           <!-- Segment Name -->
@@ -338,9 +280,9 @@ function createSegment() {
             <!-- Global Match Selector -->
             <div class="flex flex-wrap items-center gap-2">
               <span>Match</span>
-              <Select v-model="matchType">
-                <SelectTrigger class="w-[140px]">
-                  <SelectValue placeholder="Match" />
+              <Select v-model="matchType" >
+                <SelectTrigger class="w-[140px] bg-primary/30">
+                  <SelectValue placeholder="Match"/>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ALL">ALL (AND)</SelectItem>
@@ -388,7 +330,7 @@ function createSegment() {
                     </FormItem>
                   </FormField>
 
-                  <!-- Condition (operators change by field type) -->
+                  <!-- Condition -->
                   <FormField :name="`condition-${index}`">
                     <FormItem class="flex-1 min-w-[180px]">
                       <FormControl>
@@ -425,21 +367,26 @@ function createSegment() {
                   </FormField>
                 </div>
 
-                <!-- Buttons Below Inputs -->
-                <div class="flex gap-4 mt-4">
-                  <Button type="button" size="sm" class="flex-1" @click="clearCondition(index)">
-                    Clear
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    class="flex-1"
-                    @click="removeConditionGroup(index)"
-                  >
-                    Remove
-                  </Button>
-                </div>
+                <!-- Buttons -->
+                <div class="flex justify-end gap-2 mt-4">
+  <Button
+    type="button"
+    size="sm"
+    variant="outline"
+    @click="clearCondition(index)"
+  >
+    Clear
+  </Button>
+  <Button
+    type="button"
+    variant="destructive"
+    size="sm"
+    @click="removeConditionGroup(index)"
+  >
+    Remove
+  </Button>
+</div>
+
               </div>
             </TransitionGroup>
 
@@ -455,25 +402,38 @@ function createSegment() {
               {{ previewMessage }}
             </p>
 
-            <!-- Small live preview list (names + email) -->
-            <div class="mt-2">
-              <div v-if="filteredLeads.length === 0" class="text-sm text-center text-muted-foreground">
-                No leads match.
-              </div>
-              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-                <li
-                  v-for="lead in filteredLeads"
-                  :key="lead.email"
-                  class="border rounded p-2 text-sm flex justify-between items-center"
-                >
-                  <div>
-                    <div class="font-medium">{{ lead.name }}</div>
-                    <div class="text-xs text-muted-foreground">{{ lead.email }}</div>
-                  </div>
-                  <div class="text-xs">{{ lead.source }}</div>
-                </li>
-              </ul>
+            <!-- Toggleable Previous Leads -->
+            <div class="mt-4 text-center">
+              <Button
+                type="button"
+                variant="ghost"
+                class="text-primary underline"
+                @click="showLeads = !showLeads"
+              >
+                {{ showLeads ? "Hide Lead Preview" : "Show Lead Preview" }}
+              </Button>
             </div>
+
+            <Transition name="fade">
+              <div v-if="showLeads" class="mt-4 border rounded-lg p-4 bg-muted/30">
+                <div v-if="filteredLeads.length === 0" class="text-sm text-center text-muted-foreground">
+                  No leads match.
+                </div>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                  <li
+                    v-for="lead in filteredLeads"
+                    :key="lead.email"
+                    class="border rounded p-3 text-sm flex justify-between items-center hover:bg-accent transition"
+                  >
+                    <div>
+                      <div class="font-medium">{{ lead.name }}</div>
+                      <div class="text-xs text-muted-foreground">{{ lead.email }}</div>
+                    </div>
+                    <Badge variant="outline">{{ lead.source }}</Badge>
+                  </li>
+                </ul>
+              </div>
+            </Transition>
           </div>
         </Form>
       </CardContent>

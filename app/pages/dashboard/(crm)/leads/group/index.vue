@@ -1,12 +1,13 @@
 <script setup lang="ts">
-
 import { NuxtLink } from "#components";
 import {
   ChevronDown,
   ArrowUpNarrowWide,
   ArrowDownWideNarrow,
-  MoreHorizontal,
 } from "lucide-vue-next";
+
+// ✅ import your reusable dropdown
+import GroupTableDropDown from "@/components/leadTool/GroupTableDropDown.vue";
 
 useHead({
   title: "Groups",
@@ -56,7 +57,7 @@ const groups = ref<Group[]>([
 // search & sort state
 const searchQuery = ref("");
 const sortBy = ref("Group name");
-const sortOrder = ref<"asc" | "desc">("desc"); // default: newest first
+const sortOrder = ref<"asc" | "desc">("desc");
 
 // Sorting logic
 const sortedGruops = computed(() => {
@@ -102,10 +103,7 @@ const sortedGruops = computed(() => {
 <template>
   <div>
     <!-- Header -->
-    <div
-      class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6"
-    >
-      <h1 class="text-xl font-semibold">Groups</h1>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
 
       <div class="flex gap-2 w-full md:w-auto">
         <!-- Search -->
@@ -114,7 +112,7 @@ const sortedGruops = computed(() => {
           placeholder="Search groups..."
           class="w-full md:w-64"
         />
-        
+
         <!-- Sort dropdown -->
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
@@ -124,21 +122,11 @@ const sortedGruops = computed(() => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-40">
-            <DropdownMenuItem @click="sortBy = 'Group name'">
-              Group name
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="sortBy = 'Date created'">
-              Date created
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="sortBy = 'Subscribers'">
-              Subscribers
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="sortBy = 'Open rate'">
-              Open rate
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="sortBy = 'Click rate'">
-              Click rate
-            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Group name'">Group name</DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Date created'">Date created</DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Subscribers'">Subscribers</DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Open rate'">Open rate</DropdownMenuItem>
+            <DropdownMenuItem @click="sortBy = 'Click rate'">Click rate</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -191,29 +179,15 @@ const sortedGruops = computed(() => {
               <p class="text-muted-foreground">Click rate</p>
             </div>
 
-            <!-- Menu -->
-            <DropdownMenu>
-              <DropdownMenuTrigger as-child>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal class="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>View</DropdownMenuItem>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <!-- ✅ Use reusable dropdown component -->
+            <GroupTableDropDown :leadDeatils="group" @deleted="groups = groups.filter(g => g.id !== group.id)" />
           </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-else
-      class="flex flex-col items-center justify-center py-16 text-center"
-    >
+    <div v-else class="flex flex-col items-center justify-center py-16 text-center">
       <p class="text-muted-foreground mb-4">No groups found</p>
       <NuxtLink to="/dashboard/leads/group/new-group" class="text-primary">
         Add Group
@@ -221,4 +195,3 @@ const sortedGruops = computed(() => {
     </div>
   </div>
 </template>
-
