@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useHead } from "#imports"
+import type { DateValue } from "@internationalized/date"
+import { parseDate } from "@internationalized/date"
 
 // shadcn components
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
@@ -22,9 +24,11 @@ const allLeads = [
   { id: 2, name: "John Miller", email: "john@example.com", lastActivity: "2023-11-12", emailOpens: 1, tags: ["Campaign A", "VIP"] },
 ]
 
+// date picker state
+const lastActivity = ref<DateValue | undefined>(undefined)
+
 // filters state
-const filters = ref({
-  lastActivity: null as Date | null,
+const filters = ref<{ emailOpens: string; tags: string }>({
   emailOpens: "",
   tags: "",
 })
@@ -37,8 +41,10 @@ function applyFilters() {
     let match = true
 
     // last activity filter
-    if (filters.value.lastActivity) {
-      match = match && new Date(lead.lastActivity) <= filters.value.lastActivity
+    if (lastActivity.value) {
+      const cutoff = lastActivity.value
+      const leadDate = parseDate(lead.lastActivity)
+      match = match && leadDate.compare(cutoff) <= 0
     }
 
     // email opens filter
@@ -63,7 +69,6 @@ function applyFilters() {
 
 <template>
   <div class="space-y-6">
-    <h1 class="text-2xl font-bold">Cleanup Inactive Leads</h1>
 
     <!-- Filters -->
     <Card>
@@ -74,11 +79,11 @@ function applyFilters() {
           <Popover>
             <PopoverTrigger as-child>
               <Button variant="outline" class="w-full justify-start text-left font-normal">
-                {{ filters.lastActivity ? filters.lastActivity.toLocaleDateString() : "Pick a date" }}
+                {{ lastActivity ? lastActivity.toString() : "Pick a date" }}
               </Button>
             </PopoverTrigger>
             <PopoverContent class="p-0">
-              <Calendar v-model="filters.lastActivity" />
+              <Calendar v-model="lastActivity" />
             </PopoverContent>
           </Popover>
         </div>
@@ -102,7 +107,7 @@ function applyFilters() {
         <!-- Tags Input -->
         <div class="space-y-2">
           <label class="text-sm font-medium">Tags (optional)</label>
-          <Input v-model="filters.tags" type="text" placeholder="e.g. Summer, VIP" />
+          <Input v-model="filters.tags" type="text" placeholder="e.g. Summer" />
         </div>
       </CardContent>
 
@@ -120,6 +125,7 @@ function applyFilters() {
       </CardHeader>
       <CardContent>
         <div v-if="leads.length > 0">
+          
           <Table>
             <TableHeader>
               <TableRow>

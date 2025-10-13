@@ -49,4 +49,6 @@ export interface Campaign {
   url?: string;
   mode?: "dynamic" | "static";
   createdAt?: Date;
+  scan?:number;
+  link?:string;
 }

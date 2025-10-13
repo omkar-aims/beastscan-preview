@@ -45,9 +45,9 @@ const onSubmit = form.handleSubmit(async (values) => {
         <Alert v-if="error" class="flex items-start gap-3">
           <Icon
             name="lucide:circle-alert"
-            class="text-lg text-destructive-foreground"
+            class="text-lg text-destructive"
           />
-          <AlertDescription class="text-destructive-foreground">
+          <AlertDescription class="text-destructive">
             {{ error }}
           </AlertDescription>
         </Alert>
