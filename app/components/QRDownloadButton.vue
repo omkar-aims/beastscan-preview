@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import QRCodeStyling from "qr-code-styling";
 import { toast } from "vue-sonner";
-import type { QROption } from "~/types/campaign";
 
 const props = defineProps<{
   title: string;
-  qrOptions: QROption;
+  qrOptions: object;
 }>();
 
 const qrCode = ref<QRCodeStyling | null>(null);

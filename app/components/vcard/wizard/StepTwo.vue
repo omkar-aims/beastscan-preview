@@ -15,5 +15,7 @@ const vCardStore = useNewVCardStore();
 </script>
 
 <template>
-  <TheBuilder :template="vCardStore.vcard.templateName" />
+  <TheBuilder
+    :source="`https://bw.aimsinfosoft.com/beast-builder/?template=${vCardStore.vcard.templateName}`"
+  />
 </template>
