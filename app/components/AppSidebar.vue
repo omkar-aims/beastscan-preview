@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   QrCode,
   ChevronRight,
+  PartyPopper,
 } from "lucide-vue-next";
 
 const menu = [
@@ -150,6 +151,22 @@ function isActive(path: string) {
               </SidebarMenuItem>
             </Collapsible>
           </SidebarMenu>
+          <SideberMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                as-child
+                :is-active="isActive('/dashboard/qr-codes')"
+              >
+                <NuxtLink
+                  to="/dashboard/offers"
+                  class="w-full flex items-center gap-2 transition-colors duration-200"
+                >
+                  <PartyPopper  class="w-4 h-4" />
+                  Offers
+                </NuxtLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SideberMenu>
         </SidebarGroupContent>
       </SidebarGroup>
     </SidebarContent>

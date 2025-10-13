@@ -61,6 +61,8 @@ const segments = ref<Segment[]>([
   },
 ]);
 
+const layout = ref<"grid" | "list">("grid");
+
 // search & sort state
 const searchQuery = ref("");
 const sortBy = ref("Segment name");
@@ -157,43 +159,43 @@ const sortedSegments = computed(() => {
           <ArrowDownWideNarrow v-else class="h-4 w-4" />
         </Button>
       </div>
+      <div>
+        <Tabs v-model="layout" class="self-end sm:self-auto">
+          <TabsList>
+            <TabsTrigger value="grid">
+              <Icon name="lucide:layout-grid" />
+            </TabsTrigger>
+            <TabsTrigger value="list">
+              <Icon name="lucide:layout-list" />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
     </div>
 
     <!-- Segment List -->
     <div v-if="sortedSegments.length > 0" class="space-y-4">
       <div
-        v-for="segment in sortedSegments"
-        :key="segment.id"
-        class="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-md hover:bg-muted/50"
+        v-if="layout === 'grid'"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4"
       >
-        <!-- Left info -->
-        <div class="flex flex-col gap-1">
-          <span class="font-medium">{{ segment.name }}</span>
-          <span class="text-xs text-muted-foreground">
-            Created {{ new Date(segment.createdAt).toLocaleString() }}
-          </span>
-          <!-- <Button size="sm" variant="secondary" class="mt-2 w-fit">View segment</Button> -->
-          <NuxtLink class="primary cursor-pointer mt-4" to="dashboard/leads/lead-details">
-            View Segment</NuxtLink
-          >
-        </div>
-
-        <!-- Right stats -->
-        <div class="flex gap-8 mt-4 md:mt-0 text-center">
-          <div class="pl-6 border-l">
-            <p class="font-medium">{{ segment.subscribers }}</p>
-            <p class="text-xs text-muted-foreground">Subscribers</p>
-          </div>
-          <div class="pl-6 border-l">
-            <p class="font-medium">{{ segment.openRate }}%</p>
-            <p class="text-xs text-muted-foreground">Open rate</p>
-          </div>
-          <div class="pl-6 border-l flex items-center gap-2">
-            <div>
-              <p class="font-medium">{{ segment.clickRate }}%</p>
-              <p class="text-xs text-muted-foreground">Click rate</p>
+        <div
+          v-for="segment in sortedSegments"
+          :key="segment.id"
+          class="border rounded-xl p-5 flex flex-col justify-between hover:shadow-sm transition-shadow"
+        >
+          <!-- Header -->
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex flex-col gap-1">
+              <h3 class="font-medium text-base">
+                {{ segment.name }}
+              </h3>
+              <p class="text-xs text-muted-foreground">
+                Created {{ new Date(segment.createdAt).toLocaleDateString() }}
+              </p>
             </div>
-            <!-- Three dots menu -->
+
+            <!-- Dropdown -->
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <Button variant="ghost" size="icon">
@@ -207,15 +209,99 @@ const sortedSegments = computed(() => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
+          <!-- Subscribers -->
+          <div class="mt-2">
+            <p class="text-xs text-muted-foreground">Subscribers</p>
+            <p class="text-2xl font-semibold leading-tight">
+              {{ segment.subscribers }}
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <hr class="my-4 border-gray-200" />
+
+          <!-- Footer stats -->
+          <div class="flex items-center justify-between">
+            <div class="flex gap-6 text-sm">
+              <div class="text-center">
+                <p class="text-muted-foreground text-xs">Open rate</p>
+                <p class="font-medium">{{ segment.openRate }}%</p>
+              </div>
+              <div class="text-center">
+                <p class="text-muted-foreground text-xs">Click rate</p>
+                <p class="font-medium">
+                  {{ segment.clickRate }}%
+                </p>
+              </div>
+            </div>
+
+            <NuxtLink
+              to="dashboard/leads"
+              class="text-primary text-sm font-medium hover:underline"
+            >
+              View Segment
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+      <div v-else class="grid grid-cols-1 gap-4 mt-4">
+        <div
+          v-for="segment in sortedSegments"
+          :key="segment.id"
+          class="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-md hover:bg-muted/50"
+        >
+          <!-- Left info -->
+          <div class="flex flex-col gap-1">
+            <span class="font-medium flex">{{ segment.name }}</span>
+            <span class="text-xs text-muted-foreground">
+              Created {{ new Date(segment.createdAt).toLocaleString() }}
+            </span>
+            <!-- <Button size="sm" variant="secondary" class="mt-2 w-fit">View segment</Button> -->
+            <NuxtLink
+              class="mt-4 text-primary text-sm font-medium hover:underline"
+              to="dashboard/leads/lead-details"
+            >
+              View Segment</NuxtLink
+            >
+          </div>
+
+          <!-- Right stats -->
+          <div class="flex gap-8 mt-4 md:mt-0 text-center">
+            <div class="pl-6 border-l">
+              <p class="font-medium">{{ segment.subscribers }}</p>
+              <p class="text-xs text-muted-foreground">Subscribers</p>
+            </div>
+            <div class="pl-6 border-l">
+              <p class="font-medium">{{ segment.openRate }}%</p>
+              <p class="text-xs text-muted-foreground">Open rate</p>
+            </div>
+            <div class="pl-6 border-l flex items-center gap-2">
+              <div>
+                <p class="font-medium">{{ segment.clickRate }}%</p>
+                <p class="text-xs text-muted-foreground">Click rate</p>
+              </div>
+              <!-- Three dots menu -->
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal class="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>View</DropdownMenuItem>
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-else
-      class="flex flex-col items-center justify-center py-16 text-center"
-    >
+    <div v-else class="flex flex-col items-center justify-center py-16 text-center">
       <p class="text-muted-foreground mb-4">No segments available</p>
       <NuxtLink to="/segments/add">
         <Link>Add Segment</Link>

@@ -7,6 +7,7 @@ interface Tab {
   label: string;
   to: string;
   icon?: LucideIcon;
+  button ? : boolean;
 }
 
 const props = defineProps({
