@@ -167,7 +167,7 @@ const formattedDate = computed(() =>
         <!-- QR Code Image -->
         <div class="flex flex-col items-center gap-2">
           <NuxtImg
-            src="//qr.png"
+            src="/qr.png"
             alt="QR Code"
             class="w-24 h-24 object-contain"
           />

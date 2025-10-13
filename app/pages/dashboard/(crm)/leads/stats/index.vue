@@ -112,16 +112,16 @@ const totalLeads = computed(() => devices.reduce((sum, d) => sum + d.leads, 0));
     </div>
 
     <!-- Top Stats -->
-     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <KpiCard
-      v-for="stat in topStats"
-      :key="stat.label"
-      :label="stat.label"
-      :value="stat.value"
-      :trend="stat.trend"
-      :trend-direction="stat.trendDirection"
-    />
-  </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <KpiCard
+        v-for="stat in topStats"
+        :key="stat.label"
+        :label="stat.label"
+        :value="stat.value"
+        :trend="stat.trend"
+        :trend-direction="stat.trendDirection"
+      />
+    </div>
 
     <!-- Middle: Devices + Referrers -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">

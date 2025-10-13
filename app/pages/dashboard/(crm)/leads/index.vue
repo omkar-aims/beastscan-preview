@@ -228,7 +228,6 @@ function clearFilters() {
       class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 "
     >
       <div class="flex w-full justify-end items-center mb-2">
-        <!-- ✅ Sheet Trigger -->
         <Sheet>
           <SheetTrigger as-child>
             <Button variant="outline">Smart Filters</Button>
