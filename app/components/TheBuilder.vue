@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useSidebar } from "./ui/sidebar";
 
-const props = defineProps<{
-  template: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    source: string;
+    waitForLoad?: boolean;
+  }>(),
+  {
+    waitForLoad: true,
+  }
+);
 
-console.log(props.template);
-
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(props.waitForLoad ?? true);
 const width = ref<number>(0);
 const height = ref<number>(0);
 
@@ -16,8 +20,12 @@ const iframeScale = computed(() => (state.value === "expanded" ? 0.5 : 1));
 
 onMounted(() => {
   width.value = window.innerWidth;
-  height.value = window.innerHeight;
+  height.value = window.innerHeight - 64;
   if (state.value === "expanded") toggleSidebar();
+
+  if (!props.waitForLoad) {
+    isLoading.value = false;
+  }
 });
 
 onUnmounted(() => {
@@ -41,7 +49,7 @@ onUnmounted(() => {
     </div>
     <iframe
       v-show="!isLoading"
-      :src="`https://bw.aimsinfosoft.com/beast-builder/?template=${template}`"
+      :src="source"
       :class="[state === 'expanded' && 'shadow-2xl']"
       :style="{
         transform: `scale(${iframeScale}) ${

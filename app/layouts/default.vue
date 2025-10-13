@@ -8,7 +8,7 @@ const builderStore = useBuilderStore();
     <SidebarProvider>
       <AppSidebar />
 
-      <SidebarInset>
+      <SidebarInset class="min-h-screen">
         <header
           class="flex h-16 shrink-0 items-center justify-between gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
         >
@@ -40,8 +40,10 @@ const builderStore = useBuilderStore();
         <div
           id="main"
           :class="[
-            builderStore.isBuilderOpen ? 'h-screen' : 'p-4 h-screen',
-            'h-min overflow-y-auto pb-[10%] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
+            builderStore.isBuilderOpen
+              ? 'h-[90vh] p-0 overflow-y-hidden'
+              : 'p-4 h-screen pb-[10%]',
+            'overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
           ]"
         >
           <slot />

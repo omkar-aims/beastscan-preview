@@ -1,19 +1,9 @@
 <script setup lang="ts">
-import { Home, Pencil, Settings, Trash, Users } from "lucide-vue-next";
+import { Home, Pencil, Trash } from "lucide-vue-next";
 import Default from "./default.vue";
 
 const tabs = [
-  { label: "Overview", to: "/dashboard/forms/my-form/overview", icon: Home },
-  {
-    label: "Automation",
-    to: "/dashboard/forms/my-form/automation",
-    icon: Settings,
-  },
-  {
-    label: "Subscribers",
-    to: "/dashboard/forms/my-form/subscribers",
-    icon: Users,
-  },
+  { label: "Overview", to: "/dashboard/qr-codes/overview", icon: Home },
 ];
 </script>
 
