@@ -15,7 +15,7 @@ defineProps<{
 <template>
   <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
     <Card
-      class="group cursor-pointer relative flex flex-col items-center justify-center border border-dashed border-foreground hover:border-primary transition-colors"
+      class="group cursor-pointer relative flex flex-col items-center justify-center border border-dashed border-border hover:border-primary transition-colors"
     >
       <div class="flex flex-col items-center justify-center space-y-2">
         <Plus class="w-8 h-8 text-foreground" />
@@ -36,7 +36,7 @@ defineProps<{
       </CardContent>
 
       <CardFooter
-        class="flex-col gap-2 absolute bottom-0 left-0 w-full bg-card-foreground p-4 transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+        class="flex-col gap-2 absolute bottom-0 left-0 w-full bg-muted-foreground/50 p-4 transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
       >
         <Dialog>
           <DialogTrigger as-child>

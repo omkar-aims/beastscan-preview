@@ -94,12 +94,11 @@ useScrollToTopWizard(stepIndex);
             </CardContent>
           </Card>
 
-          <!--step content  -->
-          <div :class="stepIndex > 2 ">
+          <div :class="stepIndex > 2">
             <div class="flex flex-col gap-4 mt-4">
               <div v-if="stepIndex === 1">
                 <OffersWizardStepZero>
-                  <Button @click="nextStep">
+                  <Button type="button" @click="nextStep">
                     <span>Next</span>
                     <ChevronRight />
                   </Button>

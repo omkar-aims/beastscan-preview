@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/table";
 
 import { valueUpdater } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
 
 const props = withDefaults(
   defineProps<{
@@ -90,7 +91,7 @@ const { exportCSV } = useExportCSV();
       <Input
         v-if="allowSearch"
         v-model="globalFilter"
-        class="max-w-sm"
+        class="max-w-sm bg-card"
         placeholder="Search"
       />
       <AppRow direction="horizontal">
@@ -159,7 +160,7 @@ const { exportCSV } = useExportCSV();
         </Dialog>
         <Button
           v-if="allowImportExport"
-          variant="outline"
+          variant="secondary"
           @click="exportCSV(props.data as object[], 'contacts.csv')"
         >
           <Icon name="lucide:file-up" />
@@ -167,12 +168,13 @@ const { exportCSV } = useExportCSV();
         </Button>
       </AppRow>
     </div>
-    <div class="rounded-md border shadow-sm">
+    <div>
       <Table>
         <TableHeader>
           <TableRow
             v-for="headerGroup in table.getHeaderGroups()"
             :key="headerGroup.id"
+            class="hover:bg-transparent select-none"
           >
             <TableHead v-for="header in headerGroup.headers" :key="header.id">
               <FlexRender
@@ -189,6 +191,7 @@ const { exportCSV } = useExportCSV();
               v-for="row in table.getRowModel().rows"
               :key="row.id"
               :data-state="row.getIsSelected() ? 'selected' : undefined"
+              class="bg-card"
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
                 <FlexRender
@@ -209,23 +212,25 @@ const { exportCSV } = useExportCSV();
       </Table>
     </div>
 
-    <div>
+    <div v-if="table.getCanPreviousPage()">
       <div class="flex items-center justify-end py-4 space-x-2">
         <Button
-          variant="outline"
           size="sm"
           :disabled="!table.getCanPreviousPage()"
+          class="rounded-full"
           @click="table.previousPage()"
         >
-          Previous
+          <ChevronLeft />
+          <span>Prev</span>
         </Button>
         <Button
-          variant="outline"
           size="sm"
           :disabled="!table.getCanNextPage()"
+          class="rounded-full"
           @click="table.nextPage()"
         >
-          Next
+          <span>Next</span>
+          <ChevronRight />
         </Button>
       </div>
     </div>

@@ -43,14 +43,14 @@ const onSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <div class="w-full min-h-dvh lg:grid lg:grid-cols-2">
-    <div class="flex items-center justify-center py-12">
-      <div class="mx-auto grid gap-6">
+    <div class="flex items-center justify-center py-12 bg-card">
+      <div class="mx-auto grid gap-6 w-sm max-w-sm">
         <div class="grid gap-1 text-center">
           <AppLogo />
           <h1 class="text-3xl font-bold">Create new account</h1>
           <p class="text-balance text-muted-foreground">
-            or
-            <AppLink to="/login">Sign in into existing Account</AppLink>
+            Already have an account?
+            <AppLink to="/login">Sign in</AppLink>
           </p>
         </div>
 
@@ -65,9 +65,23 @@ const onSubmit = form.handleSubmit(async (values) => {
         </Alert>
 
         <form class="grid gap-4" @submit.prevent="onSubmit">
+          <FormField v-slot="{ componentField }" name="accountName">
+            <FormItem class="grid gap-2">
+              <FormLabel>Account Name</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Enter your name"
+                  v-bind="componentField"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+
           <FormField v-slot="{ componentField }" name="email">
             <FormItem class="grid gap-2">
-              <FormLabel> Email </FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -79,11 +93,15 @@ const onSubmit = form.handleSubmit(async (values) => {
             </FormItem>
           </FormField>
 
-          <FormField v-slot="{ componentField }" name="password">
+          <FormField v-slot="{ componentField }" name="referralCode">
             <FormItem class="grid gap-2">
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Referral Code (Optional)</FormLabel>
               <FormControl>
-                <PasswordInput v-bind="componentField" />
+                <Input
+                  type="text"
+                  placeholder="Enter referral code (if any)"
+                  v-bind="componentField"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,32 +110,14 @@ const onSubmit = form.handleSubmit(async (values) => {
           <Button type="submit" class="w-full">
             <span>Register</span>
           </Button>
-          <div
-            class="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border"
-          >
-            <span
-              class="relative z-10 bg-background px-2 text-muted-foreground"
-            >
-              Or continue with
-            </span>
-          </div>
-          <div class="flex gap-4 flex-col md:flex-row">
-            <Button variant="outline" class="w-full md:w-auto">
-              <Icon name="logos:google-icon" /> <span>Register with</span>Google
-            </Button>
-            <Button variant="outline" class="w-full md:w-auto">
-              <Icon name="logos:microsoft-icon" class="w-5 h-5" />
-              Register with Microsoft
-            </Button>
-          </div>
         </form>
       </div>
     </div>
-    <div class="hidden bg-muted lg:block">
+    <div class="relative hidden bg-primary lg:block overflow-hidden w-full">
       <NuxtImg
-        class="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        class="w-full absolute -right-[25%] top-1/2 -translate-y-1/2 scale-125 -rotate-3 rounded"
         alt="Image"
-        src="https://images.unsplash.com/photo-1567473030492-533b30c5494c?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src="/auth-hero.png"
       />
     </div>
   </div>

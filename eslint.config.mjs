@@ -7,5 +7,5 @@ export default withNuxt({
     "@typescript-eslint/no-explicit-any": "off",
   },
 
-  ignores: ["/app/components/ui/"],
+  ignores: ["/app/components/ui/", "app/assets/js"],
 });
