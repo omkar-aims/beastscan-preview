@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import TimeSelector from "@/components/TimeSelector.vue";
-import { Moon } from "lucide-vue-next";
-
-// Default business days
+import { Plus } from "lucide-vue-next";
 const days = [
   "Monday",
   "Tuesday",
@@ -13,164 +10,124 @@ const days = [
   "Sunday",
 ];
 
-// Default schedule
-const schedule = reactive(
-  days.map((day) => ({
-    name: day,
-    open: !["Sunday", "Monday"].includes(day),
-    startTime: "09:00",
-    endTime: "17:00",
-  }))
-);
+const checkedDays = ref<string[]>([]);
 
-// Basic form state (can be replaced with reactive form libraries like zod or vee-validate)
-const formData = reactive({
-  businessName: "",
-  streetAddress: "",
-  postalCode: "",
-  city: "",
-  country: "",
-});
+const toggleDay = (day: string) => {
+  if (checkedDays.value.includes(day)) {
+    checkedDays.value = checkedDays.value.filter((d) => d !== day);
+  } else {
+    checkedDays.value.push(day);
+  }
+};
+
+const from = ref();
 </script>
 
 <template>
-  <Card class="mx-auto p-6 shadow-md rounded-2xl space-y-6">
+  <Card>
     <CardHeader>
-      <h2 class="text-xl font-semibold text-primary">Business Information</h2>
+      <CardTitle> Business Name </CardTitle>
+      <CardDescription
+        >Please provide details about your business</CardDescription
+      >
     </CardHeader>
 
     <CardContent>
-      <Form>
-        <div class="space-y-6">
-          <!-- Business Info -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField name="businessName">
-              <FormItem>
-                <FormLabel>Business Name</FormLabel>
-                <FormControl>
-                  <Input
-                    v-model="formData.businessName"
-                    placeholder="Enter business name"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
+      <form class="space-y-4">
+        <FormField v-slot="{ componentField }" name="businessName">
+          <FormItem>
+            <FormLabel>Business Name</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        </FormField>
 
-            <FormField name="streetAddress">
-              <FormItem>
-                <FormLabel>Street Address</FormLabel>
-                <FormControl>
-                  <Input
-                    v-model="formData.streetAddress"
-                    placeholder="Enter street address"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
+        <FormField v-slot="{ componentField }" name="streetAddress">
+          <FormItem>
+            <FormLabel>Street Address</FormLabel>
+            <FormControl>
+              <Input v-bind="componentField" />
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <FormField v-slot="{ componentField }" name="postalCode">
+            <FormItem>
+              <FormLabel>Postal Code</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          </FormField>
+          <FormField v-slot="{ componentField }" name="city">
+            <FormItem>
+              <FormLabel>City</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          </FormField>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <FormField name="postalCode">
-              <FormItem>
-                <FormLabel>Postal Code</FormLabel>
-                <FormControl>
-                  <Input
-                    v-model="formData.postalCode"
-                    placeholder="Enter postal code"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField name="city">
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <Input v-model="formData.city" placeholder="Enter city" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField name="country">
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input
-                    v-model="formData.country"
-                    placeholder="Enter country"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <Separator />
-
-          <!-- Business Hours -->
-          <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-primary">Business Hours</h3>
-
-            <div
-              v-for="day in schedule"
-              :key="day.name"
-              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border rounded-lg p-4 hover:shadow-sm transition"
-            >
-              <!-- Day + Switch -->
-              <div class="flex items-center justify-between w-full sm:w-52">
-                <p class="font-medium">{{ day.name }}</p>
-                <div class="flex items-center gap-2">
-                  <Switch v-model="day.open" />
-                  <span
-                    class="text-sm font-medium"
-                    :class="day.open ? 'text-primary' : 'text-muted-foreground'"
-                  >
-                    {{ day.open ? "Open" : "Closed" }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Time Range -->
-              <div
-                v-if="day.open"
-                class="flex items-center gap-3 w-full sm:w-auto justify-between"
-                
-              >
-                <div class="flex items-center gap-2">
-                  <TimeSelector v-model="day.startTime" />
-                  <span class="text-sm font-medium text-muted-foreground"
-                    >to</span
-                  >
-                  <TimeSelector v-model="day.endTime" />
-                </div>
-              </div>
-
-              <!-- Closed Badge -->
-              <div
-                v-else
-                class="w-full sm:w-auto text-sm text-muted-foreground italic"
-              >
-                <Badge
-                  variant="secondary"
-                  class="px-2 py-1 rounded-md flex items-center gap-1"
-                >
-                  <Moon class="w-4 h-4" /> Closed
-                </Badge>
-              </div>
-            </div>
-          </div>
+          <FormField v-slot="{ componentField }" name="country">
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <Input v-bind="componentField" />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          </FormField>
         </div>
-      </Form>
+      </form>
     </CardContent>
 
-    <CardFooter>
-      <div class="flex justify-end w-full gap-3">
-        <slot />
+    <Separator />
+
+    <CardHeader>
+      <CardTitle>Opening Hours</CardTitle>
+      <CardDescription>
+        Select one or more days and specify opening and closing times.
+      </CardDescription>
+    </CardHeader>
+
+    <CardContent class="space-y-4">
+      <div class="flex flex-wrap gap-2">
+        <label
+          v-for="day in days"
+          :key="day"
+          class="flex items-center px-3 py-1.5 rounded-full border cursor-pointer transition-all select-none"
+          :class="
+            checkedDays.includes(day)
+              ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+              : 'bg-muted hover:bg-muted/70 border-border text-foreground/80'
+          "
+        >
+          <Input
+            type="checkbox"
+            class="hidden"
+            :checked="checkedDays.includes(day)"
+            @change="() => toggleDay(day)"
+          />
+          <span class="text-sm font-medium">{{ day }}</span>
+        </label>
       </div>
-    </CardFooter>
+
+      <div class="flex gap-4">
+        <Input placeholder="From" />
+        <Input placeholder="To" />
+        <TimePicker v-model="from" />
+        <Button type="button" variant="outline"> <Plus /> Add </Button>
+      </div>
+    </CardContent>
   </Card>
 </template>

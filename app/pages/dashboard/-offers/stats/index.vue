@@ -14,8 +14,13 @@ interface Stat {
   trendDirection?: "up" | "down";
 }
 
-const topStats:Stat[] = [
-  { label: "Total Redemptions", value: 1200, trend: "+5%", trendDirection: "up" },
+const topStats: Stat[] = [
+  {
+    label: "Total Redemptions",
+    value: 1200,
+    trend: "+5%",
+    trendDirection: "up",
+  },
   { label: "Active Users", value: 350, trend: "-2%", trendDirection: "down" },
   { label: "CTR", value: "18%", trend: "+1%", trendDirection: "up" },
 ];
@@ -30,9 +35,10 @@ const data = [
 
 <template>
   <div class="space-y-6">
-    <!-- Header Actions -->
     <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-semibold tracking-tight text-foreground">Offer Overview</h2>
+      <h2 class="text-2xl font-semibold tracking-tight text-foreground">
+        Offer Overview
+      </h2>
       <div class="flex items-center gap-3">
         <Button variant="outline" class="flex items-center gap-2">
           <FilePenLine class="w-4 h-4" />

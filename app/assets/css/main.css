@@ -4,9 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.99 0.005 280);
+  --background: oklch(0.9632 0.0034 247.86);
   --foreground: oklch(0.15 0.02 280);
-  --card: oklch(0.98 0.008 300);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.015 280);
   --popover: oklch(0.99 0.005 280);
   --popover-foreground: oklch(0.15 0.02 280);
@@ -14,7 +14,7 @@
   --primary: oklch(0.6537 0.2255 3.3664);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.92 0.02 260);
+  --secondary: oklch(1 0 0);
   --secondary-foreground: oklch(0.25 0.05 260);
 
   --muted: oklch(0.95 0.015 270);
@@ -29,11 +29,11 @@
   --success: oklch(0.7 0.18 150);
   --success-foreground: oklch(0.7 0.18 150);
 
-  --link : oklch(65.054% 0.1737 255.478);
+  --link: oklch(0.6537 0.2255 3.3664);
   --link-foreground: oklch(0.98 0.005 150);
 
-  --border: oklch(92.744% 0.01375 325.329);
-  --input: oklch(0.96 0.01 270);
+  --border: oklch(0.9417 0.0052 247.88);
+  --input: oklch(0.8671 0.0106 247.95);
   --ring: oklch(0.6537 0.2255 3.3664);
 
   --chart-1: oklch(0.6537 0.2255 3.3664);
@@ -42,7 +42,7 @@
   --chart-4: oklch(0.6 0.16 200);
   --chart-5: oklch(0.55 0.14 280);
 
-  --sidebar: oklch(0.97 0.01 270);
+  --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.2 0.015 280);
   --sidebar-primary: oklch(0.6537 0.2255 3.3664);
   --sidebar-primary-foreground: oklch(1 0 0);
@@ -58,7 +58,7 @@
   --radius: 0.5rem;
 
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.04);
-  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.06);
+  --shadow-xs: 0px 1px 1px 0px hsl(0 0% 0% / 0.06);
   --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0),
     0px 1px 2px 0px hsl(0 0% 0% / 0.06);
   --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.1),
@@ -103,7 +103,7 @@
   --success: oklch(0.65 0.16 150);
   --success-foreground: oklch(0.65 0.16 150);
 
-  --link : oklch(65.054% 0.1737 255.478);
+  --link: oklch(65.054% 0.1737 255.478);
   --link-foreground: oklch(0.98 0.005 150);
 
   --border: oklch(0.25 0.015 270);
@@ -167,7 +167,7 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-  --color-link : var(--link);
+  --color-link: var(--link);
   --color-link-foreground: var(--link-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -307,6 +307,24 @@
   [data-slot="dropdown-menu-item"],
   [data-slot="dropdown-menu-trigger"] {
     cursor: pointer;
+  }
+
+  tr td:first-child {
+    border-top-left-radius: 10px;
+  }
+  tr td:last-child {
+    border-top-right-radius: 10px;
+  }
+
+  tr td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  tr td:last-child {
+    border-bottom-right-radius: 10px;
+  }
+
+  th button[data-slot="checkbox"] {
+    border-color: var(--color-foreground);
   }
 }
 
