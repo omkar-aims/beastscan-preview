@@ -27,9 +27,8 @@ function handleUpdate(value: AcceptableValue) {
     emit("update:modelValue", value.toString());
   } else if (typeof value === "string" || typeof value === "number" || value === null) {
     emit("update:modelValue", value);
-  } else {
-    console.warn("Unsupported value type in DropdownSelect:", value);
   }
+
 }
 </script>
 
@@ -38,11 +37,11 @@ function handleUpdate(value: AcceptableValue) {
     :model-value="props.modelValue"
     @update:model-value="handleUpdate"
   >
-    <SelectTrigger class="w-24 border-gray-300 text-gray-700 focus:ring-pink-400">
+    <SelectTrigger class="w-24 bg-muted-foreground/20 dark:bg-muted-foreground/30  focus:ring-pink-400">
       <SelectValue :placeholder="props.placeholder || 'Select'" />
     </SelectTrigger>
 
-    <SelectContent>
+    <SelectContent class="w-24">
       <SelectItem
         v-for="option in props.options"
         :key="option"

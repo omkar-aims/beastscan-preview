@@ -26,7 +26,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       :type="showPassword ? 'text' : 'password'"
       :class="['pr-10', props.class]"
       data-slot="input"
-      placeholder="Enter your password"
+      placeholder="••••••••"
     />
 
     <Button
