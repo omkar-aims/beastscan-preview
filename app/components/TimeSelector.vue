@@ -42,7 +42,7 @@ watch([selectedHour, selectedMinute], ([h, m]) => {
       class="h-16"
     />
 
-    <span class="text-gray-600 font-semibold">:</span>
+    <span class=" font-semibold">:</span>
 
     <!-- Minute Dropdown -->
     <DropdownSelect

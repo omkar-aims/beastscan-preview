@@ -11,11 +11,11 @@ import { CloudUpload } from 'lucide-vue-next';
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Cover Image Upload -->
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-2">Cover Image</h3>
+          <h3 class="text-sm font-medium  mb-2">Cover Image</h3>
           <FileUpload v-slot="{ file, handleSelect, isFresh }">
             <div class="flex flex-col gap-4">
               <div
-                class="relative w-full h-40 border-2 border-dashed border-secondary rounded-md cursor-pointer hover:border-primary transition-colors flex flex-col items-center justify-center"
+                class="relative w-full h-40 border-2 border-dashed border-muted-foreground/30 rounded-md cursor-pointer hover:border-primary transition-colors flex flex-col items-center justify-center"
               >
                 <input
                   type="file"
@@ -27,7 +27,7 @@ import { CloudUpload } from 'lucide-vue-next';
                   class="flex flex-col items-center justify-center pointer-events-none"
                 >
                   <CloudUpload
-                    class="w-8 h-8 mb-2 text-muted-foreground"
+                    class="w-8 h-8 mb-2 "
                   />
                   <p class="text-sm text-muted-foreground">
                     Click or drag and drop to upload
@@ -51,13 +51,13 @@ import { CloudUpload } from 'lucide-vue-next';
 
         <!-- Gallery Images Upload -->
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-2">
+          <h3 class="text-sm font-medium  mb-2">
             Gallery Images (Optional)
           </h3>
           <FileUpload v-slot="{ file, handleSelect, isFresh }">
             <div class="flex flex-col gap-4">
               <div
-                class="relative w-full h-40 border-2 border-dashed border-secondary rounded-md cursor-pointer hover:border-primary transition-colors flex flex-col items-center justify-center"
+                class="relative w-full h-40 border-2 border-dashed border-muted-foreground/30 rounded-md cursor-pointer hover:border-primary transition-colors flex flex-col items-center justify-center"
               >
                 <input
                   type="file"
@@ -70,7 +70,7 @@ import { CloudUpload } from 'lucide-vue-next';
                   class="flex flex-col items-center justify-center pointer-events-none"
                 >
                   <CloudUpload 
-                    class="w-8 h-8 mb-2 text-muted-foreground"
+                    class="w-8 h-8 mb-2 "
                   />
                   <p class="text-sm text-muted-foreground">
                     Upload multiple images

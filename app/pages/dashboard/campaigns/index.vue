@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Checkbox, DataTableDropDown, NuxtLink } from "#components";
+import { Checkbox, NuxtLink } from "#components";
 import type { ColumnDef } from "@tanstack/vue-table";
 import { ArrowRight, ShoppingBag, Sparkle } from "lucide-vue-next";
 
@@ -65,8 +65,8 @@ const columns: ColumnDef<(typeof campaigns)[0]>[] = [
 
   {
     header: "Type",
-    cell: ({ row }) => {
-      const type = row.original.type;
+    cell: () => {
+      
 
       return h(
         "div",
@@ -161,7 +161,7 @@ const columns: ColumnDef<(typeof campaigns)[0]>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) =>
+    cell: () =>
       h(
         NuxtLink,
         {

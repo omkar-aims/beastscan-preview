@@ -117,7 +117,7 @@ const offers: Offer[] = [
         <!-- Cooldown State -->
         <div
           v-if="offer.cooldown"
-          class="w-full text-center text-sm py-2 border rounded-lg text-muted-foreground bg-muted"
+          class="w-full text-center text-sm py-2 border rounded-lg  bg-muted"
         >
           Cooldown active
         </div>

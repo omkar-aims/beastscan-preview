@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useCampaigns } from "~/composables/campaign/useCampaigns";
-import { Plus, QrCode } from "lucide-vue-next";
+import { Plus } from "lucide-vue-next";
 import type { Campaign } from "~/types/campaign";
 import type { ColumnDef } from "@tanstack/vue-table";
 import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 import DataTableDropDown from "~/components/DataTableDropDown.vue";
 import { NuxtImg } from "#components";
+import QRCodeGenerator from "~/components/QRCodeGenerator.vue";
 
 const { data: campaigns, isLoading } = useCampaigns();
+
 const columns: ColumnDef<Campaign>[] = [
   {
     id: "select",
@@ -28,7 +30,6 @@ const columns: ColumnDef<Campaign>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-
   {
     id: "qr",
     header: "QR Code",
@@ -39,7 +40,6 @@ const columns: ColumnDef<Campaign>[] = [
         height: 80,
       }),
   },
-
   {
     header: "Title / URL",
     cell: ({ row }) => {
@@ -50,7 +50,6 @@ const columns: ColumnDef<Campaign>[] = [
       ]);
     },
   },
-
   {
     header: "Campaign",
     cell: ({ row }) => {
@@ -58,7 +57,6 @@ const columns: ColumnDef<Campaign>[] = [
       return h("p", { class: "text-sm text-muted-foreground" }, campaign);
     },
   },
-
   {
     header: "Created At",
     cell: ({ row }) => {
@@ -71,7 +69,6 @@ const columns: ColumnDef<Campaign>[] = [
       return h("p", { class: "text-sm text-muted-foreground" }, formatted);
     },
   },
-
   {
     header: "Scans",
     accessorKey: "scans",
@@ -95,7 +92,6 @@ const columns: ColumnDef<Campaign>[] = [
       ]);
     },
   },
-
   {
     id: "actions",
     enableHiding: false,
@@ -122,18 +118,8 @@ const columns: ColumnDef<Campaign>[] = [
           </Button>
         </SheetTrigger>
 
-        <SheetContent class="flex flex-col items-center gap-6 p-6">
-          <QrCode class="w-24 h-24 text-muted-foreground" />
-
-          <Select class="w-full">
-            <SelectTrigger class="w-full bg-card">
-              <SelectValue placeholder="Choose a campaign" />
-            </SelectTrigger>
-            <SelectContent class="w-full">
-              <SelectItem value="1">My Awesome Campaign</SelectItem>
-              <SelectItem value="2">My Awesome Campaign 2</SelectItem>
-            </SelectContent>
-          </Select>
+        <SheetContent class="w-full sm:max-w-xl overflow-y-auto">
+          <QRCodeGenerator />
         </SheetContent>
       </Sheet>
     </AppRow>

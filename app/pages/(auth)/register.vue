@@ -23,10 +23,11 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   const payload = {
-    type: "user",
-    locale: navigator.language.split("-")[0],
     email: values.email,
     password: values.password,
+    accountName: values.accountName,
+    projectName: values.projectName,
+    referralCode: values.referralCode,     
   };
 
   const user = await register(payload);
@@ -54,6 +55,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           </p>
         </div>
 
+        <!-- Error Alert -->
         <Alert v-if="error" class="flex items-start gap-3">
           <Icon
             name="lucide:circle-alert"
@@ -84,8 +86,8 @@ const onSubmit = form.handleSubmit(async (values) => {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  type="text"
-                  placeholder="Enter your email"
+                  type="email"
+                  placeholder="name@example.com"
                   v-bind="componentField"
                 />
               </FormControl>

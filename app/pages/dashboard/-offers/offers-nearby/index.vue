@@ -179,7 +179,7 @@ const emptyResource = {
             <div>
               <label class="text-sm font-medium mb-1 block">Distance</label>
               <Select v-model="filters.distance">
-                <SelectTrigger class="w-full">
+                <SelectTrigger class="w-full bg-muted-foreground/20 dark:bg-muted-foreground/30">
                   <SelectValue placeholder="Select distance" />
                 </SelectTrigger>
                 <SelectContent class="w-full">
@@ -194,7 +194,7 @@ const emptyResource = {
             <div>
               <label class="text-sm font-medium mb-1 block">Offer Type</label>
               <Select v-model="filters.offerType">
-                <SelectTrigger class="w-full">
+                <SelectTrigger class="w-full bg-muted-foreground/20 dark:bg-muted-foreground/30">
                   <SelectValue placeholder="Select offer type" />
                 </SelectTrigger>
                 <SelectContent class="w-full">
@@ -209,7 +209,7 @@ const emptyResource = {
             <div>
               <label class="text-sm font-medium mb-1 block">Category</label>
               <Select v-model="filters.category">
-                <SelectTrigger class="w-full">
+                <SelectTrigger class="w-full bg-muted-foreground/20 dark:bg-muted-foreground/30">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent class="w-full">

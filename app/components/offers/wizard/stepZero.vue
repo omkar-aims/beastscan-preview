@@ -34,7 +34,7 @@ const selectedOfferCategory = ref<string | null>(null);
       <h2 class="text-2xl font-semibold text-primary tracking-tight">
         Offer Details
       </h2>
-      <p class="text-sm  mt-1">Fill in the details below</p>
+      <p class="text-sm mt-1">Fill in the details below</p>
     </CardHeader>
 
     <!-- Form Starts -->
@@ -44,11 +44,9 @@ const selectedOfferCategory = ref<string | null>(null);
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField name="title">
             <FormItem>
-              <FormLabel >Offer Title</FormLabel>
+              <FormLabel>Offer Title</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter offer title"
-                />
+                <Input placeholder="Enter offer title" />
               </FormControl>
               <FormMessage class="text-sm text-secondary" />
             </FormItem>
@@ -56,11 +54,9 @@ const selectedOfferCategory = ref<string | null>(null);
 
           <FormField name="description">
             <FormItem>
-              <FormLabel >Offer Description</FormLabel>
+              <FormLabel>Offer Description</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter offer description"
-                />
+                <Input placeholder="Enter offer description" />
               </FormControl>
               <FormMessage class="text-sm text-secondary" />
             </FormItem>
@@ -83,7 +79,7 @@ const selectedOfferCategory = ref<string | null>(null);
 
           <FormField name="validTo">
             <FormItem>
-              <FormLabel >Valid To</FormLabel>
+              <FormLabel>Valid To</FormLabel>
               <FormControl>
                 <DatePicker
                   class="w-full border-primary/30 focus-visible:ring-primary rounded-lg"
@@ -95,24 +91,24 @@ const selectedOfferCategory = ref<string | null>(null);
         </div>
 
         <!-- Max Redemption -->
-        <FormField name="maxRedemptions">
-          <FormItem>
-            <FormLabel>Max Redemptions Per User</FormLabel>
-            <FormControl>
-              <Input
-                type="number"
-                placeholder="Enter number"
-              />
-            </FormControl>
-            <FormMessage class="text-sm text-secondary" />
-          </FormItem>
-        </FormField>
-
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField name="maxRedemptions">
+            <FormItem>
+              <FormLabel>Max Redemptions Per User</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter number" />
+              </FormControl>
+              <FormMessage class="text-sm text-secondary" />
+            </FormItem>
+          </FormField>
+        </div>
         <!-- Offer Type -->
-        <div class="pt-6 border-t border-primary/20">
+        <div class="pt-6 border-t border-muted-foreground/30">
           <FormField name="offerType">
             <FormItem>
-              <FormLabel class="font-semibold text-primary">Offer Type</FormLabel>
+              <FormLabel class="text-primary"
+                >Offer Type</FormLabel
+              >
               <div class="flex flex-wrap gap-3 mt-2">
                 <SelectableButton
                   v-for="item in offerType"
@@ -133,7 +129,9 @@ const selectedOfferCategory = ref<string | null>(null);
         <div class="pt-6 border-t border-primary/20">
           <FormField name="offerCategory">
             <FormItem>
-              <FormLabel class="font-semibold text-primary">Offer Category</FormLabel>
+              <FormLabel class="font-semibold text-primary"
+                >Offer Category</FormLabel
+              >
               <div class="flex flex-wrap gap-3 mt-2">
                 <SelectableButton
                   v-for="item in OfferCategory"
