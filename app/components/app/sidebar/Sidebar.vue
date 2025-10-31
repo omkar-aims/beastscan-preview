@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-  Home,
-  Megaphone,
-  FileText,
-  Gift,
-  QrCode,
-  Zap,
-  GalleryVerticalEnd,
-} from "lucide-vue-next";
+import { Home, Megaphone, FileText, Gift, QrCode, Zap } from "lucide-vue-next";
 
 const items = [
   {
@@ -42,23 +34,9 @@ const items = [
   },
 ];
 
-const teams = [
-  {
-    name: "Acme Inc",
-    logo: GalleryVerticalEnd,
-    plan: "Free",
-  },
-  {
-    name: "Acme Corp.",
-    plan: "Startup",
-    logo: GalleryVerticalEnd,
-  },
-  {
-    name: "Evil Corp.",
-    plan: "Free",
-    logo: GalleryVerticalEnd,
-  },
-];
+const userStore = useUserStore();
+
+const projects = userStore.projects;
 
 const route = useRoute();
 
@@ -73,8 +51,8 @@ function isActive(path: string) {
 
 <template>
   <Sidebar>
-    <SidebarHeader>
-      <AppSidebarTeamSwitcher :teams="teams" />
+    <SidebarHeader class="px-0">
+      <AppSidebarTeamSwitcher v-if="projects" :projects="projects" />
     </SidebarHeader>
     <SidebarContent>
       <SidebarGroup class="px-0">

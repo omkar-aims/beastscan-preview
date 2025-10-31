@@ -1,45 +1,56 @@
-import { ref } from "vue";
+import { useMutation } from "@tanstack/vue-query";
+import { useUserStore } from "~/stores/userStore";
 import type { LoginSchema } from "~/schemas/auth";
 import type { LoginResponse } from "~/types/auth";
 
 export const useLogin = () => {
   const routes = useApiRoutes();
+  const userStore = useUserStore();
+  const router = useRouter();
 
-  const token = useCookie<string | null>("token", { path: "/" });
-  const refreshToken = useCookie<string | null>("refreshToken", { path: "/" });
+  const tokenCookie = useCookie<string | null>("token");
+  const refreshTokenCookie = useCookie<string | null>("refreshToken");
   const refreshTokenExpiration = useCookie<number | null>(
-    "refreshTokenExpiration",
-    { path: "/" }
+    "refreshTokenExpiration"
   );
 
-      const pending = ref(false);
-      const error = ref<string | null>(null);
-
-  const login = async (
-    credentials: LoginSchema
-  ): Promise<LoginResponse | null> => {
-    pending.value = true;
-    error.value = null;
-
-    try {
-      const res: LoginResponse = await $fetch(routes.auth.login, {
+  const { mutateAsync, status, error } = useMutation<
+    LoginResponse,
+    Error,
+    LoginSchema
+  >({
+    mutationFn: async (credentials) => {
+      return await $fetch<LoginResponse>(routes.auth.login, {
         method: "POST",
         body: credentials,
       });
+    },
 
-      token.value = res.token;
-      refreshToken.value = res.refresh_token;
+    onSuccess: async (res) => {
+      userStore.setToken({
+        token: res.token,
+        refreshToken: res.refresh_token,
+      });
+
+      tokenCookie.value = res.token;
+      refreshTokenCookie.value = res.refresh_token;
       refreshTokenExpiration.value = res.refresh_token_expiration;
 
-      return res;
-    } catch (err: any) {
-      error.value =
-        err?.data?.message || err?.message || "Something went wrong";
-      return null;
-    } finally {
-      pending.value = false;
-    }
+      router.replace("/dashboard");
+    },
+  });
+
+  const logout = () => {
+    userStore.resetStore();
+    tokenCookie.value = null;
+    refreshTokenCookie.value = null;
+    refreshTokenExpiration.value = null;
   };
 
-  return { login, pending, error };
+  return {
+    login: mutateAsync,
+    logout,
+    status,
+    error,
+  };
 };
