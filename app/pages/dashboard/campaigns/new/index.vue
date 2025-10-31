@@ -84,6 +84,25 @@ const route = useRoute();
 
 const selectedType = computed(() => route.query.type);
 const showTemplate = ref<boolean>(false);
+const showBuilder = ref<boolean>(false);
+
+const builderStore = useBuilderStore();
+const router = useRouter();
+watch(
+  () => showBuilder.value,
+  (value) => {
+    if (value) {
+      builderStore.open();
+      builderStore.setAction(() => {
+        router.replace("/dashboard/campaigns/");
+      });
+    } else builderStore.close();
+  }
+);
+
+onUnmounted(() => {
+  builderStore.close();
+});
 
 const templates = [
   {
@@ -148,56 +167,54 @@ const templates = [
       </Card>
     </div>
 
-    <div v-else>
-      <div v-if="!showTemplate" class="space-y-4">
-        <div>
-          <AppHeading :level="2" class="text-xl font-semibold">
-            Info
-          </AppHeading>
-          <p class="text-muted-foreground">
-            Give the details of your campaign.
-          </p>
-        </div>
-
-        <form class="space-y-4 max-w-md">
-          <FormField v-slot="{ componentField }" name="name">
-            <FormItem>
-              <FormLabel class="text-sm font-medium"
-                >Name your campaign</FormLabel
-              >
-              <FormControl>
-                <Input
-                  placeholder="People will see this, so give it a nice name!"
-                  v-bind="componentField"
-                  class="bg-card"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
-          <Button class="gap-2" type="button" @click="showTemplate = true">
-            <span>Continue to design</span>
-            <ChevronRight class="w-4 h-4" />
-          </Button>
-        </form>
+    <div v-if="selectedType && !showTemplate" class="space-y-4">
+      <div>
+        <AppHeading :level="2" class="text-xl font-semibold"> Info </AppHeading>
+        <p class="text-muted-foreground">Give the details of your campaign.</p>
       </div>
 
-      <div v-else class="space-y-4">
-        <div>
-          <AppHeading :level="2" class="text-xl font-semibold">
-            Design
-          </AppHeading>
-          <p class="text-muted-foreground">
-            Choose a template or start from scratch.
-          </p>
-        </div>
+      <form class="space-y-4 max-w-md">
+        <FormField v-slot="{ componentField }" name="name">
+          <FormItem>
+            <FormLabel class="text-sm font-medium"
+              >Name your campaign</FormLabel
+            >
+            <FormControl>
+              <Input
+                placeholder="People will see this, so give it a nice name!"
+                v-bind="componentField"
+                class="bg-card"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
 
-        <TheTemplatePicker
-          :templates="templates"
-          :handle-select="() => console.log('HELLO')"
-        />
+        <Button class="gap-2" type="button" @click="showTemplate = true">
+          <span>Continue to design</span>
+          <ChevronRight class="w-4 h-4" />
+        </Button>
+      </form>
+    </div>
+
+    <div v-if="showTemplate && !showBuilder" class="space-y-4">
+      <div>
+        <AppHeading :level="2" class="text-xl font-semibold">
+          Design
+        </AppHeading>
+        <p class="text-muted-foreground">
+          Choose a template or start from scratch.
+        </p>
       </div>
+
+      <TheTemplatePicker
+        :templates="templates"
+        :handle-select="() => (showBuilder = true)"
+      />
+    </div>
+
+    <div v-if="showBuilder" class="relative">
+      <TheBuilder source="https://beast-builder.netlify.app/" />
     </div>
   </div>
 </template>

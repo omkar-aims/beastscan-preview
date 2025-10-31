@@ -1,32 +1,41 @@
 import type { UserProfileResponse } from "~/types/auth";
+import { useUserStore } from "@/stores/userStore";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const protectedPrefixes = ["/dashboard", "/profile"];
-
   const isProtected = protectedPrefixes.some((prefix) =>
     to.path.startsWith(prefix)
   );
+
   if (!isProtected) return;
 
-  const token = useCookie<string | null>("token");
-  const { user, setUser } = useAuthStore();
+  const tokenCookie = useCookie<string | null>("token");
+  const refreshTokenCookie = useCookie<string | null>("refreshToken");
+  const userStore = useUserStore();
 
-  if (!token.value) return navigateTo("/login");
-  if (user) return;
+  if (!tokenCookie.value) navigateTo("/login");
 
   const apiRoutes = useApiRoutes();
+
   const { data, error } = await useFetch<UserProfileResponse>(
     apiRoutes.user.profile,
     {
-      headers: { Authorization: `Bearer ${token.value}` },
+      headers: { Authorization: `Bearer ${tokenCookie.value}` },
       key: "current-user",
     }
   );
 
-  if (error.value || !data.value?.result) {
-    token.value = null;
+  if (error.value) {
+    tokenCookie.value = null;
+    refreshTokenCookie.value = null;
     return navigateTo("/login");
   }
 
-  setUser(data.value.result, token.value);
+  if (data.value) {
+    userStore.setUser(data.value?.data);
+    userStore.setToken({
+      token: tokenCookie.value,
+      refreshToken: refreshTokenCookie.value,
+    });
+  }
 });

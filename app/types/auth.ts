@@ -8,7 +8,7 @@ export interface LoginResponse {
 
 export interface UserProfileResponse {
   status: "ok";
-  result: User;
+  data: User;
 }
 
 export interface RegisterSuccessResponse {

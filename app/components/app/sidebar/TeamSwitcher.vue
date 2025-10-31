@@ -1,75 +1,94 @@
 <script setup lang="ts">
-import { ChevronsUpDown, Plus, type LucideIcon } from "lucide-vue-next";
+import { ChevronsUpDown, Plus, FolderKanban } from "lucide-vue-next";
 import { useSidebar } from "~/components/ui/sidebar";
 
-const props = defineProps<{
-  teams: {
-    name: string;
-    plan: string;
-    logo: LucideIcon;
-  }[];
-}>();
-
 const { isMobile } = useSidebar();
-const activeTeam = ref<(typeof props.teams)[0] | null>(props.teams[0] ?? null);
+
+const userStore = useUserStore();
 </script>
 
 <template>
-  <SidebarMenu v-if="activeTeam">
-    <SidebarMenuItem>
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <SidebarMenuButton
-            size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+  <SidebarMenu v-if="userStore.projects">
+    <Dialog>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <SidebarMenuButton
+              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <div
+                class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
+              >
+                <FolderKanban class="size-4" />
+              </div>
+              <div
+                class="grid flex-1 text-left text-sm leading-tight select-none"
+              >
+                <span class="truncate font-semibold">
+                  {{ userStore.activeProject?.attributes.name }}
+                </span>
+                <span class="text-xs opacity-60 data-[state=open]:opacity-100">
+                  {{ userStore.activeProject?.attributes.slug }}
+                </span>
+              </div>
+              <ChevronsUpDown class="ml-auto" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            align="start"
+            :side="isMobile ? 'bottom' : 'right'"
+            :side-offset="4"
           >
-            <div
-              class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-            >
-              <component :is="activeTeam.logo" class="size-4" />
-            </div>
-            <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-semibold">
-                {{ activeTeam.name }}
-              </span>
-              <span class="truncate text-xs">{{ activeTeam.plan }}</span>
-            </div>
-            <ChevronsUpDown class="ml-auto" />
-          </SidebarMenuButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-          align="start"
-          :side="isMobile ? 'bottom' : 'right'"
-          :side-offset="4"
-        >
-          <DropdownMenuLabel class="text-xs text-muted-foreground">
-            Teams
-          </DropdownMenuLabel>
-          <DropdownMenuItem
-            v-for="team in teams"
-            :key="team.name"
-            class="gap-2 p-2"
-            @click="activeTeam = team"
-          >
-            <div
-              class="flex size-6 items-center justify-center rounded-sm border"
-            >
-              <component :is="team.logo" class="size-4 shrink-0" />
-            </div>
-            {{ team.name }}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem class="gap-2 p-2">
-            <div
-              class="flex size-6 items-center justify-center rounded-md border bg-background"
-            >
-              <Plus class="size-4" />
-            </div>
-            <div class="font-medium text-muted-foreground">Add team</div>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </SidebarMenuItem>
+            <DropdownMenuLabel class="text-xs text-muted-foreground">
+              Projects
+            </DropdownMenuLabel>
+
+            <DropdownMenuItem
+              v-for="project in userStore.projects"
+              :key="project.attributes.slug"
+              class="font-medium gap-2 p-2 cursor-pointer"
+              @click="() => userStore.setActiveProject(project.id)"
+              >{{ project.attributes.name }}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem class="p-2 gap-2">
+              <DialogTrigger
+                class="w-full text-left flex items-center gap-2 group"
+              >
+                <Plus class="size-4 group-hover:text-white" />
+                Add Project
+              </DialogTrigger>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create Project</DialogTitle>
+        </DialogHeader>
+
+        <Form>
+          <FormField v-slot="{ componentField }" name="name">
+            <FormItem>
+              <FormLabel>Project Name</FormLabel>
+              <FormControl>
+                <Input class="bg-white" v-bind="componentField" />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          </FormField>
+        </Form>
+
+        <DialogFooter>
+          <Button type="submit">Create</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </SidebarMenu>
 </template>

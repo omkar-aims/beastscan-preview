@@ -6,14 +6,18 @@ export default function useApiRoutes() {
 
   return {
     auth: {
-      login: `${BASE}/login_check`,
+      login: `${BASE}/login`,
       register: `${BASE}/register`,
     },
+
+    accounts: `https://beta.beastscan.com/api/v1/accounts`,
+    projects: `https://beta.beastscan.com/api/v1/accounts[ID]/projects`,
+
     user: {
-      profile: `${BASE}/user/profile`,
+      profile: `${BASE}/v1/me`,
       profileUpdate: `${BASE}/user/profile/update`,
     },
     campaigns: `${localPath}/campaigns`,
     leaddata: `${localapi}/leaddata`,
-  };  
+  };
 }

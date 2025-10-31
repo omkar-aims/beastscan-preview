@@ -14,16 +14,14 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const { login, pending, error } = useLogin();
+const { login, status } = useLogin();
 
 const form = useForm({
   validationSchema: toTypedSchema(loginSchema),
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
-  const user = await login(values);
-
-  if (user) return navigateTo("/dashboard");
+  await login(values);
 
   form.resetForm();
 });
@@ -42,21 +40,21 @@ const onSubmit = form.handleSubmit(async (values) => {
           </p>
         </div>
 
-        <Alert v-if="error" class="flex items-start gap-3">
+        <Alert v-if="status === 'error'" class="flex items-start gap-3">
           <Icon name="lucide:circle-alert" class="text-lg text-destructive" />
           <AlertDescription class="text-destructive">
-            {{ error }}
+            Invalid email or password
           </AlertDescription>
         </Alert>
 
         <form class="grid gap-4" @submit.prevent="onSubmit">
-          <FormField v-slot="{ componentField }" name="username">
+          <FormField v-slot="{ componentField }" name="email">
             <FormItem class="grid gap-2">
-              <FormLabel> Username </FormLabel>
+              <FormLabel> Email </FormLabel>
               <FormControl>
                 <Input
-                  type="text"
-                  placeholder="Enter your username"
+                  type="email"
+                  placeholder="Enter your email"
                   v-bind="componentField"
                 />
               </FormControl>
@@ -84,14 +82,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             </FormItem>
           </FormField>
 
-          <Button type="submit" class="w-full" :disabled="pending">
-            <Icon
-              v-if="pending"
-              name="svg-spinners:180-ring-with-bg"
-              class="w-5 h-5"
-            />
-            <span>{{ pending ? "Logging in" : "Login" }}</span>
-          </Button>
+          <StatefulButton :status="status"> Login </StatefulButton>
         </form>
       </div>
     </div>

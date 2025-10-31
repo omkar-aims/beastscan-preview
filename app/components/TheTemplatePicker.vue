@@ -16,6 +16,7 @@ defineProps<{
   <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
     <Card
       class="group cursor-pointer relative flex flex-col items-center justify-center border border-dashed border-border hover:border-primary transition-colors"
+      @click="() => handleSelect('none')"
     >
       <div class="flex flex-col items-center justify-center space-y-2">
         <Plus class="w-8 h-8 text-foreground" />
