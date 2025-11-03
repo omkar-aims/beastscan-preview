@@ -47,7 +47,6 @@ const downloadQR = () => {
 };
 
 const saveQR = () => {
-  // Implement save functionality as needed
   console.log("Saving QR Code configuration:", qrStore.config);
 };
 </script>
@@ -55,124 +54,145 @@ const saveQR = () => {
 <template>
   <div class="space-y-6 p-6">
     <SheetHeader class="p-0">
-      <SheetTitle class="text-xl text-primary">Create New QR Code</SheetTitle>
+      <SheetTitle class="text-primary text-xl font-semibold">Create New QR Code</SheetTitle>
     </SheetHeader>
 
-    <!-- QR Preview or Placeholder Icon -->
+    <!-- QR Preview Section -->
     <div class="mt-4 flex justify-center items-center">
-      <div v-if="!selectedValue" class="text-muted-foreground flex flex-col items-center">
-        <QrCode class="w-24 h-24 opacity-50" />
-        <p class="mt-2 text-sm text-muted-foreground">
-          Select a campaign to generate QR
-        </p>
+      <div v-if="!selectedValue" class="flex flex-col items-center text-muted-foreground">
+        <QrCode class="w-24 h-24 opacity-70 text-primary/70 shadow-lg rounded-md" />
+        <p class="mt-2 text-sm">Select a campaign to generate QR</p>
       </div>
 
       <div v-else-if="qrStore.generatedQR" class="transition-all duration-300">
-        <img 
-          :src="qrStore.generatedQR" 
-          alt="Generated QR Code" 
+        <img
+          :src="qrStore.generatedQR"
+          alt="Generated QR Code"
           class="w-[150px] h-[150px]"
         />
       </div>
 
-      <div v-else class="text-muted-foreground flex flex-col items-center">
+      <div v-else class="flex flex-col items-center text-muted-foreground">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        <p class="mt-2 text-sm text-muted-foreground">Generating QR Code...</p>
+        <p class="mt-2 text-sm">Generating QR Code...</p>
       </div>
     </div>
 
-    <!-- Dropdown -->
+    <!-- Campaign Dropdown -->
     <div class="px-2 space-y-2">
-      <Label for="campaign-select">Choose a Campaign</Label>
+      <Label for="campaign-select" class="text-primary text-lg">Choose a Campaign</Label>
       <Select v-model="selectedValue">
         <SelectTrigger id="campaign-select" class="w-full">
           <SelectValue placeholder="Select a campaign" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem v-for="option in campaignOptions" :key="option.value" :value="option.value">
+          <SelectItem
+            v-for="option in campaignOptions"
+            :key="option.value"
+            :value="option.value"
+          >
             {{ option.label }}
           </SelectItem>
         </SelectContent>
       </Select>
     </div>
 
-    <!-- Customization Options - Only show when QR is generated -->
+    <!-- Customization Section -->
     <div v-if="selectedValue" class="space-y-6 p-2">
-      <p class="text-primary text-xl font-bold">Customize QR Code</p>
-      <Accordion type="single" collapsible class="w-full" default-value="a">
-        <AccordionItem value="a">
-          <AccordionTrigger>Customize Colors</AccordionTrigger>
-          <AccordionContent class="space-y-4">
-            <div class="space-y-2">
-              <QRColourPicker 
-                :model-value="qrStore.config.dots.colors[0]"
-                @update:model-value="updateDotsColor"
-                v-slot="{ currentColor }"
-              >
-                <div class="flex items-center gap-3 mb-2">
-                  <span class="text-sm text-primary font-medium">Dots Color:</span>
-                  <div 
-                    class="w-8 h-8 rounded-md border border-border cursor-pointer shadow-xs"
-                    :style="{ backgroundColor: currentColor }"
-                  />
-                </div>
-              </QRColourPicker>
-            </div>
+      <h2 class="text-lg text-primary">Customize QR Code</h2>
 
-            <div class="space-y-2">
-              <QRColourPicker 
-                :model-value="qrStore.config.background.colors[0]"
-                @update:model-value="updateBackgroundColor"
-                v-slot="{ currentColor }"
-              >
-                <div class="flex items-center gap-3 mb-2">
-                  <span class="text-sm text-primary font-medium">Background Color:</span>
-                  <div 
-                    class="w-8 h-8 rounded-md border border-border cursor-pointer shadow-xs"
-                    :style="{ backgroundColor: currentColor }"
-                  />
-                </div>
-              </QRColourPicker>
-            </div>
-
-            <div class="space-y-2">
-              <QRColourPicker 
-                :model-value="qrStore.config.cornersSquare.colors[0]"
-                @update:model-value="updateCornerSquareColor"
-                v-slot="{ currentColor }"
-              >
-                <div class="flex items-center gap-3 mb-2">
-                  <span class="text-sm text-primary font-medium">Corner Square Color:</span>
-                  <div 
-                    class="w-8 h-8 rounded-md border border-border cursor-pointer shadow-xs"
-                    :style="{ backgroundColor: currentColor }"
-                  />
-                </div>
-              </QRColourPicker>
-            </div>
-
-            <div class="space-y-2">
-              <QRColourPicker 
-                :model-value="qrStore.config.cornersDot.colors[0]"
-                @update:model-value="updateCornerDotColor"
-                v-slot="{ currentColor }"
-              >
-                <div class="flex items-center gap-3 mb-2">
-                  <span class="text-sm text-primary font-medium">Corner Dot Color:</span>
-                  <div 
-                    class="w-8 h-8 rounded-md border border-border cursor-pointer shadow-xs"
-                    :style="{ backgroundColor: currentColor }"
-                  />
-                </div>
-              </QRColourPicker>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="b">
+      <Accordion type="single" collapsible class="w-full" default-value="shape">
+        <AccordionItem value="shape">
           <AccordionTrigger>Change Dot Shape</AccordionTrigger>
           <AccordionContent>
             <PatternSelection />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="colors">
+          <AccordionTrigger>Customize Colors</AccordionTrigger>
+          <AccordionContent>
+            <Accordion type="multiple" class="w-full space-y-2 mt-2">
+
+              <!-- Dots Color -->
+              <AccordionItem value="dots">
+                <AccordionTrigger>Dots Color</AccordionTrigger>
+                <AccordionContent>
+                  <QRColourPicker
+                    :model-value="qrStore.config.dots.colors[0]"
+                    @update:model-value="updateDotsColor"
+                    v-slot="{ currentColor }"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-md border border-border shadow-xs"
+                        :style="{ backgroundColor: currentColor }"
+                      />
+                      <span class="text-sm">Current: {{ currentColor }}</span>
+                    </div>
+                  </QRColourPicker>
+                </AccordionContent>
+              </AccordionItem>
+
+              <!-- Background Color -->
+              <AccordionItem value="background">
+                <AccordionTrigger>Background Color</AccordionTrigger>
+                <AccordionContent>
+                  <QRColourPicker
+                    :model-value="qrStore.config.background.colors[0]"
+                    @update:model-value="updateBackgroundColor"
+                    v-slot="{ currentColor }"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-md border border-border shadow-xs"
+                        :style="{ backgroundColor: currentColor }"
+                      />
+                      <span class="text-sm">Current: {{ currentColor }}</span>
+                    </div>
+                  </QRColourPicker>
+                </AccordionContent>
+              </AccordionItem>
+
+              <!-- Corner Square Color -->
+              <AccordionItem value="cornerSquare">
+                <AccordionTrigger>Corner Square Color</AccordionTrigger>
+                <AccordionContent>
+                  <QRColourPicker
+                    :model-value="qrStore.config.cornersSquare.colors[0]"
+                    @update:model-value="updateCornerSquareColor"
+                    v-slot="{ currentColor }"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-md border border-border shadow-xs"
+                        :style="{ backgroundColor: currentColor }"
+                      />
+                      <span class="text-sm">Current: {{ currentColor }}</span>
+                    </div>
+                  </QRColourPicker>
+                </AccordionContent>
+              </AccordionItem>
+
+              <!-- Corner Dot Color -->
+              <AccordionItem value="cornerDot">
+                <AccordionTrigger>Corner Dot Color</AccordionTrigger>
+                <AccordionContent>
+                  <QRColourPicker
+                    :model-value="qrStore.config.cornersDot.colors[0]"
+                    @update:model-value="updateCornerDotColor"
+                    v-slot="{ currentColor }"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-md border border-border shadow-xs"
+                        :style="{ backgroundColor: currentColor }"
+                      />
+                      <span class="text-sm">Current: {{ currentColor }}</span>
+                    </div>
+                  </QRColourPicker>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </AccordionContent>
         </AccordionItem>
 
@@ -180,44 +200,41 @@ const saveQR = () => {
           <AccordionTrigger>Upload Logo</AccordionTrigger>
           <AccordionContent>
             <QRBuilderLogoPicker>
-              <div class="grid grid-cols-[32px_1fr] gap-2 items-center">
-              <span
-                v-if="!qrStore.config.logoUrl"
-                class="flex justify-center items-center w-8 h-8 rounded-md border border-border cursor-pointer hover:shadow-md hover:border-primary transition-all duration-200"
-              >
-                <X class="w-5 h-5" />
-              </span>
-              <img
-                v-else
-                :src="qrStore.config.logoUrl"
-                :alt="qrStore.config.logoUrl"
-                class="w-8 h-8 p-1 rounded-md border border-border object-contain cursor-pointer hover:shadow-md hover:border-primary transition-all duration-200"
-              />
-              <Input
-                :placeholder="qrStore.config.logoUrl ? 'Change logo' : 'Choose a logo'"
-                class="w-full"
-              />
-            </div>
+              <div class="grid grid-cols-[40px_1fr] gap-3 items-center">
+                <span
+                  v-if="!qrStore.config.logoUrl"
+                  class="flex justify-center items-center w-10 h-10 rounded-md border border-border cursor-pointer"
+                >
+                  <X class="w-5 h-5" />
+                </span>
+                <img
+                  v-else
+                  :src="qrStore.config.logoUrl"
+                  alt="Logo"
+                  class="w-10 h-10 p-1 rounded-md border border-border object-contain cursor-pointer"
+                />
+                <Input
+                  :placeholder="qrStore.config.logoUrl ? 'Change logo' : 'Choose a logo'"
+                  class="w-full"
+                />
+              </div>
             </QRBuilderLogoPicker>
           </AccordionContent>
         </AccordionItem>
 
+        <!-- 🪟 Frame Style -->
         <AccordionItem value="e">
           <AccordionTrigger>Select Frame Style</AccordionTrigger>
           <AccordionContent>
             <QRBuilderFrameSelection />
           </AccordionContent>
         </AccordionItem>
-
-        <AccordionItem value="f">
-          <AccordionTrigger>Adjust Size</AccordionTrigger>
-          <AccordionContent></AccordionContent>
-        </AccordionItem>
       </Accordion>
 
-      <div class="flex w-full items-center gap-3">
-        <Button @click="downloadQR">Download QR Code</Button>
-        <Button @click="saveQR">Save QR Code</Button>
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 pt-2">
+        <Button class="w-full sm:w-auto" @click="downloadQR">Download</Button>
+        <Button variant="secondary" class="w-full sm:w-auto" @click="saveQR">Save</Button>
       </div>
     </div>
   </div>

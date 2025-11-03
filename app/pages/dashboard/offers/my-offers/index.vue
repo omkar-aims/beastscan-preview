@@ -18,17 +18,18 @@ const offers = [
       src: "/big-Sale.jpg",
       alt: "Cup of coffee with pastry",
     },
+    users: "4.8k",
   },
 ];
 
 const emptyResource = {
-  title: "Launch Your First Pop-Up Form",
+  title: "You haven't created any offers yet",
   description:
-    "Capture attention instantly with eye-catching forms that appear exactly when your visitors are most engaged.",
+    "Create exclusive offfers to attract and reatain customers effectively.",
 
   image: {
     src: "/popup-form.svg",
-    alt: "Popup form illustration",
+    alt: "Offer Illu",
   },
 
   link: {
@@ -114,17 +115,21 @@ const emptyResource = {
             </CardContent>
 
             <!-- Footer -->
-            <CardFooter class="pt-0">
-              <Button
-                class="w-full bg-primary text-white font-medium rounded-md"
-              >
-                <NuxtLink
-                  to="/dashboard/offers/stats"
-                  class="w-full text-center block text-white"
+            <CardFooter class="justify-between mt-2">
+              <div class="text-xs text-muted-foreground">
+                Claimed by
+                <span class="font-medium text-foreground">{{
+                  offer.users
+                }}</span>
+                users
+              </div>
+              <Button class="rounded-full gap-1">
+                <span
+                  ><NuxtLink to="/dashboard/offers/stats"
+                    >View Stats</NuxtLink
+                  ></span
                 >
-                  View Stats
-                  <ArrowRight class="w-4 h-4 inline-block ml-1" />
-                </NuxtLink>
+                <ArrowRight class="w-4 h-4" />
               </Button>
             </CardFooter>
           </Card>

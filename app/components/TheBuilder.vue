@@ -11,12 +11,11 @@ const props = withDefaults(
   }
 );
 
-const isLoading = ref<boolean>(props.waitForLoad ?? true);
+const isLoading = ref<boolean>(props.waitForLoad);
 const width = ref<number>(0);
 const height = ref<number>(0);
 
 const { toggleSidebar, state } = useSidebar();
-const iframeScale = computed(() => (state.value === "expanded" ? 0.5 : 1));
 
 onMounted(() => {
   width.value = window.innerWidth;
@@ -51,13 +50,6 @@ onUnmounted(() => {
       v-show="!isLoading"
       :src="source"
       :class="[state === 'expanded' && 'shadow-2xl']"
-      :style="{
-        transform: `scale(${iframeScale}) ${
-          state === 'expanded' ? 'translate(50%, 32px)' : ''
-        } `,
-        transformOrigin: 'top left',
-        transition: 'transform 0.3s ease',
-      }"
       :width="width"
       :height="height"
       @loadstart="isLoading = true"

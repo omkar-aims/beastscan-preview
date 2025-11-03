@@ -88,6 +88,18 @@ const showBuilder = ref<boolean>(false);
 
 const builderStore = useBuilderStore();
 const router = useRouter();
+
+watch(
+  () => selectedType.value,
+  (newValue) => {
+    if (!newValue) {
+      showTemplate.value = false;
+      showBuilder.value = false;
+      builderStore.close();
+    }
+  }
+);
+
 watch(
   () => showBuilder.value,
   (value) => {
