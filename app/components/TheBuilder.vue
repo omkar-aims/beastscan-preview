@@ -1,30 +1,41 @@
 <script setup lang="ts">
 import { useSidebar } from "./ui/sidebar";
 
-const props = withDefaults(
-  defineProps<{
-    source: string;
-    waitForLoad?: boolean;
-  }>(),
-  {
-    waitForLoad: true,
-  }
-);
+defineProps<{
+  source: string;
+}>();
 
-const isLoading = ref<boolean>(props.waitForLoad ?? true);
+const isLoading = ref<boolean>(false);
 const width = ref<number>(0);
 const height = ref<number>(0);
 
 const { toggleSidebar, state } = useSidebar();
 const iframeScale = computed(() => (state.value === "expanded" ? 0.5 : 1));
 
+const iframeRef = useTemplateRef("iframeRef");
+
+const builderStore = useBuilderStore();
+
 onMounted(() => {
   width.value = window.innerWidth;
   height.value = window.innerHeight - 64;
   if (state.value === "expanded") toggleSidebar();
 
-  if (!props.waitForLoad) {
+  builderStore.iframeRef = iframeRef.value;
+
+  const iframe = iframeRef.value;
+
+  if (!iframe) return;
+
+  if (iframe.contentDocument?.readyState === "complete") {
     isLoading.value = false;
+  } else {
+    iframe.addEventListener("load", () => {
+      isLoading.value = false;
+    });
+    iframe.addEventListener("loadstart", () => {
+      isLoading.value = true;
+    });
   }
 });
 
@@ -49,6 +60,7 @@ onUnmounted(() => {
     </div>
     <iframe
       v-show="!isLoading"
+      ref="iframeRef"
       :src="source"
       :class="[state === 'expanded' && 'shadow-2xl']"
       :style="{
@@ -60,8 +72,6 @@ onUnmounted(() => {
       }"
       :width="width"
       :height="height"
-      @loadstart="isLoading = true"
-      @load="isLoading = false"
     />
   </div>
 </template>

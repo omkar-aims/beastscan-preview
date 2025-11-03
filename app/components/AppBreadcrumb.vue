@@ -24,6 +24,7 @@ const breadcrumbs = computed(() => {
 });
 
 const showBreadcrumb = computed(() => breadcrumbs.value.length > 0);
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -31,7 +32,7 @@ const showBreadcrumb = computed(() => breadcrumbs.value.length > 0);
     <BreadcrumbList>
       <BreadcrumbItem>
         <BreadcrumbLink as-child>
-          <NuxtLink to="/dashboard">Dashboard</NuxtLink>
+          {{ userStore.activeProject?.attributes.name }}
         </BreadcrumbLink>
       </BreadcrumbItem>
 

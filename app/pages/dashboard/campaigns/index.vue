@@ -2,6 +2,7 @@
 import { Checkbox, NuxtLink } from "#components";
 import type { ColumnDef } from "@tanstack/vue-table";
 import { ArrowRight, ShoppingBag, Sparkle } from "lucide-vue-next";
+import { useCampaigns } from "~/composables/campaign/useCampaigns";
 
 const campaigns = [
   {
@@ -66,8 +67,6 @@ const columns: ColumnDef<(typeof campaigns)[0]>[] = [
   {
     header: "Type",
     cell: () => {
-      
-
       return h(
         "div",
         {
@@ -169,10 +168,22 @@ const columns: ColumnDef<(typeof campaigns)[0]>[] = [
             "relative flex gap-2 items-center text-primary hover:underline",
           href: "/dashboard/campaigns",
         },
-        [h("span", null, "View Detail"), h(ArrowRight, { class: "w-4 h-4" })]
+        () => [
+          h("span", null, "View Detail"),
+          h(ArrowRight, { class: "w-4 h-4" }),
+        ]
       ),
   },
 ];
+
+const { data, isLoading } = useCampaigns();
+
+watch(
+  () => isLoading.value,
+  () => {
+    if (!isLoading) console.log(data.value);
+  }
+);
 </script>
 
 <template>

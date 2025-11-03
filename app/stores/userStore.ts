@@ -1,11 +1,8 @@
-import { watch } from "vue";
 import { defineStore } from "pinia";
 import type { Token, Account, Project } from "@/types";
 import type { User } from "~/types/user";
 
 export const useUserStore = defineStore("user", () => {
-  const apiRoutes = useApiRoutes();
-
   const token = ref<Token>({
     token: null,
     refreshToken: null,
@@ -16,8 +13,8 @@ export const useUserStore = defineStore("user", () => {
   const accounts = ref<Account[]>([]);
   const projects = ref<Project[]>([]);
 
-  const activeAccountId = ref<string | null>(null);
-  const activeProjectId = ref<string | null>(null);
+  const activeAccountId = useCookie<string | null>("activeAccountId");
+  const activeProjectId = useCookie<string | null>("activeProjectId");
 
   const activeAccount = computed(
     () => accounts.value.find((acc) => acc.id === activeAccountId.value) ?? null
@@ -52,53 +49,6 @@ export const useUserStore = defineStore("user", () => {
     activeProjectId.value = projectId;
   }
 
-  function resetStore() {
-    token.value = { token: null, refreshToken: null };
-    accounts.value = [];
-    projects.value = [];
-    activeAccountId.value = null;
-    activeProjectId.value = null;
-  }
-
-  async function fetchAccounts() {
-    if (!token.value.token) return;
-    const { data }: { data: Account[] } = await $fetch(apiRoutes.accounts, {
-      headers: { Authorization: `Bearer ${token.value.token}` },
-    });
-
-    console.log(data);
-
-    setAccounts(data);
-    if (data[0]) setActiveAccount(data[0].id);
-  }
-
-  async function fetchProjects() {
-    if (!activeAccountId.value || !token.value.token) return;
-    const { data }: { data: Project[] } = await $fetch(
-      apiRoutes.projects.replace("[ID]", `/${activeAccountId.value}`),
-      {
-        headers: { Authorization: `Bearer ${token.value.token}` },
-      }
-    );
-
-    setProjects(data);
-    if (data[0]) setActiveProject(data[0].id);
-  }
-
-  watch(
-    () => token.value.token,
-    async (newToken) => {
-      if (newToken) await fetchAccounts();
-    }
-  );
-
-  watch(
-    () => activeAccountId.value,
-    async (newId) => {
-      if (newId) await fetchProjects();
-    }
-  );
-
   return {
     token,
     user,
@@ -116,6 +66,5 @@ export const useUserStore = defineStore("user", () => {
     setProjects,
     setActiveAccount,
     setActiveProject,
-    resetStore,
   };
 });
