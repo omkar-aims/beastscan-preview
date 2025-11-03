@@ -17,6 +17,8 @@ const height = ref<number>(0);
 
 const { toggleSidebar, state } = useSidebar();
 
+
+
 onMounted(() => {
   width.value = window.innerWidth;
   height.value = window.innerHeight - 64;
