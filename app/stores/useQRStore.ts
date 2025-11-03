@@ -7,7 +7,7 @@ import { useDebounceFn } from '@vueuse/core'
 const INITIAL_THEME: QROptions = {
   text: '',
   size: 150,
-  margin: 10,
+  margin: 5,
   type: 'png',
   dots: { type: 'square', coloring: 'solid', colors: ['#000000'], rotation: 0 },
   cornersSquare: { type: 'square', coloring: 'solid', colors: ['#000000'], rotation: 0 },

@@ -10,7 +10,8 @@ const width = ref<number>(0);
 const height = ref<number>(0);
 
 const { toggleSidebar, state } = useSidebar();
-const iframeScale = computed(() => (state.value === "expanded" ? 0.5 : 1));
+
+
 
 const iframeRef = useTemplateRef("iframeRef");
 
@@ -63,13 +64,6 @@ onUnmounted(() => {
       ref="iframeRef"
       :src="source"
       :class="[state === 'expanded' && 'shadow-2xl']"
-      :style="{
-        transform: `scale(${iframeScale}) ${
-          state === 'expanded' ? 'translate(50%, 32px)' : ''
-        } `,
-        transformOrigin: 'top left',
-        transition: 'transform 0.3s ease',
-      }"
       :width="width"
       :height="height"
     />
