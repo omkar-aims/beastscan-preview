@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { slugify } from "@vueuse/motion";
+import { toTypedSchema } from "@vee-validate/zod";
 import {
   IdCard,
   UtensilsCrossed,
@@ -9,8 +11,11 @@ import {
   Sparkles,
   ShoppingBag,
   ArrowRight,
-  ChevronRight,
 } from "lucide-vue-next";
+import { useForm } from "vee-validate";
+import FormMessage from "~/components/ui/form/FormMessage.vue";
+import { useCreateCampaign } from "~/composables/campaign/useCreateCampaign";
+import { createCampaignSchema } from "~/schemas";
 
 const campaignTypes = [
   {
@@ -81,58 +86,34 @@ const campaignTypes = [
 ];
 
 const route = useRoute();
+const open = ref(false);
 
 const selectedType = computed(() => route.query.type);
-const showTemplate = ref<boolean>(false);
-const showBuilder = ref<boolean>(false);
 
-const builderStore = useBuilderStore();
-const router = useRouter();
-
-watch(
-  () => selectedType.value,
-  (newValue) => {
-    if (!newValue) {
-      showTemplate.value = false;
-      showBuilder.value = false;
-      builderStore.close();
-    }
-  }
-);
-
-watch(
-  () => showBuilder.value,
-  (value) => {
-    if (value) {
-      builderStore.open();
-      builderStore.setAction(() => {
-        router.replace("/dashboard/campaigns/");
-      });
-    } else builderStore.close();
-  }
-);
-
-onUnmounted(() => {
-  builderStore.close();
+const form = useForm({
+  validationSchema: toTypedSchema(createCampaignSchema),
 });
 
-const templates = [
-  {
-    name: "Classic Lead Capture",
-    preview:
-      "https://files.jotform.com/jotformapps/lead-capture-form-dde416f59c804b9d693d09e0da962a7c-classic.png",
-  },
-  {
-    name: "Modern Lead Form",
-    preview:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtgzk6KSI8ROLGzE_7zjUfi8G1VK21qpxOgA&s",
-  },
-  {
-    name: "Marketing Form Example",
-    preview:
-      "https://cdn.marketing123.123formbuilder.com/wp-content/uploads/2020/12/Lead-Capture-Form-4030148-1.jpg",
-  },
-];
+const { mutateAsync, status } = useCreateCampaign();
+const error = ref<string | null>(null);
+const builderStore = useBuilderStore();
+const onSubmit = form.handleSubmit(async (values) => {
+  try {
+    await mutateAsync(values, {
+      onSuccess(data) {
+        open.value = false;
+        const campaign = data.data;
+        builderStore.setCampaign(campaign);
+        nextTick(() => {
+          navigateTo(`/design?campaign=${campaign.attributes.slug}`);
+        });
+      },
+    });
+    form.resetForm();
+  } catch (err: any) {
+    error.value = err.message ?? "Something went wrong";
+  }
+});
 </script>
 
 <template>
@@ -164,69 +145,76 @@ const templates = [
           </div>
 
           <CardAction>
-            <NuxtLink
-              :href="`/dashboard/campaigns/new?type=${type.title
-                .toLowerCase()
-                .replaceAll(' ', '-')}`"
-            >
-              <Button class="rounded-full gap-1">
-                <span>Create</span>
-                <ArrowRight class="w-4 h-4" />
-              </Button>
-            </NuxtLink>
+            <Button class="rounded-full gap-1" @click="open = true">
+              <span>Create</span>
+              <ArrowRight class="w-4 h-4" />
+            </Button>
           </CardAction>
         </CardFooter>
       </Card>
     </div>
 
-    <div v-if="selectedType && !showTemplate" class="space-y-4">
-      <div>
-        <AppHeading :level="2" class="text-xl font-semibold"> Info </AppHeading>
-        <p class="text-muted-foreground">Give the details of your campaign.</p>
-      </div>
+    <Dialog v-model:open="open">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create campaign</DialogTitle>
+          <DialogDescription>
+            Give the details of your campaign.
+          </DialogDescription>
+        </DialogHeader>
 
-      <form class="space-y-4 max-w-md">
-        <FormField v-slot="{ componentField }" name="name">
-          <FormItem>
-            <FormLabel class="text-sm font-medium"
-              >Name your campaign</FormLabel
-            >
-            <FormControl>
-              <Input
-                placeholder="People will see this, so give it a nice name!"
-                v-bind="componentField"
-                class="bg-card"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
+        <form class="space-y-4 max-w-md" @submit="onSubmit">
+          <FormField v-slot="{ componentField }" name="title">
+            <FormItem>
+              <FormLabel class="text-sm font-medium">
+                Campaign Title
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter a clear, engaging campaign title"
+                  v-bind="componentField"
+                  class="bg-card"
+                  @change="
+                (e: Event) => {
+                  const target = e.target as HTMLInputElement
+                  form.setFieldValue('slug', slugify(target.value))
+                }
+              "
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
 
-        <Button class="gap-2" type="button" @click="showTemplate = true">
-          <span>Continue to design</span>
-          <ChevronRight class="w-4 h-4" />
-        </Button>
-      </form>
-    </div>
+          <FormField v-slot="{ componentField }" name="slug">
+            <FormItem>
+              <FormLabel class="text-sm font-medium"> Campaign Slug </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="e.g. summer-sale-2025"
+                  v-bind="componentField"
+                  class="bg-card"
+                  @focus="error = null"
+                />
+              </FormControl>
+              <FormMessage />
+              <p
+                v-if="error !== null"
+                class="text-destructive-foreground text-sm"
+              >
+                {{ error }}
+              </p>
+            </FormItem>
+          </FormField>
 
-    <div v-if="showTemplate && !showBuilder" class="space-y-4">
-      <div>
-        <AppHeading :level="2" class="text-xl font-semibold">
-          Design
-        </AppHeading>
-        <p class="text-muted-foreground">
-          Choose a template or start from scratch.
-        </p>
-      </div>
-
-      <TheTemplatePicker
-        :templates="templates"
-        :handle-select="() => (showBuilder = true)"
-      />
-    </div>
-
-    <div v-if="showBuilder" class="relative">
-      <TheBuilder source="https://beast-builder.netlify.app/" />
-    </div>
+          <DialogFooter class="mt-4">
+            <DialogClose as-child>
+              <Button type="button" variant="outline"> Cancel </Button>
+            </DialogClose>
+            <StatefulButton :status="status"> Create Campaign </StatefulButton>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>

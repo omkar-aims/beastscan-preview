@@ -1,7 +1,6 @@
 export default function useApiRoutes() {
   const config = useRuntimeConfig();
   const BASE = config.public.apiBase;
-  const localPath = `${config.public.host}/api`;
   const localapi = `/api`;
 
   return {
@@ -11,13 +10,18 @@ export default function useApiRoutes() {
     },
 
     accounts: `https://beta.beastscan.com/api/v1/accounts`,
-    projects: `https://beta.beastscan.com/api/v1/accounts[ID]/projects`,
+    projects: `https://beta.beastscan.com/api/v1/accounts/[ID]/projects`,
 
     user: {
       profile: `${BASE}/v1/me`,
       profileUpdate: `${BASE}/user/profile/update`,
     },
-    campaigns: `${localPath}/campaigns`,
+    campaigns: {
+      create: "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",
+      update: "https://beta.beastscan.com/api/v1/campaigns/[ID]",
+      projectCampaigns:
+        "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",
+    },
     leaddata: `${localapi}/leaddata`,
   };
 }

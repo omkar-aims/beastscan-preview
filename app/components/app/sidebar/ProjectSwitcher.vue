@@ -55,7 +55,7 @@ const userStore = useUserStore();
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem class="p-2 gap-2">
+            <DropdownMenuItem class="px-2 gap-2 cursor-pointer" as-child>
               <DialogTrigger
                 class="w-full text-left flex items-center gap-2 group"
               >
@@ -86,6 +86,9 @@ const userStore = useUserStore();
         </Form>
 
         <DialogFooter>
+          <DialogClose as-child>
+            <Button type="button" variant="outline"> Cancel </Button>
+          </DialogClose>
           <Button type="submit">Create</Button>
         </DialogFooter>
       </DialogContent>
