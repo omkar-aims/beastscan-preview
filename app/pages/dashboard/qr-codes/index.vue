@@ -6,7 +6,6 @@ import type { ColumnDef } from "@tanstack/vue-table";
 import Checkbox from "~/components/ui/checkbox/Checkbox.vue";
 import DataTableDropDown from "~/components/DataTableDropDown.vue";
 import { NuxtImg } from "#components";
-import QRCodeGenerator from "~/components/QRCodeGenerator.vue";
 
 const { data: campaigns, isLoading } = useCampaigns();
 
@@ -103,25 +102,23 @@ const columns: ColumnDef<Campaign>[] = [
       ]),
   },
 ];
+
+const showCreateModal = ref<boolean>(false);
 </script>
 
 <template>
   <div class="space-y-4">
     <AppRow direction="horizontal" class="justify-between items-center">
       <AppHeading :level="3">QR Codes</AppHeading>
-
-      <Sheet>
-        <SheetTrigger>
-          <Button class="flex items-center gap-2">
-            <Plus />
-            <span>Create New</span>
-          </Button>
-        </SheetTrigger>
-
-        <SheetContent class="w-full sm:max-w-xl overflow-y-auto">
-          <QRCodeGenerator />
-        </SheetContent>
-      </Sheet>
+      <Button class="flex items-center gap-2" @click="showCreateModal = true">
+        <Plus />
+        <span>Create New</span>
+      </Button>
+      <QRCodeBuilder
+        v-if="showCreateModal"
+        v-motion-pop
+        @on-close="showCreateModal = false"
+      />
     </AppRow>
 
     <template v-if="campaigns?.length === 0">
