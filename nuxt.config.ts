@@ -46,6 +46,12 @@ export default defineNuxtConfig({
     defaultLocale: "en",
   },
 
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700, 800, 900],
+    },
+  },
+
   shadcn: {
     prefix: "",
     componentDir: "./app/components/ui",

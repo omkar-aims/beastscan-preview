@@ -15,4 +15,11 @@ export const createCampaignSchema = z.object({
   config: z.record(z.any()).optional().default({}),
 });
 
+export const createQRSchema = z.object({
+  status: z.literal("active"),
+  campaignId: z.string(),
+  config: z.record(z.any()).optional().default({}),
+});
+
 export type CampaignSchema = z.infer<typeof createCampaignSchema>;
+export type QRSchema = z.infer<typeof createQRSchema>;
