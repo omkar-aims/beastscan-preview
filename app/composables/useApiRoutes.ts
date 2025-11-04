@@ -21,6 +21,7 @@ export default function useApiRoutes() {
       update: "https://beta.beastscan.com/api/v1/campaigns/[ID]",
       projectCampaigns:
         "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",
+      getCampaign: "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",  
     },
     leaddata: `${localapi}/leaddata`,
   };
