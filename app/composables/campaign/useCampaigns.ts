@@ -21,9 +21,19 @@ export function useCampaigns() {
         }
       );
 
-      const data = response.json();
+      if (!response.ok) throw new Error("Failed to fetch campaigns")
 
-      return data;
+      const data =await response.json();
+
+      if (!data || !data.data) return []
+
+      const campaigns = Array.isArray(data.data) ? data.data : [data.data]
+
+      return campaigns.reverse()
     },
+
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
   });
 }
