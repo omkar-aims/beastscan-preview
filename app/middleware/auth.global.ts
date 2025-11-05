@@ -3,14 +3,22 @@ import type { Account, Project } from "~/types";
 import { useUserStore } from "@/stores/userStore";
 
 export default defineNuxtRouteMiddleware(async (to) => {
+  const tokenCookie = useCookie<string | null>("token");
+  const refreshTokenCookie = useCookie<string | null>("refreshToken");
+
+  // Redirect authenticated users away from login page
+  if (to.path === "/login" && tokenCookie.value) {
+    return navigateTo("/dashboard");
+  }
+
+  // Check if route is protected
   const protectedPrefixes = ["/dashboard", "/profile", "/design"];
   const isProtected = protectedPrefixes.some((prefix) =>
     to.path.startsWith(prefix)
   );
   if (!isProtected) return;
 
-  const tokenCookie = useCookie<string | null>("token");
-  const refreshTokenCookie = useCookie<string | null>("refreshToken");
+  // Redirect unauthenticated users to login
   if (!tokenCookie.value) return navigateTo("/login");
 
   const userStore = useUserStore();
