@@ -8,10 +8,10 @@ export function useCampaigns() {
   const apiRoutes = useApiRoutes();
   const userStore = useUserStore();
 
-  return useQuery<Campaign[]>({
+  return useQuery({
     queryKey: campaignsKey,
     queryFn: async () => {
-      const response = await fetch(
+      const { data }: { data: Campaign[] } = await $fetch(
         apiRoutes.campaigns.projectCampaigns.replace(
           "[ID]",
           userStore.activeProjectId ?? ""
@@ -21,15 +21,7 @@ export function useCampaigns() {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch campaigns")
-
-      const data =await response.json();
-
-      if (!data || !data.data) return []
-
-      const campaigns = Array.isArray(data.data) ? data.data : [data.data]
-
-      return campaigns.reverse()
+      return data;
     },
 
     refetchOnMount: true,

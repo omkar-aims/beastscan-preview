@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
+import { ref, onMounted, defineEmits } from "vue";
+
 const campaigns = [
   {
     type: "campaigns",
@@ -63,37 +65,40 @@ const campaigns = [
   },
 ];
 
-const loading = ref<boolean>(true);
+const loading = ref(true);
+const emit = defineEmits(["on-close"]);
 
 onMounted(async () => {
   await import("@/assets/js/qr-builder.js");
   loading.value = false;
 });
-
-const overlayRef = useTemplateRef("overlayRef");
-
-const emit = defineEmits(["on-close"]);
 </script>
 
 <template>
-  <div
-    ref="overlayRef"
-    v-motion-fade
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-  >
+  <Teleport to="body">
     <div
-      v-motion-pop
-      class="bg-background h-[90vh] max-h-[680px] w-5xl rounded-lg grid grid-cols-[1fr_30%] overflow-hidden content-center"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
     >
-      <button
-        class="absolute top-4 right-4 rounded-full p-2 hover:bg-muted transition cursor-pointer z-50"
-        aria-label="Close"
-        @click="() => emit('on-close')"
+      <div
+        class="relative bg-background h-[90vh] max-h-[680px] w-5xl rounded-lg grid grid-cols-[1fr_30%] overflow-hidden"
       >
-        <X />
-      </button>
-      <p v-if="loading">Loading</p>
-      <qr-builder v-else :campaigns="campaigns" :show-action="true" />
+        <button
+          class="absolute top-4 right-4 rounded-full p-2 hover:bg-muted transition cursor-pointer z-50"
+          aria-label="Close"
+          @click="() => emit('on-close')"
+        >
+          <X />
+        </button>
+
+        <qr-builder
+          v-if="!loading"
+          :campaigns="campaigns"
+          :show-action="true"
+        />
+        <div v-else class="absolute inset-0 flex items-center justify-center">
+          <div class="loader" />
+        </div>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>
