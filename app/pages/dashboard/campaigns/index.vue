@@ -1,105 +1,13 @@
 <script setup lang="ts">
-import { Plus, Calendar, ArrowRight, Hash } from "lucide-vue-next";
-
-interface Campaign {
-  type: string;
-  id: string;
-  attributes: {
-    title: string;
-    slug: string;
-    short_code: string;
-    status: string;
-    published_at: string | null;
-    project_id: string;
-  };
-}
-
-const campaigns: Campaign[] = [
-  {
-    type: "Digital Business Card",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d25",
-    attributes: {
-      title: "Demo Campaign",
-      slug: "demo-campaign",
-      short_code: "c-zPa95a",
-      status: "draft",
-      published_at: null,
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439987",
-    },
-  },
-  {
-    type: "Landing Page",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d26",
-    attributes: {
-      title: "Product Launch",
-      slug: "product-launch",
-      short_code: "c-aB3c4d",
-      status: "published",
-      published_at: "2024-10-15T10:30:00Z",
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439988",
-    },
-  },
-  {
-    type: "QR Code Campaign",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d27",
-    attributes: {
-      title: "Restaurant Menu",
-      slug: "restaurant-menu",
-      short_code: "c-xY7z8w",
-      status: "published",
-      published_at: "2024-09-20T14:45:00Z",
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439989",
-    },
-  },
-  {
-    type: "Email Campaign",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d28",
-    attributes: {
-      title: "Newsletter October",
-      slug: "newsletter-october",
-      short_code: "c-mN5p6q",
-      status: "draft",
-      published_at: null,
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439990",
-    },
-  },
-  {
-    type: "Landing Page",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d29",
-    attributes: {
-      title: "Black Friday Sale",
-      slug: "black-friday-sale",
-      short_code: "c-rS9t0u",
-      status: "scheduled",
-      published_at: "2024-11-25T00:00:00Z",
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439991",
-    },
-  },
-  {
-    type: "Digital Business Card",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d30",
-    attributes: {
-      title: "Personal Portfolio",
-      slug: "personal-portfolio",
-      short_code: "c-vW1x2y",
-      status: "published",
-      published_at: "2024-08-10T09:15:00Z",
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439992",
-    },
-  },
-  {
-    type: "Social Share",
-    id: "0199f1cd-ff16-7b16-803c-a777daa26d31",
-    attributes: {
-      title: "Event Promotion",
-      slug: "event-promotion",
-      short_code: "c-zA3b4c",
-      status: "archived",
-      published_at: "2024-07-05T16:20:00Z",
-      project_id: "0199e10f-d13d-7ea3-9065-88d328439993",
-    },
-  },
-];
+import {
+  Plus,
+  Calendar,
+  ArrowRight,
+  Hash,
+  ExternalLink,
+} from "lucide-vue-next";
+import { useCampaigns } from "~/composables/campaign/useCampaigns";
+const { data: campaigns, isLoading, isError } = useCampaigns();
 </script>
 
 <template>
@@ -114,7 +22,15 @@ const campaigns: Campaign[] = [
       </NuxtLink>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div v-if="isLoading">
+      <p>Loading</p>
+    </div>
+
+    <div v-else-if="isError" class="text-center py-10 text-red-500">
+      Failed to load campaigns
+    </div>
+
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <Card v-for="campaign in campaigns" :key="campaign.id">
         <CardContent>
           <div class="flex items-center gap-3 mb-2">
@@ -130,11 +46,11 @@ const campaigns: Campaign[] = [
             <p class="text-sm text-muted-foreground flex items-center gap-2">
               <span class="font-medium">Short Link:</span>
               <a
-                :href="`https://beastscan.io/${campaign.attributes.short_code}`"
+                :href="`https://beastscan.io/${campaign.attributes.slug}`"
                 target="_blank"
                 class="text-primary font-medium hover:underline flex items-center gap-1"
               >
-                beastscan.io/{{ campaign.attributes.short_code }}
+                beastscan.io/{{ campaign.attributes.slug.split("-")[0] }}
                 <ExternalLink class="w-3.5 h-3.5 opacity-70" />
               </a>
             </p>

@@ -8,10 +8,10 @@ export function useCampaigns() {
   const apiRoutes = useApiRoutes();
   const userStore = useUserStore();
 
-  return useQuery<Campaign[]>({
+  return useQuery({
     queryKey: campaignsKey,
     queryFn: async () => {
-      const response = await fetch(
+      const { data }: { data: Campaign[] } = await $fetch(
         apiRoutes.campaigns.projectCampaigns.replace(
           "[ID]",
           userStore.activeProjectId ?? ""
@@ -20,8 +20,6 @@ export function useCampaigns() {
           headers: { Authorization: `Bearer ${userStore.token.token}` },
         }
       );
-
-      const data = response.json();
 
       return data;
     },
