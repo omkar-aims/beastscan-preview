@@ -1,4 +1,21 @@
 <script setup lang="ts">
+import { useFetchUser } from "~/composables/user/useFetchUser";
+import { useUserStore } from "~/stores/userStore";
+
+const { fetchUser } = useFetchUser();
+const userStore = useUserStore();
+
+// Fetch user on layout mount if not available
+onMounted(async () => {
+  if (!userStore.user && userStore.token?.token) {
+    console.log('Layout: Fetching user...');
+    try {
+      await fetchUser();
+    } catch (error) {
+      console.error('Layout: Failed to fetch user:', error);
+    }
+  }
+});
 const builderStore = useBuilderStore();
 
 const route = useRoute();

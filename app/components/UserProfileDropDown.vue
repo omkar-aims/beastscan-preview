@@ -1,20 +1,30 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
+import { Icon } from "@iconify/vue";
+import { useLogout } from "~/composables/auth/useLogout";
+
+const { logout } = useLogout();
+const showLogoutDialog = ref(false);
+
 const menuItems = [
-  { label: "View Profile", href: "/account", icon: "lucide:user" },
-  { label: "Settings", href: "/settings", icon: "lucide:settings" },
-  { label: "My Orders", href: "/orders", icon: "lucide:shopping-bag" },
-  { label: "My Loyalty", href: "/loyalty", icon: "lucide:heart" },
-  { label: "My Clip Cards", href: "/clip-cards", icon: "lucide:credit-card" },
-  { label: "Billing & Subscription", href: "/billing", icon: "lucide:receipt" },
-  { label: "Referrals", href: "/referrals", icon: "lucide:share-2" },
-  { label: "Integrations", href: "/integrations", icon: "lucide:layers" },
+  { label: "View Profile", href: "/profile", icon: "lucide:user" },
+  { label: "Accounts", href: "/accounts", icon: "lucide:users" },
 ];
 
-const logoutItem = {
-  label: "Logout",
-  href: "/logout",
-  icon: "lucide:log-out",
-};
+const logoutItem = { label: "Logout", icon: "lucide:log-out" };
+
+function openLogout() {
+  // stop menu default behavior by opening the dialog via state
+  showLogoutDialog.value = true;
+}
+function closeLogout() {
+  showLogoutDialog.value = false;
+}
+async function confirmLogout() {
+  await logout();
+  closeLogout();
+}
 </script>
 
 <template>
@@ -37,30 +47,56 @@ const logoutItem = {
     </DropdownMenuTrigger>
 
     <DropdownMenuContent class="w-56" align="end">
-      <DropdownMenuLabel>
+      <!-- <DropdownMenuLabel>
         <p class="text-sm font-bold leading-none mb-0.5">user</p>
         <p class="text-xs leading-none text-muted-foreground">
           user@example.com
         </p>
       </DropdownMenuLabel>
 
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator /> -->
 
       <DropdownMenuItem v-for="item in menuItems" :key="item.href" as-child>
-        <a :href="item.href" class="flex items-center gap-2">
-          <Icon :name="item.icon" class="h-4 w-4" />
+        <NuxtLink :to="item.href" class="flex items-center gap-2 w-full">
+          <Icon :icon="item.icon" class="h-4 w-4" />
           {{ item.label }}
-        </a>
+        </NuxtLink>
       </DropdownMenuItem>
 
       <DropdownMenuSeparator />
 
+      <!-- Logout item: use a button and stop propagation so menu doesn't auto-close/navigation -->
       <DropdownMenuItem as-child>
-        <a :href="logoutItem.href" class="flex items-center gap-2">
-          <Icon :name="logoutItem.icon" class="h-4 w-4" />
+        <button
+          type="button"
+          class="flex items-center gap-2 w-full text-red-600"
+          @click.stop="openLogout"
+        >
+          <Icon :icon="logoutItem.icon" class="h-4 w-4" />
           {{ logoutItem.label }}
-        </a>
+        </button>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
+
+  <!-- AlertDialog controlled by showLogoutDialog -->
+  <AlertDialog
+    :open="showLogoutDialog"
+    @openChange="(v) => (showLogoutDialog = v)"
+  >
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+        <AlertDialogDescription>
+          Are you sure you want to log out? You will be redirected to the login
+          page and your local session will be cleared.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel @click="closeLogout">Cancel</AlertDialogCancel>
+        <!-- Confirm runs logout then closes dialog -->
+        <AlertDialogAction @click="confirmLogout">Confirm</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 </template>

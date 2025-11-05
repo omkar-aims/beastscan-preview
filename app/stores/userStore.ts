@@ -49,6 +49,11 @@ export const useUserStore = defineStore("user", () => {
     activeProjectId.value = projectId;
   }
 
+  function clearAuth() {
+    token.value = { token: null, refreshToken: null };
+    user.value = null;
+  }
+
   return {
     token,
     user,
@@ -66,5 +71,6 @@ export const useUserStore = defineStore("user", () => {
     setProjects,
     setActiveAccount,
     setActiveProject,
+    clearAuth,
   };
 });
