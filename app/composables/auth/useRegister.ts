@@ -4,12 +4,30 @@ import type { RegisterResponse } from "~/types/auth";
 
 export const useRegister = () => {
   const router = useRouter();
+  const routes = useApiRoutes();
 
   const mutation = useMutation({
     mutationFn: async (credentials: RegisterSchema) => {
-      return await $fetch<RegisterResponse>('https://beta.beastscan.com/api/v1/signup', {
+      // Only send fields that have values
+      const body: any = {
+        email: credentials.email,
+        password: credentials.password,
+      };
+
+      // Add optional fields if they exist
+      if (credentials.accountName) {
+        body.accountName = credentials.accountName;
+      }
+      if (credentials.projectName) {
+        body.projectName = credentials.projectName;
+      }
+      if (credentials.referralCode) {
+        body.referralCode = credentials.referralCode;
+      }
+
+      return await $fetch<RegisterResponse>(routes.auth.register, {
         method: "POST",
-        body: credentials,
+        body,
       });
     },
 

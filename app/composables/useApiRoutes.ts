@@ -6,7 +6,7 @@ export default function useApiRoutes() {
   return {
     auth: {
       login: `${BASE}/login`,
-      register: `${BASE}/register`,
+      register: `https://beta.beastscan.com/api/v1/signup`,
     },
 
     accounts: `https://beta.beastscan.com/api/v1/accounts`,
