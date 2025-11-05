@@ -1,31 +1,27 @@
-import { ref } from "vue";
+import { useMutation } from "@tanstack/vue-query";
 import type { RegisterSchema } from "~/schemas/auth";
 import type { RegisterResponse } from "~/types/auth";
 
 export const useRegister = () => {
-  const apiRoutes = useApiRoutes();
+  const router = useRouter();
 
-  const pending = ref(false);
-  const error = ref<string | null>(null);
-
-  const register = async (
-    credentials: RegisterSchema
-  ): Promise<RegisterResponse | undefined> => {
-    pending.value = true;
-    error.value = null;
-
-    try {
-      const res: RegisterResponse = await $fetch(apiRoutes.auth.register, {
+  const mutation = useMutation({
+    mutationFn: async (credentials: RegisterSchema) => {
+      return await $fetch<RegisterResponse>('https://beta.beastscan.com/api/v1/signup', {
         method: "POST",
         body: credentials,
       });
+    },
 
-      return res;
-    } catch (err: any) {
-      error.value = err.data?.message || "Something went wrong";
-    } finally {
-      pending.value = false;
-    }
+    onSuccess: async () => {
+      router.replace("/login");
+    },
+  });
+
+  return {
+    register: mutation.mutateAsync,
+    status: mutation.status,
+    error: mutation.error,
+    isPending: mutation.isPending,
   };
-  return { register, pending, error };
 };

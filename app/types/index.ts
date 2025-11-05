@@ -3,6 +3,9 @@ export type Account = {
   id: string;
   attributes: {
     name: string;
+    slug: string;
+    created_at: Date;
+    updated_at: Date;
   };
 };
 
