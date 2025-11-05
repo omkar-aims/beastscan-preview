@@ -228,7 +228,6 @@ onMounted(() => {
     <header
       class="max-w-7xl w-full mx-auto py-4 px-4 sm:px-6 flex items-center justify-between"
     >
-      <!-- Left Section -->
       <div class="flex items-center gap-4 sm:gap-6">
         <NuxtLink href="/">
           <NuxtImg
@@ -349,8 +348,12 @@ onMounted(() => {
       </div>
 
       <div class="hidden lg:flex items-center gap-3">
-        <Button variant="outline">Login</Button>
-        <Button>Get Started</Button>
+        <NuxtLink href="/login">
+          <Button variant="outline">Login</Button>
+        </NuxtLink>
+        <NuxtLink href="/register">
+          <Button>Get Started</Button>
+        </NuxtLink>
       </div>
 
       <button
@@ -415,8 +418,12 @@ onMounted(() => {
             </li>
 
             <li class="flex gap-2 mt-3">
-              <Button variant="outline" class="flex-1">Login</Button>
-              <Button class="flex-1">Get Started</Button>
+              <NuxtLink href="/login">
+                <Button variant="outline" class="flex-1">Login</Button>
+              </NuxtLink>
+              <NuxtLink href="/register">
+                <Button class="flex-1">Get Started</Button>
+              </NuxtLink>
             </li>
           </ul>
         </div>
