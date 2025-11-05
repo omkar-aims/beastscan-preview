@@ -1,137 +1,113 @@
 <script setup lang="ts">
+import {
+  Plus,
+  Calendar,
+  ArrowRight,
+  Hash,
+  ExternalLink,
+} from "lucide-vue-next";
 import { useCampaigns } from "~/composables/campaign/useCampaigns";
-import { 
-  CreditCard, Plus, Link2, Calendar, Eye, Globe, QrCode, Mail, FileText, Share2, 
-  Pencil
-} from "lucide-vue-next"
-
-const { data: campaigns, isLoading, isError } = useCampaigns()
-
-const getIcon = (type: string) => {
-  const iconMap: Record<string, any> = {
-    "Digital Business Card": CreditCard,
-    "Landing Page": Globe,
-    "QR Code Campaign": QrCode,
-    "Email Campaign": Mail,
-    "Social Share": Share2,
-  }
-  return iconMap[type] || FileText
-}
-
-const getStatusColor = (status: string): string => {
-  const colors: Record<string, string> = {
-    draft: "bg-gray-100 text-gray-700",
-    published: "bg-green-100 text-green-700",
-    scheduled: "bg-blue-100 text-blue-700",
-    archived: "bg-orange-100 text-orange-700",
-  }
-  return colors[status] || "bg-gray-100 text-gray-700"
-}
-
-const formatDate = (dateInput: string | Date): string => {
-  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })
-}
-
+const { data: campaigns, isLoading, isError } = useCampaigns();
 </script>
 
 
 <template>
-  <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-      <h1 class="text-2xl sm:text-3xl font-bold text-center sm:text-left">
-        Campaigns
-      </h1>
-      <NuxtLink to="/dashboard/campaigns/new" class="w-full sm:w-auto">
-        <Button class="w-full sm:w-auto flex items-center justify-center gap-2">
+  <div class="w-full max-w-7xl mx-auto p-6">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold">Campaigns</h1>
+      <NuxtLink to="/dashboard/campaigns/new">
+        <Button>
           <Plus class="w-5 h-5" />
           Launch New Campaign
         </Button>
       </NuxtLink>
     </div>
 
-    <div v-if="isLoading" class="text-center py-10 text-muted-foreground">
-      Loading campaigns...
+    <div v-if="isLoading">
+      <p>Loading</p>
     </div>
 
     <div v-else-if="isError" class="text-center py-10 text-red-500">
-      Failed to load campaigns.
+      Failed to load campaigns
     </div>
 
-    <div
-      v-else
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-    >
-      <Card v-for="campaign in campaigns" :key="campaign.id" class="flex flex-col">
-        <CardHeader class="pb-3">
-          <div class="flex flex-wrap items-start justify-between gap-3">
-            <div class="flex items-start gap-3 flex-1 min-w-0">
-              <div class="p-3 bg-primary/20 rounded-xl flex-shrink-0">
-                <component :is="getIcon(campaign.type)" class="w-6 h-6 text-chart-4" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <CardTitle class="text-base sm:text-lg font-semibold truncate">
-                  {{ campaign.attributes.title }}
-                </CardTitle>
-                <Badge variant="default" class="text-xs px-2 py-0">
-                  {{ campaign.type }}
-                </Badge>
-              </div>
-            </div>
-            <Badge
-              variant="secondary"
-              :class="getStatusColor(campaign.attributes.status)"
-              class="flex-shrink-0 text-xs sm:text-sm"
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <Card v-for="campaign in campaigns" :key="campaign.id">
+        <CardContent>
+          <div class="flex items-center gap-3 mb-2">
+            <div
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-rose-500"
             >
-              {{ campaign.attributes.status }}
-            </Badge>
-          </div>
-        </CardHeader>
-
-        <CardContent class="space-y-4 flex flex-col flex-grow">
-          <div class="space-y-2">
-            <div class="flex flex-wrap items-center gap-2 text-sm truncate">
-              <Link2 class="w-4 h-4 text-muted-foreground" />
-              <span class="text-muted-foreground">Campaign:</span>
-              <span class="font-medium truncate">{{ campaign.attributes.slug }}</span>
+              <Hash class="w-4 h-4 text-white" />
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 text-sm truncate">
-              <Calendar class="w-4 h-4 text-muted-foreground" />
-              <span class="text-muted-foreground">Published:</span>
-              <span>
-                {{
+            <h3 class="font-semibold">{{ campaign.attributes.title }}</h3>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm text-muted-foreground flex items-center gap-2">
+              <span class="font-medium">Short Link:</span>
+              <a
+                :href="`https://beastscan.io/${campaign.attributes.slug}`"
+                target="_blank"
+                class="text-primary font-medium hover:underline flex items-center gap-1"
+              >
+                beastscan.io/{{ campaign.attributes.slug.split("-")[0] }}
+                <ExternalLink class="w-3.5 h-3.5 opacity-70" />
+              </a>
+            </p>
+
+            <p class="text-sm text-muted-foreground flex items-center gap-2">
+              <span class="font-medium">Status:</span>
+              <span
+                :class="[
+                  'px-2 py-0.5 rounded-full text-xs font-medium capitalize',
+                  campaign.attributes.status === 'published'
+                    ? 'bg-green-100 text-green-600'
+                    : campaign.attributes.status === 'archived'
+                    ? 'bg-yellow-100 text-yellow-600'
+                    : 'bg-gray-100 text-gray-500',
+                ]"
+              >
+                {{ campaign.attributes.status }}
+              </span>
+
+              <span
+                v-if="
+                  campaign.attributes.status === 'published' &&
                   campaign.attributes.published_at
-                    ? formatDate(campaign.attributes.published_at)
-                    : "Not published"
+                "
+                class="text-xs text-muted-foreground ml-2 flex items-center gap-1"
+              >
+                <Calendar class="w-3.5 h-3.5 opacity-70" />
+                {{
+                  new Date(
+                    campaign.attributes.published_at
+                  ).toLocaleDateString()
                 }}
               </span>
-            </div>
-          </div>
- 
-          <div class="mt-auto pt-2 flex gap-2">
-            <NuxtLink class="w-full">
-              <Button variant="outline" class="w-full flex items-center justify-center gap-2">
-                <Eye class="w-4 h-4" />
-                View
-              </Button>
-            </NuxtLink>
-            <NuxtLink class="w-full">
-              <Button variant="outline" class="w-full flex items-center justify-center gap-2">
-                <Pencil class="w-4 h-4" />
-                Edit
-              </Button>
-            </NuxtLink>
+            </p>
           </div>
         </CardContent>
+
+        <CardFooter class="justify-between mt-4">
+          <div class="text-xs text-muted-foreground">
+            Reached
+            <span class="font-medium text-foreground">2.3k</span>
+            people
+          </div>
+
+          <CardAction>
+            <NuxtLink
+              :href="`/dashboard/campaigns/${campaign.attributes.slug}`"
+            >
+              <Button class="rounded-full gap-1">
+                <span>View</span>
+                <ArrowRight class="w-4 h-4" />
+              </Button>
+            </NuxtLink>
+          </CardAction>
+        </CardFooter>
       </Card>
     </div>
   </div>
 </template>
-
-
-
