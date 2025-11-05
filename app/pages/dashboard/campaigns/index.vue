@@ -10,6 +10,7 @@ import { useCampaigns } from "~/composables/campaign/useCampaigns";
 const { data: campaigns, isLoading, isError } = useCampaigns();
 </script>
 
+
 <template>
   <div class="w-full max-w-7xl mx-auto p-6">
     <div class="flex items-center justify-between mb-8">

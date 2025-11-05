@@ -23,5 +23,9 @@ export function useCampaigns() {
 
       return data;
     },
+
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
   });
 }
