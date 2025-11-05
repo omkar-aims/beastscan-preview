@@ -14,9 +14,6 @@ export const registrationSchema = z.object({
   password: z
     .string({ required_error: "Password is required" })
     .min(8, "Please make a Strong Password"),
-  accountName: z.string().optional(),
-  projectName: z.string().optional(),
-  referralCode: z.string().optional(),
 });
 export type LoginSchema = z.infer<typeof loginSchema>;
 export type RegisterSchema = z.infer<typeof registrationSchema>;

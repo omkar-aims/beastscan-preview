@@ -5,6 +5,7 @@ import { registrationSchema } from "~/schemas/auth";
 import { useRegister } from "~/composables/auth/useRegister";
 import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 import { toast } from "vue-sonner";
+import { ref } from "vue";
 
 useHead({
   title: "Register",
@@ -15,29 +16,28 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const { register, error } = useRegister();
+const { register, isPending } = useRegister();
+const errorMessage = ref<string | null>(null);
 
 const form = useForm({
   validationSchema: toTypedSchema(registrationSchema),
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
-  const payload = {
-    email: values.email,
-    password: values.password,
-    accountName: values.accountName,
-    projectName: values.projectName,
-    referralCode: values.referralCode,     
-  };
-
-  const user = await register(payload);
-
-  if (user && user.status === "ok") {
-    toast.success("Register Sucessfuly");
-    return navigateTo("/login");
-  } else {
-    error.value = user?.result?.message || "Something went wrong";
-    form.resetForm();
+  errorMessage.value = null;
+  
+  try {
+    await register({
+      email: values.email,
+      password: values.password,
+    });
+    
+    toast.success("Registration successful! Please login.");
+  } catch (err: any) {
+    // Extract the detail message from the error response
+    const detail = err?.data?.detail  || "Registration failed. Please try again.";
+    errorMessage.value = detail;
+    toast.error(detail);
   }
 });
 </script>
@@ -56,31 +56,17 @@ const onSubmit = form.handleSubmit(async (values) => {
         </div>
 
         <!-- Error Alert -->
-        <Alert v-if="error" class="flex items-start gap-3">
+        <Alert v-if="errorMessage" variant="destructive" class="flex items-start gap-3">
           <Icon
             name="lucide:circle-alert"
-            class="text-lg text-destructive-foreground"
+            class="text-lg"
           />
-          <AlertDescription class="text-destructive-foreground">
-            {{ error }}
+          <AlertDescription>
+            {{ errorMessage }}
           </AlertDescription>
         </Alert>
 
         <form class="grid gap-4" @submit.prevent="onSubmit">
-          <FormField v-slot="{ componentField }" name="accountName">
-            <FormItem class="grid gap-2">
-              <FormLabel>Account Name</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Enter your name"
-                  v-bind="componentField"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
           <FormField v-slot="{ componentField }" name="email">
             <FormItem class="grid gap-2">
               <FormLabel>Email</FormLabel>
@@ -89,28 +75,31 @@ const onSubmit = form.handleSubmit(async (values) => {
                   type="email"
                   placeholder="name@example.com"
                   v-bind="componentField"
+                  :disabled="isPending"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           </FormField>
 
-          <FormField v-slot="{ componentField }" name="referralCode">
+          <FormField v-slot="{ componentField }" name="password">
             <FormItem class="grid gap-2">
-              <FormLabel>Referral Code (Optional)</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  type="text"
-                  placeholder="Enter referral code (if any)"
+                  type="password"
+                  placeholder="Enter your password"
                   v-bind="componentField"
+                  :disabled="isPending"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           </FormField>
 
-          <Button type="submit" class="w-full">
-            <span>Register</span>
+          <Button type="submit" class="w-full" :disabled="isPending">
+            <Icon v-if="isPending" name="lucide:loader-2" class="mr-2 h-4 w-4 animate-spin" />
+            <span>{{ isPending ? "Creating account..." : "Register" }}</span>
           </Button>
         </form>
       </div>

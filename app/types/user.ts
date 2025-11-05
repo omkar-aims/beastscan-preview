@@ -10,10 +10,11 @@ export interface Organization {
 }
 
 export interface User {
-  id: number;
-  name: string;
-  company: string | null;
+  id: string;
   email: string;
-  created_at: string;
-  organization: Organization;
+  publicRoles?: string[];
+  name?: string;
+  company?: string | null;
+  created_at?: string;
+  organization?: Organization;
 }
