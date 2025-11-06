@@ -19,7 +19,9 @@ const props = defineProps<Props>();
           <p class="text-sm text-muted-foreground">
             {{ props.label }}
           </p>
-          <p class="text-2xl font-bold">{{ props.value }}</p>
+          <p class="text-2xl font-bold">
+            <AnimatedCounter :value="Number(value)" />
+          </p>
         </div>
 
         <div
