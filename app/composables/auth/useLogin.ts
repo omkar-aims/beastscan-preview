@@ -3,7 +3,8 @@ import { useUserStore } from "~/stores/userStore";
 import type { LoginSchema } from "~/schemas/auth";
 import type { LoginResponse } from "~/types/auth";
 
-export const useLogin = () => {
+export const useLogin = (options?: { redirect?: boolean }) => {
+ const { redirect = true } = options || {};
   const routes = useApiRoutes();
   const userStore = useUserStore();
   const router = useRouter();
@@ -36,7 +37,9 @@ export const useLogin = () => {
       refreshTokenCookie.value = res.refresh_token;
       refreshTokenExpiration.value = res.refresh_token_expiration;
 
-      router.replace("/dashboard");
+      if (redirect) {
+        await router.replace("/dashboard");
+      }
     },
   });
 
