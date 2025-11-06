@@ -23,7 +23,15 @@ import {
   MessageSquare,
   Calendar,
 } from "lucide-vue-next";
+import { useCookie } from "#app";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
+const token = useCookie<string | null>("token");
+
+const goToDashboard = () => {
+  router.push("/dashboard");
+};
 definePageMeta({
   layout: false,
 });
@@ -348,12 +356,16 @@ onMounted(() => {
       </div>
 
       <div class="hidden lg:flex items-center gap-3">
-        <NuxtLink href="/login">
-          <Button variant="outline">Login</Button>
-        </NuxtLink>
-        <NuxtLink href="/register">
-          <Button>Get Started</Button>
-        </NuxtLink>
+        <nav class="flex items-center gap-3">
+          <Button v-if="token" @click="goToDashboard"> Go To Dashboard </Button>
+
+          <NuxtLink v-else href="/login">
+            <Button variant="outline">Login</Button>
+          </NuxtLink>
+          <NuxtLink v-if="!token" href="/register">
+            <Button>Register</Button>
+          </NuxtLink>
+        </nav>
       </div>
 
       <button

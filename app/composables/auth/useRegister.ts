@@ -1,13 +1,17 @@
 import { useMutation } from "@tanstack/vue-query";
 import type { RegisterSchema } from "~/schemas/auth";
 import type { RegisterResponse } from "~/types/auth";
+import { useUserStore } from "~/stores/userStore";
 
 export const useRegister = () => {
-  const router = useRouter();
   const routes = useApiRoutes();
+  const userStore = useUserStore();
 
   const mutation = useMutation({
     mutationFn: async (credentials: RegisterSchema) => {
+      // Store credentials for auto-login
+      userStore.setTempCredentials(credentials.email, credentials.password);
+
       // Only send fields that have values
       const body: any = {
         email: credentials.email,
@@ -32,7 +36,8 @@ export const useRegister = () => {
     },
 
     onSuccess: async () => {
-      router.replace("/login");
+      // Don't redirect here, let the component handle auto-login
+      // router.replace("/login");
     },
   });
 

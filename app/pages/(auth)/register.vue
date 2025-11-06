@@ -3,6 +3,8 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { registrationSchema } from "~/schemas/auth";
 import { useRegister } from "~/composables/auth/useRegister";
+import { useLogin } from "~/composables/auth/useLogin";
+import { useUserStore } from "~/stores/userStore";
 import { useRegistrationWizard } from "~/composables/useRegistrationWizard";
 import redirectIfAuthenticated from "~/middleware/redirectIfAuthenticated";
 import { toast } from "vue-sonner";
@@ -23,8 +25,13 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const { register, isPending } = useRegister();
+const router = useRouter();
+const { register, isPending: isRegistering } = useRegister();
+// 👇 Disable auto-redirect for registration auto-login
+const { login } = useLogin({ redirect: false });
+const userStore = useUserStore();
 const errorMessage = ref<string | null>(null);
+const isPending = ref(false);
 
 const form = useForm({
   validationSchema: toTypedSchema(registrationSchema),
@@ -37,7 +44,10 @@ const { currentStep, totalSteps, canProceed, nextStep, prevStep } =
 const handleSubmit = form.handleSubmit(
   async (values) => {
     errorMessage.value = null;
+    isPending.value = true;
+    
     try {
+      // Step 1: Register the user
       await register({
         email: values.email,
         password: values.password,
@@ -45,12 +55,50 @@ const handleSubmit = form.handleSubmit(
         projectName: values.projectName,
         referralCode: values.referralCode,
       });
-      toast.success("Registration successful! Please login.");
+      
+      toast.success("Registration successful! Logging you in...");
+
+      // Step 2: Auto-login using stored credentials
+      const credentials = userStore.tempCredentials;
+      if (credentials) {
+        try {
+          await login({
+            email: credentials.email,
+            password: credentials.password,
+          });
+          
+          // Step 3: Clear stored password for security
+          userStore.clearTempCredentials();
+          
+          // Step 4: Navigate to dashboard
+          await navigateTo("/dashboard", { replace: true });
+          
+          toast.success("Welcome! You're now logged in.");
+        } catch (loginError: any) {
+          console.error("Auto-login failed:", loginError);
+          
+          // Clear credentials on login error
+          userStore.clearTempCredentials();
+          
+          // Redirect to login page if auto-login fails
+          toast.info("Please login with your credentials");
+          await navigateTo("/login", { replace: true });
+        }
+      } else {
+        // If no credentials found, redirect to login
+        toast.info("Please login with your credentials");
+        await navigateTo("/login", { replace: true });
+      }
     } catch (err: any) {
       const detail =
         err?.data?.detail || "Registration failed. Please try again.";
       errorMessage.value = detail;
       toast.error(detail);
+      
+      // Clear credentials on error
+      userStore.clearTempCredentials();
+    } finally {
+      isPending.value = false;
     }
   },
   (_errors) => {

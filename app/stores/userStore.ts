@@ -16,6 +16,8 @@ export const useUserStore = defineStore("user", () => {
   const activeAccountId = useCookie<string | null>("activeAccountId");
   const activeProjectId = useCookie<string | null>("activeProjectId");
 
+  const tempCredentials = ref<{ email: string; password: string } | null>(null);
+
   const activeAccount = computed(
     () => accounts.value.find((acc) => acc.id === activeAccountId.value) ?? null
   );
@@ -49,9 +51,27 @@ export const useUserStore = defineStore("user", () => {
     activeProjectId.value = projectId;
   }
 
+  function setTempCredentials(email: string, password: string) {
+    tempCredentials.value = { email, password };
+  }
+
+  function clearTempCredentials() {
+    tempCredentials.value = null;
+  }
+
   function clearAuth() {
     token.value = { token: null, refreshToken: null };
     user.value = null;
+    accounts.value = [];
+    projects.value = [];
+    activeAccountId.value = null;
+    activeProjectId.value = null; 
+    clearTempCredentials();
+
+  }
+
+  function resetStore() {
+    clearTempCredentials();
   }
 
   return {
@@ -61,6 +81,7 @@ export const useUserStore = defineStore("user", () => {
     projects,
     activeAccountId,
     activeProjectId,
+    tempCredentials,
 
     activeAccount,
     activeProject,
@@ -71,6 +92,9 @@ export const useUserStore = defineStore("user", () => {
     setProjects,
     setActiveAccount,
     setActiveProject,
+    setTempCredentials,
+    clearTempCredentials,
     clearAuth,
+    resetStore,
   };
 });
