@@ -8,11 +8,11 @@ const userStore = useUserStore();
 // Fetch user on layout mount if not available
 onMounted(async () => {
   if (!userStore.user && userStore.token?.token) {
-    console.log('Layout: Fetching user...');
+    console.log("Layout: Fetching user...");
     try {
       await fetchUser();
     } catch (error) {
-      console.error('Layout: Failed to fetch user:', error);
+      console.error("Layout: Failed to fetch user:", error);
     }
   }
 });

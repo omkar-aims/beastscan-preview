@@ -1,6 +1,9 @@
-<script setup>
-import { ref, computed } from "vue";
+<script setup lang="ts">
 import { Search, X, Plus } from "lucide-vue-next";
+
+defineProps<{
+  disableRemove: boolean;
+}>();
 
 const allTags = ref([
   { name: "Design", color: "#E57373" },
@@ -65,6 +68,7 @@ function addCustomTag() {
         />
         <span>{{ tag.name }}</span>
         <X
+          v-if="!disableRemove"
           class="w-4 h-4 cursor-pointer hover:text-destructive/80"
           @click="toggleTag(tag)"
         />

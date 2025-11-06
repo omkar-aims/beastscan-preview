@@ -3,16 +3,15 @@ import {
   Plus,
   Calendar,
   ArrowRight,
-  Hash,
   ExternalLink,
+  BarChart,
 } from "lucide-vue-next";
 import { useCampaigns } from "~/composables/campaign/useCampaigns";
 const { data: campaigns, isLoading, isError } = useCampaigns();
 </script>
 
-
 <template>
-  <div class="w-full max-w-7xl mx-auto p-6">
+  <div>
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-3xl font-bold">Campaigns</h1>
       <NuxtLink to="/dashboard/campaigns/new">
@@ -34,30 +33,27 @@ const { data: campaigns, isLoading, isError } = useCampaigns();
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <Card v-for="campaign in campaigns" :key="campaign.id">
         <CardContent>
-          <div class="flex items-center gap-3 mb-2">
-            <div
-              class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-rose-500"
-            >
-              <Hash class="w-4 h-4 text-white" />
+          <div class="mb-2 flex flex-col items-center justify-center p-4">
+            <div class="p-2 rounded-lg bg-white">
+              <NuxtImg
+                src="https://my.beastscan.com/qr/campaign?uuid=SYOL3E&format=png&ts=1759229288"
+                width="120"
+                height="120"
+                alt="Campaign QR"
+                class="rounded-md"
+              />
             </div>
-
-            <h3 class="font-semibold">{{ campaign.attributes.title }}</h3>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm text-muted-foreground flex items-center gap-2">
-              <span class="font-medium">Short Link:</span>
-              <a
-                :href="`https://beastscan.io/${campaign.attributes.slug}`"
-                target="_blank"
-                class="text-primary font-medium hover:underline flex items-center gap-1"
-              >
-                beastscan.io/{{ campaign.attributes.slug.split("-")[0] }}
-                <ExternalLink class="w-3.5 h-3.5 opacity-70" />
-              </a>
+            <p class="mt-2 text-xs text-muted-foreground">
+              Scan to view campaign
             </p>
+          </div>
 
-            <p class="text-sm text-muted-foreground flex items-center gap-2">
-              <span class="font-medium">Status:</span>
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold capitalize">
+                {{ campaign.attributes.title }}
+              </h3>
+
               <span
                 :class="[
                   'px-2 py-0.5 rounded-full text-xs font-medium capitalize',
@@ -70,30 +66,41 @@ const { data: campaigns, isLoading, isError } = useCampaigns();
               >
                 {{ campaign.attributes.status }}
               </span>
+            </div>
 
-              <span
-                v-if="
-                  campaign.attributes.status === 'published' &&
-                  campaign.attributes.published_at
-                "
-                class="text-xs text-muted-foreground ml-2 flex items-center gap-1"
-              >
-                <Calendar class="w-3.5 h-3.5 opacity-70" />
-                {{
-                  new Date(
-                    campaign.attributes.published_at
-                  ).toLocaleDateString()
-                }}
-              </span>
-            </p>
+            <a
+              :href="`https://beastscan.io/${campaign.attributes.slug}`"
+              target="_blank"
+              class="text-sm text-primary font-medium hover:underline flex items-center gap-1"
+            >
+              beastscan.io/{{ campaign.attributes.slug.split("-")[0] }}
+              <ExternalLink class="w-3.5 h-3.5 opacity-70" />
+            </a>
+
+            <div
+              class="text-xs text-muted-foreground mt-1.5 flex items-center gap-1"
+            >
+              <Calendar class="w-4 h-4" />
+              <span class="font-medium">2025-09-12</span>
+            </div>
+
+            <div class="mt-4">
+              <TagPicker :disable-remove="true" />
+            </div>
           </div>
         </CardContent>
 
-        <CardFooter class="justify-between mt-4">
-          <div class="text-xs text-muted-foreground">
-            Reached
+        <CardFooter class="justify-between items-center mt-4">
+          <div
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 border border-border text-xs text-muted-foreground"
+          >
+            <div
+              class="flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white"
+            >
+              <BarChart class="w-3 h-3" />
+            </div>
             <span class="font-medium text-foreground">2.3k</span>
-            people
+            <span>scans</span>
           </div>
 
           <CardAction>
