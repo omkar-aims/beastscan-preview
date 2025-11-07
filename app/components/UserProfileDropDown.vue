@@ -9,7 +9,8 @@ const showLogoutDialog = ref(false);
 
 const menuItems = [
   { label: "View Profile", href: "/profile", icon: "lucide:user" },
-  { label: "Accounts", href: "/accounts", icon: "lucide:users" },
+  { label: "Projects", href: "/projects", icon:"lucide:folder-open" },
+  { label: "Update Password", href: "/update-password", icon: "lucide:key" },
 ];
 
 const logoutItem = { label: "Logout", icon: "lucide:log-out" };

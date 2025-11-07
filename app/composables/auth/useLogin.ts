@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/vue-query";
+  import { useMutation } from "@tanstack/vue-query";
 import { useUserStore } from "~/stores/userStore";
 import type { LoginSchema } from "~/schemas/auth";
 import type { LoginResponse } from "~/types/auth";

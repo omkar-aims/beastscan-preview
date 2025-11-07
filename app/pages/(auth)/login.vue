@@ -50,7 +50,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         <form class="grid gap-4" @submit.prevent="onSubmit">
           <FormField v-slot="{ componentField }" name="email">
             <FormItem class="grid gap-2">
-              <FormLabel> Email </FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -72,17 +72,26 @@ const onSubmit = form.handleSubmit(async (values) => {
             </FormItem>
           </FormField>
 
-          <FormField v-slot="{ componentField }" name="rememberMe">
-            <FormItem class="flex gap-2">
-              <FormControl>
-                <Checkbox v-bind="componentField" />
-              </FormControl>
-              <FormLabel>Remember me</FormLabel>
-              <FormMessage />
-            </FormItem>
-          </FormField>
+          <!-- Remember Me + Forgot Password Row -->
+          <div class="flex items-center justify-between">
+            <FormField v-slot="{ componentField }" name="rememberMe">
+              <FormItem class="flex items-center gap-2 m-0">
+                <FormControl>
+                  <Checkbox v-bind="componentField" />
+                </FormControl>
+                <FormLabel class="m-0">Remember me</FormLabel>
+              </FormItem>
+            </FormField>
 
-          <StatefulButton :status="status"> Login </StatefulButton>
+            <NuxtLink
+              to="/forgot-password"
+              class="text-sm text-primary hover:underline"
+            >
+              Forgot password?
+            </NuxtLink>
+          </div>
+
+          <StatefulButton :status="status">Login</StatefulButton>
         </form>
       </div>
     </div>
