@@ -25,8 +25,7 @@ definePageMeta({
   middleware: [redirectIfAuthenticated],
 });
 
-const router = useRouter();
-const { register, isPending: isRegistering } = useRegister();
+const { register } = useRegister();
 // 👇 Disable auto-redirect for registration auto-login
 const { login } = useLogin({ redirect: false });
 const userStore = useUserStore();

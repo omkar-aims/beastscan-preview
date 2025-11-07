@@ -23,11 +23,11 @@ import {
   MessageSquare,
   Calendar,
 } from "lucide-vue-next";
-import { useCookie } from "#app";
 import { useRouter } from "vue-router";
 
+
+const { isAuthenticated } = useAuth();
 const router = useRouter();
-const token = useCookie<string | null>("token");
 
 const goToDashboard = () => {
   router.push("/dashboard");
@@ -357,12 +357,12 @@ onMounted(() => {
 
       <div class="hidden lg:flex items-center gap-3">
         <nav class="flex items-center gap-3">
-          <Button v-if="token" @click="goToDashboard"> Go To Dashboard </Button>
+          <Button v-if="isAuthenticated" @click="goToDashboard"> Go To Dashboard </Button>
 
           <NuxtLink v-else href="/login">
             <Button variant="outline">Login</Button>
           </NuxtLink>
-          <NuxtLink v-if="!token" href="/register">
+          <NuxtLink v-if="!isAuthenticated" href="/register">
             <Button>Register</Button>
           </NuxtLink>
         </nav>
