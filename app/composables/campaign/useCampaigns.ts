@@ -21,7 +21,6 @@ export function useCampaigns() {
         }
       );
 
-      console.log(data);
       return data;
     },
 
