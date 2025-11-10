@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Home, Megaphone, FileText, Gift, QrCode, Zap } from "lucide-vue-next";
+import { Home, Megaphone, Gift, QrCode } from "lucide-vue-next";
 
 const items = [
   {
@@ -12,11 +12,7 @@ const items = [
     url: "/dashboard/campaigns",
     icon: Megaphone,
   },
-  {
-    title: "Forms",
-    url: "/dashboard/forms",
-    icon: FileText,
-  },
+
   {
     title: "Offers",
     url: "/dashboard/offers",
@@ -26,11 +22,6 @@ const items = [
     title: "QR Codes",
     url: "/dashboard/qr-codes",
     icon: QrCode,
-  },
-  {
-    title: "Devices",
-    url: "/dashboard/devices",
-    icon: Zap,
   },
 ];
 

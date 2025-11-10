@@ -15,10 +15,10 @@ const value = ref<DateValue>();
   <Popover>
     <PopoverTrigger as-child>
       <Button
-        variant="outline"
+        variant="ghost"
         :class="
           cn(
-            'justify-start text-left font-normal',
+            'h-10 justify-start text-left font-normal bg-card rounded-md border border-input hover:bg-card hover:text-card-foreground',
             !value && 'text-muted-foreground'
           )
         "

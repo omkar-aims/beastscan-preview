@@ -13,9 +13,10 @@ onMounted(async () => {
 
   loading.value = false;
 
-  window.addEventListener("QRCreateTrigger", (e) => {
-    console.log(e);
-  });
+  window.addEventListener("QRCreateTrigger", ((e: Event) => {
+    const customEvent = e as CustomEvent;
+    console.log(customEvent.detail);
+  }) as EventListener);
 });
 </script>
 
