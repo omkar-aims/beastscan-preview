@@ -410,12 +410,12 @@ const businessHours = ref([
             <FileUpload v-slot="{ file, handleSelect }">
               <div class="space-y-3">
                 <Label
-                  for="galleryImage"
+                  for="coverImage"
                   class="h-10 border border-input rounded-md w-full px-4"
                   >Upload cover image</Label
                 >
                 <Input
-                  id="galleryImage"
+                  id="coverImage"
                   type="file"
                   accept="image/*"
                   class="bg-card hidden"
