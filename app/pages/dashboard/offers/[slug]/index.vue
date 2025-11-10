@@ -4,41 +4,34 @@ import {
   Settings,
   ExternalLink,
   Edit3,
-  LayoutDashboard,
-  Archive,
+  Pause,
   MapPin,
   Building2,
 } from "lucide-vue-next";
 
 const topStats = [
+  { label: "Total Views", value: 14800, trend: "+8%", trendDirection: "up" },
   {
-    label: "Total Views",
-    value: 35400,
-    trend: "+6%",
+    label: "Total Redemptions",
+    value: 3200,
+    trend: "+12%",
     trendDirection: "up",
   },
   {
-    label: "New Views",
-    value: 1800,
-    trend: "+3%",
+    label: "Conversion Rate",
+    value: 26,
+    trend: "+2%",
     trendDirection: "up",
-  },
-  {
-    label: "Conversions",
-    value: 10200,
-    trend: "-1%",
-    trendDirection: "down",
   },
 ];
 
 const engagement = [
-  { time: "14:00", Conversions: 1200, "New Views": 500, "Total Views": 2200 },
-  { time: "15:00", Conversions: 1400, "New Views": 2400, "Total Views": 6800 },
-  { time: "16:00", Conversions: 1600, "New Views": 1800, "Total Views": 13200 },
-  { time: "17:00", Conversions: 1500, "New Views": 1200, "Total Views": 18400 },
-  { time: "18:00", Conversions: 1700, "New Views": 1800, "Total Views": 25400 },
-  { time: "19:00", Conversions: 1500, "New Views": 1600, "Total Views": 31400 },
-  { time: "20:00", Conversions: 1300, "New Views": 1000, "Total Views": 35400 },
+  { time: "10:00", Views: 1800, Redemptions: 320 },
+  { time: "11:00", Views: 2500, Redemptions: 500 },
+  { time: "12:00", Views: 4200, Redemptions: 720 },
+  { time: "13:00", Views: 5100, Redemptions: 820 },
+  { time: "14:00", Views: 5800, Redemptions: 930 },
+  { time: "15:00", Views: 6400, Redemptions: 1000 },
 ];
 
 const countries = [
@@ -110,7 +103,7 @@ const showArchiveAlert = ref<boolean>(false);
   <div class="space-y-6">
     <AppRow gap="md">
       <div class="flex justify-between items-center">
-        <AppHeading :level="3">My Awesome Campaign</AppHeading>
+        <AppHeading :level="3">My Awesome offer</AppHeading>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <button
@@ -128,32 +121,22 @@ const showArchiveAlert = ref<boolean>(false);
               <ExternalLink
                 class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
               />
-              Visit
+              View
             </DropdownMenuItem>
             <DropdownMenuItem
               class="group cursor-pointer"
               @click="showQuickEditModal = true"
             >
               <Edit3 class="w-4 h-4 mr-2 group-hover:text-primary-foreground" />
-              Quick Edit
+              Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              class="group cursor-pointer"
-              @click="() => navigateTo('/design?campaign=1')"
-            >
-              <LayoutDashboard
-                class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
-              />
-              Open in Designer
-            </DropdownMenuItem>
+
             <DropdownMenuItem
               class="group cursor-pointer"
               @click="showArchiveAlert = true"
             >
-              <Archive
-                class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
-              />
-              Archive
+              <Pause class="w-4 h-4 mr-2 group-hover:text-primary-foreground" />
+              Pause
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -195,13 +178,15 @@ const showArchiveAlert = ref<boolean>(false);
           class="my-4"
           :data="engagement"
           index="time"
-          :categories="['Total Views', 'New Views', 'Conversions']"
+          :categories="['Views', 'Redemptions']"
           :colors="colors"
         />
       </Card>
       <Card class="p-6 space-y-4">
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold tracking-tight">Traffic Sources</h2>
+          <h2 class="text-lg font-semibold tracking-tight">
+            Redemption Sources
+          </h2>
 
           <Select v-model="selectedFilter">
             <SelectTrigger class="w-[130px]">

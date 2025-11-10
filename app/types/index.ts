@@ -36,3 +36,18 @@ export type Campaign = {
     project_id: string;
   };
 };
+
+export type Offer = {
+  type: "offers";
+  id: string;
+  attributes: {
+    title: string;
+    slug: string;
+    description: string;
+    type: "freebie" | "percentage" | "fixed" | "bogo" | "trial";
+    status: "draft" | "active" | "paused" | "archived";
+    valid_from: string;
+    valid_until: string;
+    project_id: string;
+  };
+};
