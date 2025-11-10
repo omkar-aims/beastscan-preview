@@ -9,8 +9,11 @@ export default function useApiRoutes() {
       register: `https://beta.beastscan.com/api/v1/signup`,
     },
 
-    accounts: `https://beta.beastscan.com/api/v1/accounts`,
-    projects: `https://beta.beastscan.com/api/v1/accounts/[ID]/projects`,
+accounts: {
+      all: `https://beta.beastscan.com/api/v1/accounts`,
+      byId: (id: string) => `https://beta.beastscan.com/api/v1/accounts/${id}`,
+      update: (id: string) => `https://beta.beastscan.com/api/v1/accounts/${id}`,
+    },    projects: `https://beta.beastscan.com/api/v1/accounts/[ID]/projects`,
 
     user: {
       profile: `${BASE}/v1/me`,

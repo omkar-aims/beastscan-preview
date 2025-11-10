@@ -11,6 +11,7 @@ const menuItems = [
   { label: "View Profile", href: "/profile", icon: "lucide:user" },
   { label: "Projects", href: "/projects", icon:"lucide:folder-open" },
   { label: "Update Password", href: "/update-password", icon: "lucide:key" },
+  { label:"Account Information", href:"/account",icon:"lucide:info"}
 ];
 
 const logoutItem = { label: "Logout", icon: "lucide:log-out" };
