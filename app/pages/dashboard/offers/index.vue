@@ -7,8 +7,31 @@ import {
   Car,
   CheckCircle2,
   ArrowRight,
+  MapPin,
+  Plus,
 } from "lucide-vue-next";
 import { ref } from "vue";
+
+const emptyStates = {
+  "my-offers": {
+    icon: Gift,
+    title: "You haven't created any offers yet",
+    description:
+      "Start by creating your first offer to attract more customers.",
+    buttonText: "Create Offer",
+    link: "/dashboard/offers/new",
+  },
+  redeemed: {
+    icon: CheckCircle2,
+    title: "No redeemed offers yet",
+    description: "Claim an offer to see it here.",
+  },
+  nearby: {
+    icon: MapPin,
+    title: "No nearby offers found",
+    description: "Check back later for offers in your area.",
+  },
+};
 
 const offers = [
   {
@@ -85,9 +108,46 @@ const offers = [
     claimed: false,
   },
 ];
-const tags = ["Nearby offers", "My offers", "Redeemed offers"];
 
-const activeTag = ref("Nearby offers");
+const tags = [
+  { label: "Nearby offers", value: "nearby" },
+  { label: "My offers", value: "my-offers" },
+  { label: "Redeemed offers", value: "redeemed" },
+];
+
+const route = useRoute();
+const router = useRouter();
+
+const activeTag = ref((route.query.key as string) || "nearby");
+const currentState = computed(() => emptyStates[activeTag.value]);
+
+watch(
+  () => route.query.key,
+  (val) => {
+    activeTag.value = val?.toString() || "nearby";
+  }
+);
+
+function setActiveTag(tag: string) {
+  activeTag.value = tag;
+  router.replace({ query: { key: tag } });
+}
+
+const filteredOffers = computed(() => {
+  switch (activeTag.value) {
+    case "nearby":
+      return offers;
+
+    case "my-offers":
+      return offers.filter((o) => !o.claimed);
+
+    case "redeemed":
+      return offers.filter((o) => o.claimed);
+
+    default:
+      return offers;
+  }
+});
 </script>
 
 <template>
@@ -100,36 +160,36 @@ const activeTag = ref("Nearby offers");
     </AppRow>
 
     <div class="flex flex-wrap gap-2">
-      <NuxtLink
+      <div
         v-for="tag in tags"
-        :key="tag"
+        :key="tag.value"
         class="group flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer border border-muted-foreground/10 bg-muted-foreground/10 transition-all duration-200"
         :class="
-          activeTag === tag
+          activeTag === tag.value
             ? 'border-primary bg-primary '
             : 'hover:border-primary hover:bg-primary'
         "
-        :href="`/dashboard/offers#${tag.toLowerCase().replace(' ', '-')}`"
+        @click="setActiveTag(tag.value)"
       >
         <span
           class="transition-colors duration-200 text-sm"
           :class="
-            activeTag === tag
+            activeTag === tag.value
               ? 'text-primary-foreground'
               : 'text-muted-foreground group-hover:text-primary-foreground'
           "
         >
-          {{ tag }}
+          {{ tag.label }}
         </span>
-      </NuxtLink>
+      </div>
     </div>
 
     <div
-      v-if="offers.length"
+      v-if="filteredOffers.length"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
     >
       <Card
-        v-for="offer in offers"
+        v-for="offer in filteredOffers"
         :key="offer.title"
         class="overflow-hidden pt-0"
       >
@@ -177,59 +237,50 @@ const activeTag = ref("Nearby offers");
             users
           </div>
 
-          <NuxtLink v-if="!offer.claimed" href="/dashboard/offers/demo/redeem">
+          <NuxtLink
+            v-if="!offer.claimed && activeTag !== 'my-offers'"
+            href="/dashboard/offers/demo/redeem"
+          >
             <Button class="rounded-full gap-1">
               <span>Claim</span>
               <ArrowRight class="w-4 h-4" />
             </Button>
           </NuxtLink>
 
-          <Button v-else disabled class="bg-success rounded-full">
+          <Button
+            v-if="offer.claimed && activeTag !== 'my-offers'"
+            disabled
+            class="bg-success rounded-full"
+          >
             <CheckCircle2 class="w-4 h-4" />
             <span>Claimed</span>
           </Button>
+
+          <NuxtLink
+            v-if="!offer.claimed && activeTag === 'my-offers'"
+            href="/dashboard/offers/demo/"
+          >
+            <Button class="rounded-full gap-1">
+              <span>View Detail</span>
+              <ArrowRight class="w-4 h-4" />
+            </Button>
+          </NuxtLink>
         </CardFooter>
       </Card>
     </div>
 
-    <div v-else class="text-center py-16 space-y-4">
-      <template v-if="activeTag === 'My offers'">
-        <div class="flex flex-col items-center gap-3">
-          <Gift class="w-10 h-10 text-muted-foreground" />
-          <h3 class="text-lg font-semibold">
-            You haven't created any offers yet
-          </h3>
-          <p class="text-sm text-muted-foreground">
-            Start by creating your first offer to attract more customers.
-          </p>
-          <NuxtLink href="/dashboard/offers/new">
-            <Button class="gap-2 rounded-full">
-              <Plus class="w-4 h-4" />
-              Create Offer
-            </Button>
-          </NuxtLink>
-        </div>
-      </template>
-
-      <template v-else-if="activeTag === 'Redeemed offers'">
-        <div class="flex flex-col items-center gap-3">
-          <CheckCircle2 class="w-10 h-10 text-muted-foreground" />
-          <h3 class="text-lg font-semibold">No redeemed offers yet</h3>
-          <p class="text-sm text-muted-foreground">
-            Claim an offer to see it here.
-          </p>
-        </div>
-      </template>
-
-      <template v-else-if="activeTag === 'Nearby offers'">
-        <div class="flex flex-col items-center gap-3">
-          <MapPin class="w-10 h-10 text-muted-foreground" />
-          <h3 class="text-lg font-semibold">No nearby offers found</h3>
-          <p class="text-sm text-muted-foreground">
-            Check back later for offers in your area.
-          </p>
-        </div>
-      </template>
+    <div v-else class="text-center">
+      <Card>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <component :is="currentState.icon" class="w-12 h-12" />
+            </EmptyMedia>
+            <EmptyTitle>{{ currentState.title }}</EmptyTitle>
+            <EmptyDescription>{{ currentState.description }}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      </Card>
     </div>
   </AppRow>
 </template>
