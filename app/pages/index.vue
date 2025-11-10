@@ -357,14 +357,18 @@ onMounted(() => {
 
       <div class="hidden lg:flex items-center gap-3">
         <nav class="flex items-center gap-3">
-          <Button v-if="isAuthenticated" @click="goToDashboard"> Go To Dashboard </Button>
+          <template v-if="isAuthenticated">
+            <Button @click="goToDashboard">Go To Dashboard</Button>
+          </template>
 
-          <NuxtLink v-else href="/login">
-            <Button variant="outline">Login</Button>
-          </NuxtLink>
-          <NuxtLink v-if="!isAuthenticated" href="/register">
-            <Button>Register</Button>
-          </NuxtLink>
+          <template v-else>
+            <NuxtLink href="/login">
+              <Button variant="outline">Login</Button>
+            </NuxtLink>
+            <NuxtLink href="/register">
+              <Button>Register</Button>
+            </NuxtLink>
+          </template>
         </nav>
       </div>
 

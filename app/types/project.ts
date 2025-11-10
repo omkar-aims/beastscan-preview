@@ -5,7 +5,7 @@ export interface ProjectAttributes {
 }
 
 export interface Project {
-  type: string;
+  type: "projects"; 
   id: string;
   attributes: ProjectAttributes;
 }
