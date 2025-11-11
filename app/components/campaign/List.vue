@@ -55,11 +55,11 @@ defineProps<{
           </div>
 
           <a
-            :href="`http://localhost:3000/${campaign.id}`"
+            :href="`https://beastscan-preview.vercel.app/${campaign.id}`"
             target="_blank"
             class="text-sm text-primary font-medium hover:underline flex items-center gap-1 mt-1"
           >
-            localhost:3000/{{ campaign.attributes.short_code }}
+            beast.io/{{ campaign.attributes.short_code }}
             <ExternalLink class="w-3.5 h-3.5 opacity-70" />
           </a>
 
