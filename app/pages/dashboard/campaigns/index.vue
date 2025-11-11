@@ -60,7 +60,7 @@ const filteredCampaigns = computed(() => {
     <CampaignEmpty v-if="campaigns?.length === 0" />
     <CampaignError v-if="isError" />
 
-    <div v-else>
+    <div v-if="campaigns?.length && campaigns?.length > 0">
       <div class="flex items-center justify-between mb-4">
         <h1 class="text-3xl font-bold">Campaigns</h1>
         <NuxtLink to="/dashboard/campaigns/new">

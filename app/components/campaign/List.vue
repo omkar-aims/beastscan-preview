@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
     <Card v-for="campaign in campaigns" :key="campaign.id">
       <CardContent class="grid grid-cols-[1fr_3fr] gap-6">
         <div class="flex flex-col items-center justify-center rounded-2xl">
@@ -55,11 +55,11 @@ defineProps<{
           </div>
 
           <a
-            :href="`https://beastscan.io/${campaign.attributes.slug}`"
+            :href="`http://localhost:3000/${campaign.id}`"
             target="_blank"
             class="text-sm text-primary font-medium hover:underline flex items-center gap-1 mt-1"
           >
-            beastscan.io/{{ campaign.attributes.slug.split("-")[0] }}
+            localhost:3000/{{ campaign.attributes.short_code }}
             <ExternalLink class="w-3.5 h-3.5 opacity-70" />
           </a>
 
@@ -82,9 +82,7 @@ defineProps<{
 
           <div class="flex justify-end items-center gap-2">
             <CardAction>
-              <NuxtLink
-                :href="`/dashboard/campaigns/${campaign.attributes.slug}`"
-              >
+              <NuxtLink :href="`/dashboard/campaigns/${campaign.id}`">
                 <Button class="rounded-full gap-1">
                   <span>View</span>
                   <ArrowRight class="w-4 h-4" />

@@ -11,8 +11,6 @@ const height = ref<number>(0);
 
 const { toggleSidebar, state } = useSidebar();
 
-
-
 const iframeRef = useTemplateRef("iframeRef");
 
 const builderStore = useBuilderStore();
@@ -28,16 +26,26 @@ onMounted(() => {
 
   if (!iframe) return;
 
+  const sendBuilderConfig = () => {
+    iframe.contentWindow?.postMessage(
+      { type: "builderSetConfig", config: JSON.stringify(builderStore.config) },
+      "*"
+    );
+    isLoading.value = false;
+  };
+
+  sendBuilderConfig();
+
   if (iframe.contentDocument?.readyState === "complete") {
     isLoading.value = false;
-  } else {
-    iframe.addEventListener("load", () => {
-      isLoading.value = false;
-    });
-    iframe.addEventListener("loadstart", () => {
-      isLoading.value = true;
-    });
   }
+  iframe.addEventListener("load", () => {
+    isLoading.value = false;
+    sendBuilderConfig();
+  });
+  iframe.addEventListener("loadstart", () => {
+    isLoading.value = true;
+  });
 });
 
 onUnmounted(() => {

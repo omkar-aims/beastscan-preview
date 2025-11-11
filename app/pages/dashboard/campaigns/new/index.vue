@@ -96,16 +96,14 @@ const form = useForm({
 
 const { mutateAsync, status } = useCreateCampaign();
 const error = ref<string | null>(null);
-const builderStore = useBuilderStore();
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     await mutateAsync(values, {
       onSuccess(data) {
         open.value = false;
-        const campaign = data.data;
-        builderStore.setCampaign(campaign);
+        const campaign = data;
         nextTick(() => {
-          navigateTo(`/design?campaign=${campaign.attributes.slug}`);
+          navigateTo(`/design?campaign=${campaign.id}`);
         });
       },
     });
