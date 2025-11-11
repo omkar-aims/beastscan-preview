@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import { Check, X } from "lucide-vue-next";
+import { ref, onMounted, watch } from "vue";
+import { useRoute, navigateTo } from "#app";
+import { useCampaign } from "~/composables/campaign/useCampaign";
+import { useSidebar } from "~/components/ui/sidebar";
 import { useUpdateCampaign } from "~/composables/campaign/useUpdateCampaign";
+
+const { toggleSidebar, state } = useSidebar();
+
 const route = useRoute();
+const campaignId = route.query.campaign as string | undefined;
 
-const campaignSlug = route.query.campaign;
+if (!campaignId) {
+  navigateTo("/dashboard/campaigns");
+}
 
-if (!campaignSlug) navigateTo("/dashboard/campaigns");
+const { data: campaign, isLoading: isFetching } = useCampaign(campaignId);
 
+const isLoading = ref(true);
+const width = ref(0);
+const height = ref(0);
+const iframeRef = ref<HTMLIFrameElement | null>(null);
 const builderStore = useBuilderStore();
-const showTemplatePicker = ref<boolean>(false);
 
-const { mutateAsync, status } = useUpdateCampaign();
+const { mutateAsync, status } = useUpdateCampaign(campaignId);
 
 watch(
   () => status.value,
@@ -22,16 +34,50 @@ watch(
 );
 
 onMounted(() => {
-  builderStore.open();
-  showTemplatePicker.value = true;
-  window.addEventListener("message", async (event) => {
-    if (event.data?.type === "builderConfigResponse") {
+  width.value = window.innerWidth;
+  height.value = window.innerHeight - 64;
+  if (state.value === "expanded") toggleSidebar();
+
+  const iframe = iframeRef.value;
+  if (!iframe) return;
+
+  builderStore.iframeRef = iframeRef.value;
+
+  const sendBuilderConfig = () => {
+    if (!campaign.value) return;
+
+    iframe.contentWindow?.postMessage(
+      {
+        type: "builderSetConfig",
+        config: JSON.stringify(campaign.value.attributes?.config ?? {}),
+      },
+      "*"
+    );
+
+    isLoading.value = false;
+  };
+
+  watch(
+    () => campaign.value,
+    (val) => {
+      if (val) {
+        sendBuilderConfig();
+      }
+    },
+    { immediate: true }
+  );
+
+  window.addEventListener("message", async (event: MessageEvent) => {
+    if (event.origin !== "https://beast-builder.netlify.app") return;
+
+    if (event.data?.type === "builderReady") {
+      sendBuilderConfig();
+    }
+
+    if (event.data?.type == "builderConfigResponse") {
       const config = event.data.config;
 
       await mutateAsync({
-        title: builderStore.campaign?.attributes.title ?? "",
-        slug: builderStore.campaign?.attributes.slug ?? "",
-        status: builderStore.action,
         config: config,
       });
     }
@@ -39,7 +85,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  builderStore.close();
+  if (state.value === "collapsed") toggleSidebar();
 });
 
 const templates = [
@@ -60,23 +106,45 @@ const selectTemplate = (newTemplate: (typeof templates)[0]) => {
 
 const confirmSelection = () => {
   if (!selectedTemplate.value) return;
-  showTemplatePicker.value = false;
+  builderStore.showTemplatePicker = false;
   builderStore.iframeRef?.contentWindow?.postMessage(
     {
       type: "builderSetConfig",
       config: selectedTemplate.value.config,
     },
-    { targetOrigin: "*" }
+    "*"
   );
 };
 </script>
 
 <template>
   <div class="relative">
-    <TheBuilder source="https://beast-builder.netlify.app/" />
+    <div class="absolute inset-0 w-full h-full flex justify-center">
+      <div
+        v-if="isLoading || isFetching"
+        class="w-full h-full flex justify-center items-center py-32"
+      >
+        <div class="max-w-sm">
+          <div class="flex flex-col items-center">
+            <div class="loader my-6" />
+            <AppHeading :level="3">Hang On!</AppHeading>
+            <p class="text-muted-foreground">The builder is loading</p>
+          </div>
+        </div>
+      </div>
+
+      <iframe
+        v-show="!isLoading && !isFetching"
+        ref="iframeRef"
+        src="https://beast-builder.netlify.app/"
+        :width="width"
+        :height="height"
+        class="border-0"
+      />
+    </div>
 
     <div
-      v-if="showTemplatePicker"
+      v-if="builderStore.showTemplatePicker"
       v-motion-fade
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
     >
@@ -90,7 +158,7 @@ const confirmSelection = () => {
 
             <button
               class="text-gray-500 hover:text-gray-700"
-              @click="showTemplatePicker = false"
+              @click="builderStore.showTemplatePicker = false"
             >
               <X class="w-5 h-5" />
             </button>
@@ -128,7 +196,10 @@ const confirmSelection = () => {
         </div>
 
         <div class="flex justify-end gap-3">
-          <Button variant="outline" @click="showTemplatePicker = false">
+          <Button
+            variant="outline"
+            @click="builderStore.showTemplatePicker = false"
+          >
             Cancel
           </Button>
 

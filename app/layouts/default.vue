@@ -40,6 +40,11 @@ const showBuilderOptions = computed(() => route.fullPath.includes("design"));
 
           <div class="flex items-center gap-3">
             <div v-if="showBuilderOptions" class="flex gap-2">
+              <Button
+                class="bg-success hover:bg-success/90"
+                @click="() => (builderStore.showTemplatePicker = true)"
+                >Templates</Button
+              >
               <StatefulButton
                 :status="builderStore.draftStatus"
                 variant="outline"

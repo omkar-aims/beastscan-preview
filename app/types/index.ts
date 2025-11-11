@@ -34,6 +34,7 @@ export type Campaign = {
     status: "draft" | "published" | "archived";
     published_at: null | Date;
     project_id: string;
+    config?: object;
   };
 };
 

@@ -9,11 +9,13 @@ export default function useApiRoutes() {
       register: `https://beta.beastscan.com/api/v1/signup`,
     },
 
-accounts: {
+    accounts: {
       all: `https://beta.beastscan.com/api/v1/accounts`,
       byId: (id: string) => `https://beta.beastscan.com/api/v1/accounts/${id}`,
-      update: (id: string) => `https://beta.beastscan.com/api/v1/accounts/${id}`,
-    },    projects: `https://beta.beastscan.com/api/v1/accounts/[ID]/projects`,
+      update: (id: string) =>
+        `https://beta.beastscan.com/api/v1/accounts/${id}`,
+    },
+    projects: `https://beta.beastscan.com/api/v1/accounts/[ID]/projects`,
 
     user: {
       profile: `${BASE}/v1/me`,
@@ -24,7 +26,8 @@ accounts: {
       update: "https://beta.beastscan.com/api/v1/campaigns/[ID]",
       projectCampaigns:
         "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",
-      getCampaign: "https://beta.beastscan.com/api/v1/projects/[ID]/campaigns",  
+      getCampaigns: "https://beta.beastscan.com/api/v1/campaigns/",
+      singleCampaign: "https://beta.beastscan.com/api/v1/campaigns/[ID]",
     },
     leaddata: `${localapi}/leaddata`,
   };

@@ -329,9 +329,13 @@
 }
 
 [data-sonner-toast][data-styled="true"] {
-  border-radius: var(--radius) !important;
+  border-radius: 9999px !important;
   box-shadow: var(--shadow-xl) !important;
   backdrop-filter: blur(8px);
+  background-color: var(--color-card) !important;
+  padding: 12px 20px !important;
+  min-height: 32px !important;
+  display: inline-flex;
 }
 
 .CP-block,
