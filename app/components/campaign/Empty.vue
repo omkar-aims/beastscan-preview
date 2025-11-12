@@ -17,7 +17,7 @@ import { Plus, Megaphone } from "lucide-vue-next";
 
     <EmptyContent>
       <NuxtLink href="/dashboard/campaigns/new">
-        <Button> <Plus class="mr-2 h-4 w-4" /> Lunch New Campaign </Button>
+        <Button> <Plus class="mr-2 h-4 w-4" /> Launch New Campaign </Button>
       </NuxtLink>
     </EmptyContent>
   </Empty>
