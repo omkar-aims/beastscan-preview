@@ -37,7 +37,7 @@ const emptyResource = {
 
 const offers = [
   {
-    title: "Free Coffee with Lunch",
+    title: "Free Coffee with Launch",
     location: "Café Bonjour, Zürich",
     redeemedOn: "July 2, 2025 at 12:43 PM",
     description:

@@ -9,16 +9,13 @@ export const useRegister = () => {
 
   const mutation = useMutation({
     mutationFn: async (credentials: RegisterSchema) => {
-      // Store credentials for auto-login
       userStore.setTempCredentials(credentials.email, credentials.password);
 
-      // Only send fields that have values
       const body: any = {
         email: credentials.email,
         password: credentials.password,
       };
 
-      // Add optional fields if they exist
       if (credentials.accountName) {
         body.accountName = credentials.accountName;
       }
@@ -33,11 +30,6 @@ export const useRegister = () => {
         method: "POST",
         body,
       });
-    },
-
-    onSuccess: async () => {
-      // Don't redirect here, let the component handle auto-login
-      // router.replace("/login");
     },
   });
 
