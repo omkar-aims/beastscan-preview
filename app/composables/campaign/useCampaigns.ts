@@ -1,7 +1,5 @@
 import type { Campaign } from "~/types";
 import { useQuery } from "@tanstack/vue-query";
-import { useUserStore } from "@/stores/userStore";
-import { campaignData } from "~/data/campaignData";
 
 export const campaignsKey = ["campaigns"];
 
