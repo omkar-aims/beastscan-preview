@@ -15,12 +15,12 @@ const filteredCampaigns = computed(() => {
 
   let result = [...campaigns.value];
 
-  if (searchQuery.value) {
+  if (searchQuery.value?.trim()) {
     const q = searchQuery.value.toLowerCase();
-    result = result.filter(
-      (c) =>
-        c.attributes.title.toLowerCase().includes(q) ||
-        c.attributes.slug.toLowerCase().includes(q)
+    result = result.filter((c) =>
+      [c.attributes.title, c.attributes.slug]
+        .filter(Boolean)
+        .some((field) => field.toLowerCase().includes(q))
     );
   }
 
@@ -28,23 +28,32 @@ const filteredCampaigns = computed(() => {
     case "latest":
       result.sort(
         (a, b) =>
-          new Date(b.attributes.published_at ?? 0).getTime() -
-          new Date(a.attributes.published_at ?? 0).getTime()
+          new Date(b.attributes.published_at || 0).getTime() -
+          new Date(a.attributes.published_at || 0).getTime()
       );
       break;
+
     case "oldest":
       result.sort(
         (a, b) =>
-          new Date(a.attributes.published_at ?? 0).getTime() -
-          new Date(b.attributes.published_at ?? 0).getTime()
+          new Date(a.attributes.published_at || 0).getTime() -
+          new Date(b.attributes.published_at || 0).getTime()
       );
       break;
+
     case "name_asc":
       result.sort((a, b) =>
         a.attributes.title.localeCompare(b.attributes.title)
       );
       break;
+
     case "name_desc":
+      result.sort((a, b) =>
+        b.attributes.title.localeCompare(a.attributes.title)
+      );
+      break;
+
+    case "scans":
       result.sort((a, b) =>
         b.attributes.title.localeCompare(a.attributes.title)
       );
