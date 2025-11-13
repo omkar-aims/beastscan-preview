@@ -25,8 +25,8 @@ import {
 } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 
+const tokenCookie = useCookie<string | null>("token");
 
-const { isAuthenticated } = useAuth();
 const router = useRouter();
 
 const goToDashboard = () => {
@@ -357,7 +357,7 @@ onMounted(() => {
 
       <div class="hidden lg:flex items-center gap-3">
         <nav class="flex items-center gap-3">
-          <template v-if="isAuthenticated">
+          <template v-if="tokenCookie">
             <Button @click="goToDashboard">Go To Dashboard</Button>
           </template>
 
