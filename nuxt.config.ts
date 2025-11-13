@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
       host: process.env.NUXT_PUBLIC_HOST,
+      previewBase: process.env.NUXT_PUBLIC_PREVIEW_BASE,
     },
   },
 

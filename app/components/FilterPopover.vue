@@ -9,7 +9,16 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "~/lib/utils";
 
-const types = ["URL", "Beasthub", "Linkhub", "Lead", "Feedback", "vCard"];
+const types = [
+  "Digital Business Card",
+  "Landing Page",
+  "Product Page",
+  "Restaurant Menu",
+  "Gift Card",
+  "Stamp Card",
+  "Referral Program",
+  "Giveaway",
+];
 const tags = ["Marketing", "Q4", "Promo", "Retail", "Event"];
 const statuses = ["Draft", "Active", "Archived"];
 

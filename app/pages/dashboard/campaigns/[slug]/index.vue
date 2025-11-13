@@ -119,7 +119,7 @@ const { mutate, status } = useDeleteCampaign();
     <div v-if="campaign" class="space-y-6">
       <AppRow gap="md">
         <div class="flex justify-between items-center">
-          <AppHeading :level="3">My Awesome Campaign</AppHeading>
+          <AppHeading :level="3">{{ campaign.attributes.title }}</AppHeading>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <button
@@ -164,6 +164,7 @@ const { mutate, status } = useDeleteCampaign();
 
               <DropdownMenuItem
                 class="group cursor-pointer"
+                variant="destructive"
                 @click="showDeleteAlert = true"
               >
                 <Trash2
