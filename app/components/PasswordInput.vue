@@ -39,7 +39,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
     >
       <Icon
         class="text-lg text-muted-foreground"
-        :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
+        :name="!showPassword ? 'lucide:eye-off' : 'lucide:eye'"
       />
     </Button>
   </div>
