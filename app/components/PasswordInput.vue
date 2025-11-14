@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
 
-const props = defineProps<{
-  modelValue?: string;
-  defaultValue?: string;
-  class?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string;
+    defaultValue?: string;
+    class?: string;
+    placeholder?: string;
+  }>(),
+  {
+    placeholder: "Choose a strong password",
+  }
+);
 
 const emits = defineEmits<{
   (e: "update:modelValue", value: string): void;
@@ -26,7 +32,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
       :type="showPassword ? 'text' : 'password'"
       :class="['pr-10', props.class]"
       data-slot="input"
-      placeholder="••••••••"
+      :placeholder="placeholder"
     />
 
     <Button

@@ -15,6 +15,8 @@ import {
   Palette,
   Goal,
   Plus,
+  ChevronRight,
+  PartyPopper,
 } from "lucide-vue-next";
 
 import { useForm } from "vee-validate";
@@ -292,145 +294,24 @@ const stepIcon = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="bg-card">
     <section
       v-if="currentStep !== 6"
-      class="w-screen h-screen overflow-hidden grid grid-cols-[320px_1fr]"
+      class="w-screen h-screen overflow-y-scroll flex flex-col pb-12"
     >
-      <div
-        class="relative w-[360px] h-screen text-white px-10 py-20 flex flex-col justify-between overflow-hidden"
-        :class="currentStep === 1 ? 'bg-primary' : 'bg-card'"
-      >
-        <div v-if="currentStep === 1">
-          <div class="flex items-center gap-2 mb-12">
-            <div
-              class="h-7 w-7 bg-white/20 rounded-full flex items-center justify-center"
-            >
-              <span class="font-bold text-white">B</span>
-            </div>
-            <span class="text-white/90 font-medium tracking-wide"
-              >Beastscan</span
-            >
-          </div>
-
-          <h1 class="text-3xl font-semibold leading-snug mb-4">
-            A few steps away from creating your account.
-          </h1>
-
-          <p class="text-white/80 text-sm leading-relaxed max-w-xs">
-            Create your account in minutes. Start personalizing your experience
-            today.
-          </p>
-
-          <div class="absolute bottom-0 right-0">
-            <NuxtImg src="/onboarding/startup.svg" class="w-60 opacity-90" />
-          </div>
+      <div class="flex-1 flex flex-col justify-center items-center gap-4">
+        <div v-if="currentStep !== 5">
+          <AppLogo class="h-10" />
         </div>
-
-        <div v-else class="mt-10 space-y-6 text-card-foreground">
-          <div class="absolute top-4 left-4">
-            <NuxtImg src="/logo-full-light.png" class="h-10" />
-          </div>
-          <div
-            v-for="step in steps"
-            :key="step.id"
-            class="flex flex-col gap-2 py-1"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="h-8 w-8 flex items-center justify-center rounded-full border font-medium text-base transition-all"
-                :class="[
-                  currentStep > step.id
-                    ? 'bg-success text-white border-success'
-                    : currentStep === step.id
-                    ? 'border-2 border-primary text-primary'
-                    : 'border-2 border-muted-foreground/40 text-muted-foreground',
-                ]"
-              >
-                <Check
-                  v-if="currentStep > step.id"
-                  class="w-4 h-4 stroke-[3]"
-                />
-
-                <span v-else>{{ step.id }}</span>
-              </div>
-
-              <span
-                class="text-base transition-colors font-medium"
-                :class="[
-                  currentStep > step.id
-                    ? 'text-muted-foreground/70'
-                    : currentStep === step.id
-                    ? 'text-primary'
-                    : 'text-muted-foreground/80',
-                ]"
-              >
-                {{ step.title }}
-              </span>
-            </div>
-          </div>
-
-          <div
-            class="absolute bottom-0 right-0 w-full h-32 flex items-center justify-center"
-          >
-            <div
-              class="bg-gradient-to-br from-primary to-primary/50 h-32 absolute bottom-0 right-0 w-full"
-              style="clip-path: polygon(0 0, 100% 40%, 100% 100%, 0% 100%)"
-            />
-
-            <div
-              v-motion
-              class="absolute top-0 right-4 shadow-2xl border border-primary w-20 h-20 rounded-full bg-white flex justify-center items-center"
-              :initial="{ opacity: 0, scale: 0.6, y: 10 }"
-              :enter="{ opacity: 1, scale: 1, y: 0 }"
-              :transition="{ duration: 300 }"
-            >
-              <component
-                :is="stepIcon"
-                v-motion
-                class="w-10 h-10 text-primary"
-                :initial="{ opacity: 0, scale: 0.5 }"
-                :enter="{ opacity: 1, scale: 1 }"
-                :transition="{ duration: 250 }"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-4">
-        <div
-          class="flex justify-end items-center gap-1 text-sm text-muted-foreground mb-12"
-        >
-          <Button
-            v-if="currentStep === 1"
-            variant="link"
-            class="p-0 h-auto text-primary/80 flex items-center gap-1"
-          >
-            Login here
-            <ArrowRight class="w-4 h-4" />
-          </Button>
-
-          <span v-else class="flex items-center">
-            Having issue ?
-            <Button
-              variant="link"
-              class="p-0 h-auto text-primary/80 flex items-center gap-1"
-              >Get help
-              <ArrowRight class="w-4 h-4" />
-            </Button>
-          </span>
-        </div>
-
         <div
           v-if="currentStep === 1"
           class="w-full max-w-3xl mx-auto space-y-8"
         >
-          <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-gray-900">
+          <div class="text-center">
+            <h1 class="text-4xl font-semibold tracking-tight text-gray-900">
               Create your account
             </h1>
-            <p class="text-sm text-muted-foreground mt-1">
+            <p class="text-xl text-muted-foreground mt-1">
               Set up your account to get started with your dashboard.
             </p>
           </div>
@@ -444,7 +325,7 @@ const stepIcon = computed(() => {
                     id="email"
                     type="email"
                     placeholder="you@example.com"
-                    class="bg-card border-0 rounded-xl py-6 px-8"
+                    class="bg-muted border-0 rounded-xl py-6 px-8"
                     v-bind="componentField"
                   />
                 </FormControl>
@@ -472,8 +353,7 @@ const stepIcon = computed(() => {
                   <PasswordInput
                     id="password"
                     type="password"
-                    placeholder="••••••••"
-                    class="bg-card border-0 rounded-xl py-6 px-8"
+                    class="bg-muted border-0 rounded-xl py-6 px-8"
                     v-bind="componentField"
                   />
                 </FormControl>
@@ -489,9 +369,9 @@ const stepIcon = computed(() => {
                   <PasswordInput
                     id="confirm"
                     type="password"
-                    placeholder="••••••••"
-                    class="bg-card border-0 rounded-xl py-6 px-8"
+                    class="bg-muted border-0 rounded-xl py-6 px-8"
                     v-bind="componentField"
+                    placeholder="Confirm your password"
                   />
                 </FormControl>
                 <FormDescription />
@@ -512,14 +392,17 @@ const stepIcon = computed(() => {
         </div>
         <div
           v-if="currentStep === 2"
-          v-motion-slide-bottom
+          v-motion
+          :initial="{ opacity: 0, y: 10 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 250 } }"
+          :leave="{ opacity: 0, y: -10, transition: { duration: 250 } }"
           class="w-full max-w-3xl mx-auto space-y-8"
         >
-          <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-gray-900">
+          <div class="text-center">
+            <h1 class="text-4xl font-semibold tracking-tight text-gray-900">
               What's your name?
             </h1>
-            <p class="text-sm text-muted-foreground mt-1">
+            <p class="text-xl text-muted-foreground mt-1">
               Your name will appear across your dashboard and profile.
             </p>
           </div>
@@ -531,7 +414,7 @@ const stepIcon = computed(() => {
                   <Input
                     id="name"
                     placeholder="e.g., John Doe"
-                    class="bg-card border-0 rounded-xl py-6 px-8"
+                    class="bg-muted border-0 rounded-xl py-6 px-8"
                     v-bind="componentField"
                   />
                 </FormControl>
@@ -541,23 +424,28 @@ const stepIcon = computed(() => {
             </FormField>
 
             <div class="flex justify-end">
-              <Button type="submit" size="lg" class="rounded-full py-6 px-8">
-                <span>Continue</span>
-                <ArrowRight class="w-4 h-4" />
+              <Button type="submit" class="group rounded-full py-6 px-8">
+                <span class="block ml-2">Continue</span>
+                <ArrowRight
+                  class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Button>
             </div>
           </form>
         </div>
         <div
           v-if="currentStep === 3"
-          v-motion-slide-bottom
+          v-motion
+          :initial="{ opacity: 0, y: 10 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 250 } }"
+          :leave="{ opacity: 0, y: -10, transition: { duration: 250 } }"
           class="w-full max-w-3xl mx-auto space-y-8"
         >
-          <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-gray-900">
+          <div class="text-center">
+            <h1 class="text-4xl font-semibold tracking-tight text-gray-900">
               How will you be using your account?
             </h1>
-            <p class="text-sm text-muted-foreground mt-1">
+            <p class="text-xl text-muted-foreground mt-1">
               Are you using Beastscan for personal or business purposes?
             </p>
           </div>
@@ -566,7 +454,7 @@ const stepIcon = computed(() => {
               <FormField v-slot="{ componentField }" name="type">
                 <FormItem>
                   <Card
-                    class="cursor-pointer relative"
+                    class="cursor-pointer relative transition-transform duration-200 active:translate-y-1"
                     @click="form.setFieldValue('type', 'personal')"
                   >
                     <CardContent class="flex items-start gap-3">
@@ -606,7 +494,7 @@ const stepIcon = computed(() => {
               <FormField v-slot="{ componentField }" name="type">
                 <FormItem>
                   <Card
-                    class="cursor-pointer relative"
+                    class="cursor-pointer relative transition-transform duration-200 active:translate-y-1"
                     @click="form.setFieldValue('type', 'business')"
                   >
                     <CardContent class="flex items-start gap-3">
@@ -651,7 +539,7 @@ const stepIcon = computed(() => {
                     <Input
                       id="businessName"
                       placeholder="Your company name"
-                      class="bg-card border-0 rounded-xl py-6 px-8"
+                      class="bg-muted border-0 rounded-xl py-6 px-8"
                       v-bind="componentField"
                     />
                   </FormControl>
@@ -661,23 +549,28 @@ const stepIcon = computed(() => {
             </div>
 
             <div class="flex justify-end">
-              <Button type="submit" class="rounded-full py-6 px-8">
-                <span>Continue</span>
-                <ArrowRight class="w-4 h-4" />
+              <Button type="submit" class="group rounded-full py-6 px-8">
+                <span class="block ml-2">Continue</span>
+                <ArrowRight
+                  class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Button>
             </div>
           </form>
         </div>
         <div
           v-if="currentStep === 4"
-          v-motion-slide-bottom
+          v-motion
+          :initial="{ opacity: 0, y: 10 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 250 } }"
+          :leave="{ opacity: 0, y: -10, transition: { duration: 250 } }"
           class="w-full max-w-3xl mx-auto space-y-8"
         >
-          <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-gray-900">
+          <div class="text-center">
+            <h1 class="text-4xl font-semibold tracking-tight text-gray-900">
               Choose your brand color
             </h1>
-            <p class="text-sm text-muted-foreground mt-1">
+            <p class="text-xl text-muted-foreground mt-1">
               Pick a color that best represents your style or brand identity.
             </p>
           </div>
@@ -685,13 +578,13 @@ const stepIcon = computed(() => {
             <FormField v-slot="{ componentField }" name="color">
               <FormItem>
                 <FormControl>
-                  <div class="flex flex-wrap gap-5">
+                  <div class="flex flex-wrap justify-center gap-5">
                     <label
                       v-for="color in colors"
                       :key="color.value"
-                      class="w-12 h-12 cursor-pointer border relative flex items-center justify-center transition-all duration-200 hover:scale-105"
+                      class="w-20 h-20 cursor-pointer border relative flex items-center justify-center transition-all duration-200 hover:scale-105"
                       :class="[
-                        'rounded-full border-muted',
+                        'rounded-xl border-muted',
                         color.value === componentField.modelValue
                           ? 'ring-2 ring-primary ring-offset-2'
                           : '',
@@ -708,12 +601,12 @@ const stepIcon = computed(() => {
                       <Check
                         v-if="color.value === componentField.modelValue"
                         v-motion-pop
-                        class="text-white w-5 h-5"
+                        class="text-white w-8 h-8 stroke-3"
                       />
                     </label>
 
                     <label
-                      class="w-12 h-12 cursor-pointer border rounded-full flex items-center justify-center bg-white hover:scale-105 transition-all duration-200 relative"
+                      class="w-20 h-20 cursor-pointer border rounded-xl flex items-center justify-center bg-white hover:scale-105 transition-all duration-200 relative"
                       :class="
                         componentField.modelValue?.startsWith('custom:')
                           ? 'ring-2 ring-primary ring-offset-2'
@@ -727,7 +620,7 @@ const stepIcon = computed(() => {
 
                       <div
                         v-else
-                        class="absolute inset-0 rounded-full"
+                        class="absolute inset-0 rounded-xl"
                         :style="{
                           backgroundColor: componentField.modelValue.replace(
                             'custom:',
@@ -753,24 +646,29 @@ const stepIcon = computed(() => {
               </FormItem>
             </FormField>
 
-            <div class="flex justify-end">
-              <Button type="submit" class="rounded-full py-6 px-8 gap-2">
-                <span>Continue</span>
-                <ArrowRight class="w-4 h-4" />
+            <div class="flex justify-center">
+              <Button type="submit" class="group rounded-full py-6 px-8">
+                <span class="block ml-2">Continue</span>
+                <ArrowRight
+                  class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Button>
             </div>
           </form>
         </div>
         <div
           v-if="currentStep === 5"
-          v-motion-slide-bottom
+          v-motion
+          :initial="{ opacity: 0, y: 10 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 250 } }"
+          :leave="{ opacity: 0, y: -10, transition: { duration: 250 } }"
           class="w-full max-w-3xl mx-auto space-y-8"
         >
-          <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-gray-900">
+          <div class="text-center">
+            <h1 class="text-4xl font-semibold tracking-tight text-gray-900">
               What's your main goal?
             </h1>
-            <p class="text-sm text-muted-foreground mt-1">
+            <p class="text-xl text-muted-foreground mt-1">
               Tell us your main goal so we can guide you in the right direction.
             </p>
           </div>
@@ -784,7 +682,7 @@ const stepIcon = computed(() => {
               >
                 <FormItem>
                   <Card
-                    class="cursor-pointer relative"
+                    class="cursor-pointer relative transition-transform duration-200 active:translate-y-1"
                     @click="form.setFieldValue('mainGoal', goal.title)"
                   >
                     <CardContent class="flex items-start gap-3">
@@ -824,9 +722,11 @@ const stepIcon = computed(() => {
             </div>
 
             <div class="flex justify-end">
-              <Button class="rounded-full py-6 px-8">
-                <span>Continue</span>
-                <ArrowRight class="w-4 h-4" />
+              <Button type="submit" class="group rounded-full py-6 px-8">
+                <span class="block ml-2">Continue</span>
+                <ArrowRight
+                  class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Button>
             </div>
           </form>
@@ -858,7 +758,11 @@ const stepIcon = computed(() => {
         </p>
       </div>
 
-      <div v-else class="space-y-6 text-center relative z-10">
+      <div
+        v-else
+        class="space-y-6 text-center relative z-10 flex flex-col items-center"
+      >
+        <PartyPopper class="text-primary-foreground w-20 h-20" />
         <AppHeading
           :level="2"
           class="text-3xl md:text-5xl font-extrabold text-primary-foreground"
@@ -867,6 +771,7 @@ const stepIcon = computed(() => {
         </AppHeading>
         <NuxtLink href="/dashboard" class="inline-block">
           <Button
+            size="lg"
             class="rounded-full py-4 px-8 bg-primary-foreground hover:bg-primary-foreground text-primary hover:text-primary"
           >
             <span>Go to dashboard</span>
@@ -875,5 +780,50 @@ const stepIcon = computed(() => {
         </NuxtLink>
       </div>
     </section>
+
+    <div
+      v-if="currentStep !== 6"
+      class="fixed bottom-0 w-full bg-card py-4 border-t border-border"
+    >
+      <div class="flex items-center justify-center gap-6">
+        <div
+          v-for="step in steps"
+          :key="step.id"
+          class="flex items-center gap-3"
+        >
+          <div
+            class="h-6 w-6 flex items-center justify-center rounded-full border font-medium text-base transition-all"
+            :class="[
+              currentStep > step.id
+                ? 'bg-success text-white border-success'
+                : currentStep === step.id
+                ? 'border-primary text-primary border-2'
+                : 'border-muted-foreground/40 text-muted-foreground border-2',
+            ]"
+          >
+            <Check v-if="currentStep > step.id" class="w-4 h-4 stroke-[3]" />
+            <span v-else class="text-sm font-normal">{{ step.id }}</span>
+          </div>
+
+          <span
+            class="text-sm font-medium transition-colors"
+            :class="[
+              currentStep > step.id
+                ? 'text-muted-foreground/70'
+                : currentStep === step.id
+                ? 'text-primary'
+                : 'text-muted-foreground/80',
+            ]"
+          >
+            {{ step.title }}
+          </span>
+
+          <ChevronRight
+            v-if="step.id !== steps.length"
+            class="w-4 h-4 text-muted-foreground/50"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
