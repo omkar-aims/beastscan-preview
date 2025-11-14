@@ -72,7 +72,6 @@ const onSubmit = form.handleSubmit(async (values) => {
             </FormItem>
           </FormField>
 
-          <!-- Remember Me + Forgot Password Row -->
           <div class="flex items-center justify-between">
             <FormField v-slot="{ componentField }" name="rememberMe">
               <FormItem class="flex items-center gap-2 m-0">
