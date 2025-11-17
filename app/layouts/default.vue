@@ -21,6 +21,16 @@ const builderStore = useBuilderStore();
 const route = useRoute();
 
 const showBuilderOptions = computed(() => route.fullPath.includes("design"));
+
+watch(
+  () => route.path,
+  () => {
+    document.querySelector("#main")?.scroll({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+);
 </script>
 
 <template>

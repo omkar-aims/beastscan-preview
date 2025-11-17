@@ -244,7 +244,7 @@ const runtimeConfig = useRuntimeConfig();
                     size="sm"
                     class="h-8 text-xs font-medium rounded-full"
                   >
-                    View Analytics
+                    View details
                     <ArrowRight class="w-3.5 h-3.5 ml-1" />
                   </Button>
                 </NuxtLink>
