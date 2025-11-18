@@ -338,6 +338,22 @@ const runtimeConfig = useRuntimeConfig();
             </FormItem>
           </FormField>
 
+          <FormField v-slot="{ componentField }" name="alias">
+            <FormItem>
+              <FormLabel class="text-sm font-medium"
+                >Alias (Optional)</FormLabel
+              >
+              <FormControl>
+                <Input
+                  placeholder="Short alternate name "
+                  v-bind="componentField"
+                  class="bg-card"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+
           <DialogFooter class="mt-4">
             <DialogClose as-child>
               <Button type="button" variant="outline"> Cancel </Button>
