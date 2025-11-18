@@ -2,14 +2,11 @@
 import {
   ArrowRight,
   Calendar,
-  Plus,
-  Settings,
   ExternalLink,
   Edit3,
   LayoutDashboard,
-  MapPin,
-  Building2,
   Trash2,
+  MoreHorizontal,
 } from "lucide-vue-next";
 import AppHeading from "~/components/AppHeading.vue";
 import { useCampaign } from "~/composables/campaign/useCampaign";
@@ -77,62 +74,65 @@ const showQuickEditModal = ref<boolean>(false);
   <section v-if="campaign" class="space-y-6">
     <div class="flex justify-between items-center">
       <AppHeading :level="3">Campaign Overview</AppHeading>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <button
-            class="w-10 h-10 flex items-center justify-center rounded-full border border-border bg-input"
-          >
-            <Settings class="w-5 h-5 text-muted-foreground" />
-          </button>
-        </DropdownMenuTrigger>
+      <ButtonGroup>
+        <Button
+          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+          @click="() => navigateTo(`/demo`)"
+        >
+          <ExternalLink class="w-4 h-4" />
+          Visit
+        </Button>
 
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            class="group cursor-pointer"
-            @click="() => navigateTo(`/demo`)"
-          >
-            <ExternalLink
-              class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
-            />
-            Visit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            class="group cursor-pointer"
-            @click="showQuickEditModal = true"
-          >
-            <Edit3 class="w-4 h-4 mr-2 group-hover:text-primary-foreground" />
-            Quick Edit
-          </DropdownMenuItem>
+        <Button
+          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+          @click="showQuickEditModal = true"
+        >
+          <Edit3 class="w-4 h-4" />
+          Quick Edit
+        </Button>
 
-          <DropdownMenuItem as="div" class="group cursor-pointer py-0">
-            <a
-              :href="`/design?campaign=${campaign?.id}`"
-              target="_blank"
-              class="w-full h-full flex items-center py-1.5"
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button
+              class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+              size="icon"
+              aria-label="More Options"
             >
-              <LayoutDashboard
-                class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
-              />
-              Open in Builder
-            </a>
-          </DropdownMenuItem>
+              <MoreHorizontal class="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
 
-          <DropdownMenuItem
-            class="group cursor-pointer"
-            variant="destructive"
-            @click="showDeleteAlert = true"
-          >
-            <Trash2 class="w-4 h-4 mr-2 group-hover:text-primary-foreground" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuContent align="end" class="w-48">
+            <DropdownMenuItem as="div" class="group py-0 cursor-pointer">
+              <a
+                :href="`/design?campaign=${campaign?.id}`"
+                target="_blank"
+                class="w-full h-full flex items-center py-1.5"
+              >
+                <LayoutDashboard
+                  class="w-4 h-4 mr-2 group-hover:text-primary-foreground"
+                />
+                Open in Builder
+              </a>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              class="cursor-pointer"
+              variant="destructive"
+              @click="showDeleteAlert = true"
+            >
+              <Trash2 class="w-4 h-4 mr-2" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </ButtonGroup>
     </div>
 
     <div v-if="campaign">
       <Card>
         <CardContent>
-          <div class="grid grid-cols-[1fr_180px] gap-6">
+          <div class="grid grid-cols-[1fr_140px] gap-6">
             <div class="space-y-3 min-w-0">
               <div class="space-y-1.5">
                 <span
@@ -177,15 +177,18 @@ const showQuickEditModal = ref<boolean>(false);
             </div>
 
             <div class="flex flex-col items-center">
-              <div class="p-2 rounded-xl bg-white">
+              <div class="rounded-xl bg-white">
                 <NuxtImg
                   src="https://qrapi.beastscan.com/?size=300&margin=10&renderer=pattern&format=svg&text=https%3A%2F%2Fqrapi.beastscan.com&dots_type=hex&dots_color=%231e40af&dots_negative_color=%23c7d2fe&corners_square_type=rounded&corners_square_color=%231e40af&corners_square_background_color=%23c7d2fe&corners_dot_type=dot&corners_dot_color=%231e40af&pattern_bg=transparent"
-                  width="180"
-                  height="180"
+                  width="160"
+                  height="160"
                   alt="Campaign QR"
                   class="rounded-lg"
                 />
               </div>
+              <Button variant="link" class="text-muted-foreground"
+                >Edit QR Code</Button
+              >
             </div>
           </div>
         </CardContent>
@@ -292,6 +295,22 @@ const showQuickEditModal = ref<boolean>(false);
               >
                 {{ "x" }}
               </p>
+            </FormItem>
+          </FormField>
+
+          <FormField v-slot="{ componentField }" name="alias">
+            <FormItem>
+              <FormLabel class="text-sm font-medium"
+                >Alias (Optional)</FormLabel
+              >
+              <FormControl>
+                <Input
+                  placeholder="Short alternate name "
+                  v-bind="componentField"
+                  class="bg-card"
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           </FormField>
 
