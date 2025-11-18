@@ -92,7 +92,7 @@ const accounts = [
                 <FormControl>
                   <PasswordInput
                     v-bind="componentField"
-                    placeholder="••••••••"
+                    placeholder="Your current password"
                     class="bg-muted border-muted"
                   />
                 </FormControl>
@@ -106,7 +106,7 @@ const accounts = [
                 <FormControl>
                   <PasswordInput
                     v-bind="componentField"
-                    placeholder="••••••••"
+                    placeholder="Choose a new password"
                     class="bg-muted border-muted"
                   />
                 </FormControl>
@@ -120,7 +120,7 @@ const accounts = [
                 <FormControl>
                   <PasswordInput
                     v-bind="componentField"
-                    placeholder="••••••••"
+                    placeholder="Confirm your password"
                     class="bg-muted border-muted"
                   />
                 </FormControl>
