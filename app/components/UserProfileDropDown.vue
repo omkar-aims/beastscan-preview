@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { useLogout } from "~/composables/auth/useLogout";
-import { FolderOpen, LogOut, User, Users } from "lucide-vue-next";
+import {
+  FolderOpen,
+  LogOut,
+  User,
+  Users,
+  CirclePlus,
+  EllipsisVertical,
+} from "lucide-vue-next";
 
 const { logout } = useLogout();
 const showLogoutDialog = ref(false);

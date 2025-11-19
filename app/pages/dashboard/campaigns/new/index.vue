@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { slugify } from "@vueuse/motion";
-import { toTypedSchema } from "@vee-validate/zod";
 import {
   IdCard,
   UtensilsCrossed,
@@ -12,10 +11,6 @@ import {
   ShoppingBag,
   ArrowRight,
 } from "lucide-vue-next";
-import { useForm } from "vee-validate";
-import FormMessage from "~/components/ui/form/FormMessage.vue";
-import { useCreateCampaign } from "~/composables/campaign/useCreateCampaign";
-import { createCampaignSchema } from "~/schemas";
 
 const campaignTypes = [
   {
@@ -86,32 +81,8 @@ const campaignTypes = [
 ];
 
 const route = useRoute();
-const open = ref(false);
 
 const selectedType = computed(() => route.query.type);
-
-const form = useForm({
-  validationSchema: toTypedSchema(createCampaignSchema),
-});
-
-const { mutateAsync, status } = useCreateCampaign();
-const error = ref<string | null>(null);
-const onSubmit = form.handleSubmit(async (values) => {
-  try {
-    await mutateAsync(values, {
-      onSuccess(data) {
-        open.value = false;
-        const campaign = data;
-        nextTick(() => {
-          navigateTo(`/design?campaign=${campaign.id}`);
-        });
-      },
-    });
-    form.resetForm();
-  } catch (err: any) {
-    error.value = err.message ?? "Something went wrong";
-  }
-});
 </script>
 
 <template>
@@ -143,7 +114,14 @@ const onSubmit = form.handleSubmit(async (values) => {
           </div>
 
           <CardAction>
-            <Button class="rounded-full gap-1" @click="open = true">
+            <Button
+              class="rounded-full gap-1"
+              @click="
+                navigateTo(
+                  `/dashboard/campaigns/create?type=${slugify(type.title)}`
+                )
+              "
+            >
               <span>Create</span>
               <ArrowRight class="w-4 h-4" />
             </Button>
@@ -151,68 +129,5 @@ const onSubmit = form.handleSubmit(async (values) => {
         </CardFooter>
       </Card>
     </div>
-
-    <Dialog v-model:open="open">
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create campaign</DialogTitle>
-          <DialogDescription>
-            Give the details of your campaign.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form class="space-y-4 max-w-md" @submit="onSubmit">
-          <FormField v-slot="{ componentField }" name="title">
-            <FormItem>
-              <FormLabel class="text-sm font-medium">
-                Campaign Title
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter a clear, engaging campaign title"
-                  v-bind="componentField"
-                  class="bg-card"
-                  @change="
-                (e: Event) => {
-                  const target = e.target as HTMLInputElement
-                  form.setFieldValue('slug', slugify(target.value))
-                }
-              "
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-
-          <FormField v-slot="{ componentField }" name="slug">
-            <FormItem>
-              <FormLabel class="text-sm font-medium"> Campaign Slug </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="e.g. summer-sale-2025"
-                  v-bind="componentField"
-                  class="bg-card"
-                  @focus="error = null"
-                />
-              </FormControl>
-              <FormMessage />
-              <p
-                v-if="error !== null"
-                class="text-destructive-foreground text-sm"
-              >
-                {{ error }}
-              </p>
-            </FormItem>
-          </FormField>
-
-          <DialogFooter class="mt-4">
-            <DialogClose as-child>
-              <Button type="button" variant="outline"> Cancel </Button>
-            </DialogClose>
-            <StatefulButton :status="status"> Create Campaign </StatefulButton>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
   </div>
 </template>
