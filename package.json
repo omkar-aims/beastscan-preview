@@ -40,6 +40,7 @@
     "husky": "^9.1.7",
     "lucide-vue-next": "^0.540.0",
     "nanoid": "^5.1.5",
+    "node-vibrant": "^4.0.3",
     "nuxt": "^4.0.3",
     "nuxt-color-picker": "^1.2.8",
     "pinia": "^3.0.3",

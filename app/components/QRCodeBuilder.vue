@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
-import { ref, onMounted, defineEmits } from "vue";
 import { useCampaigns } from "~/composables/campaign/useCampaigns";
 
 const loading = ref(true);
