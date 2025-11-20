@@ -30,10 +30,12 @@ const sendBuilderConfig = () => {
   isLoading.value = false;
 };
 
-onMounted(() => {
+const updateSize = () => {
   width.value = window.innerWidth;
-  height.value = window.innerHeight - 64;
+  height.value = window.innerHeight;
+};
 
+onMounted(() => {
   const iframe = iframeRef.value;
   isLoading.value = true;
 
@@ -44,6 +46,13 @@ onMounted(() => {
       sendBuilderConfig();
     }
   });
+
+  updateSize();
+  window.addEventListener("resize", updateSize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateSize);
 });
 
 watch(
@@ -59,7 +68,7 @@ watch(
   <div class="absolute inset-0 w-full h-full flex justify-center">
     <div
       v-if="isFetching"
-      class="w-full h-full flex justify-center items-center py-32"
+      class="w-full h-full flex justify-center items-center"
     >
       <div class="max-w-sm">
         <div class="flex flex-col items-center">

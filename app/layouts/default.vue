@@ -105,10 +105,16 @@ watch(
             showBuilderOptions
               ? 'h-[90vh] p-0 overflow-y-hidden'
               : 'p-4 h-screen pb-[10%]',
-            'overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
+            'w-full overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-card [&::-webkit-scrollbar-thumb]:bg-foreground',
           ]"
         >
-          <slot />
+          <div
+            :class="[
+              showBuilderOptions ? 'w-full' : 'w-full max-w-7xl mx-auto ',
+            ]"
+          >
+            <slot />
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
