@@ -85,6 +85,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             <NuxtLink
               to="/forgot-password"
               class="text-sm text-primary hover:underline"
+              tabindex="-1"
             >
               Forgot password?
             </NuxtLink>

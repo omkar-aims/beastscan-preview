@@ -77,7 +77,15 @@ const showQuickEditModal = ref<boolean>(false);
       <ButtonGroup>
         <Button
           class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
-          @click="() => navigateTo(`/demo`)"
+          @click="
+            async () =>
+              await navigateTo(
+                `${runtimeConfig.public.previewBase}${campaign.id}`,
+                {
+                  external: true,
+                }
+              )
+          "
         >
           <ExternalLink class="w-4 h-4" />
           Visit

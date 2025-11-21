@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ChevronRight, Check } from "lucide-vue-next";
+import { useCreateCampaign } from "~/composables/campaign/useCreateCampaign";
 
 const steps = [
   {
@@ -20,11 +21,25 @@ const steps = [
   },
   {
     id: 5,
-    title: "Done",
+    title: "Customize",
   },
 ];
 
 const currentStep = ref<number>(1);
+
+const configData = ref({});
+const themeData = ref("");
+
+const newCampaign = ref({
+  title: null,
+  slug: null,
+  alias: null,
+  type: null,
+  config: null,
+  status: null,
+});
+
+const { mutate, status } = useCreateCampaign();
 </script>
 
 <template>
@@ -72,16 +87,57 @@ const currentStep = ref<number>(1);
       </div>
     </div>
 
-    <CampaignWizardDetail v-if="currentStep === 1" @done="currentStep += 1" />
-    <CampaignWizardType v-if="currentStep === 2" @done="currentStep += 1" />
+    <CampaignWizardDetail
+      v-if="currentStep === 1"
+      @done="
+        (values) => {
+          currentStep += 1;
+          Object.assign(newCampaign, values);
+        }
+      "
+    />
+    <CampaignWizardType
+      v-if="currentStep === 2"
+      v-motion-fade
+      @done="
+        (type) => {
+          currentStep += 1;
+          newCampaign.type = type;
+        }
+      "
+    />
     <CampaignWizardConfigure
       v-if="currentStep === 3"
-      @done="currentStep += 1"
+      v-motion-fade
+      @done="
+        (config) => {
+          currentStep += 1;
+          Object.assign(configData, config);
+        }
+      "
     />
-    <CampaignWizardTheme v-if="currentStep === 4" @done="currentStep += 1" />
+    <CampaignWizardTheme
+      v-if="currentStep === 4"
+      v-motion-fade
+      :config="configData"
+      @done="
+        (theme) => {
+          currentStep += 1;
+          themeData = theme;
+        }
+      "
+    />
     <CampaignWizardCustomize
       v-if="currentStep === 5"
-      @done="currentStep += 1"
+      v-motion-fade
+      :theme="themeData"
+      :status="status"
+      @done="
+        (theme) => {
+          newCampaign.config = theme;
+          mutate(newCampaign);
+        }
+      "
     />
   </section>
 </template>
