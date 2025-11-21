@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { Plus } from "lucide-vue-next";
+import { Plus, Image } from "lucide-vue-next";
+import { nanoid } from "nanoid";
 import { Vibrant } from "node-vibrant/browser";
 
 const palettes = [
+  { name: "Rose", colors: ["#FF007F", "#E60057"] },
   { name: "Ocean", colors: ["#0074D9", "#00A8FF"] },
   { name: "Sunset", colors: ["#FF6B6B", "#FBC15E"] },
   { name: "Forest", colors: ["#2ECC71", "#27AE60"] },
@@ -10,27 +12,72 @@ const palettes = [
   { name: "Fire", colors: ["#E74C3C", "#C0392B"] },
   { name: "Sky", colors: ["#3498DB", "#1A73E8"] },
   { name: "Mint", colors: ["#1ABC9C", "#16A085"] },
-  { name: "Rose", colors: ["#FF007F", "#E60057"] },
 ];
 
+const customColor = ref<{ primary: string; secondary: string }>({
+  primary: "",
+  secondary: "",
+});
+
 const showCustomPicker = ref<boolean>(false);
+const selectedImage = ref<string | null>(null);
+const extractedPairs = ref<null | (typeof palettes)[0]>(null);
 
-const extractedColors = ref<string[]>([]);
-
-function extractColorFromImage(e: Event) {
+async function extractColorPairsFromImage(e: Event) {
   const target = e.target as HTMLInputElement;
   if (!target?.files || !target.files[0]) return;
 
   const imagePath = URL.createObjectURL(target.files[0]);
-  Vibrant.from(imagePath)
-    .getPalette()
-    .then((palette) => {
-      Object.entries(palette).map(([_, swatch]) => {
-        if (swatch?.hex) {
-          extractedColors.value.push(swatch.hex.replace("#", ""));
-        }
-      });
+  selectedImage.value = imagePath;
+
+  extractedPairs.value = null;
+
+  const palette = await Vibrant.from(imagePath).getPalette();
+
+  const swatches = Object.values(palette)
+    .filter((s) => s?.hex)
+    .map((s) => ({
+      hex: s.hex,
+      population: s.population ?? 0,
+    }));
+
+  swatches.sort((a, b) => b.population - a.population);
+
+  const unique = Array.from(new Set(swatches.map((s) => s.hex)));
+
+  const pairs = [];
+
+  for (let i = 0; i < unique.length - 1; i++) {
+    pairs.push({
+      name: nanoid(),
+      colors: [unique[i], unique[i + 1]],
     });
+
+    if (pairs.length >= 4) break;
+  }
+
+  if (pairs) extractedPairs.value = pairs;
+}
+
+const selected = ref<string>("Rose");
+
+const emit = defineEmits(["done"]);
+const props = defineProps<{
+  theme: string;
+  status: "idle" | "pending" | "error" | "success";
+}>();
+
+function handleSelect() {
+  if (!selected.value) return;
+  const pallet = palettes.find((p) => p.name === selected.value);
+
+  if (!pallet) return;
+
+  const [primary, secondary] = pallet.colors;
+
+  let updatedTemplate = props.theme.replaceAll("PRIMARY_COLOR", primary);
+  updatedTemplate = updatedTemplate.replaceAll("SECONDARY_COLOR", secondary);
+  emit("done", updatedTemplate);
 }
 </script>
 
@@ -41,7 +88,11 @@ function extractColorFromImage(e: Event) {
         <div
           v-for="palette in palettes"
           :key="palette.name"
-          class="group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow"
+          class="active:translate-y-1 ring-2 duration-200 transition-transform group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow"
+          :class="
+            palette.name === selected ? 'ring-primary' : 'ring-transparent'
+          "
+          @click="selected = palette.name"
         >
           <div class="rounded-full overflow-hidden h-8 w-8 flex">
             <div
@@ -59,6 +110,11 @@ function extractColorFromImage(e: Event) {
 
         <div
           class="group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow transition"
+          :class="
+            customColor.primary !== '' && customColor.secondary !== ''
+              ? 'ring-primary'
+              : 'ring-transparent'
+          "
           @click="showCustomPicker = true"
         >
           <Plus class="w-4 h-4" />
@@ -66,7 +122,26 @@ function extractColorFromImage(e: Event) {
             Custom
           </div>
         </div>
+        <label
+          class="group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow transition"
+          for="pickImage"
+        >
+          <Image class="w-4 h-4" />
+          <div class="text-sm font-medium text-center text-foreground">
+            Pick from image
+          </div>
+          <Input
+            id="pickImage"
+            type="file"
+            class="hidden"
+            @change="extractColorPairsFromImage"
+          />
+        </label>
       </div>
+
+      <StatefulButton :status="status" @click="handleSelect">
+        Create
+      </StatefulButton>
     </div>
 
     <div class="h-[428px] overflow-hidden flex justify-end">
@@ -78,74 +153,64 @@ function extractColorFromImage(e: Event) {
     </div>
 
     <Dialog v-model:open="showCustomPicker">
-      <DialogContent class="space-y-6 w-[360px]">
-        <div class="px-4 my-4">
-          <FileUpload v-slot="{ handleSelect, file }">
-            <div
-              class="relative"
-              @drop.prevent="
-                (e) => {
-                  handleSelect(e);
-                  extractColorFromImage(e);
-                }
-              "
+      <DialogContent class="max-w-md bg-card">
+        <DialogHeader>
+          <DialogTitle>Choose a custom color</DialogTitle>
+        </DialogHeader>
+        <div class="space-y-6">
+          <div>
+            <label
+              for="primaryColor"
+              class="block font-medium text-sm mb-2 text-muted-foreground"
             >
-              <Input
-                id="colorImage"
-                type="file"
-                class="hidden"
-                accept="image/*"
-                @change="(e: Event) => {
-                          handleSelect(e);
-                          extractColorFromImage(e);
-                        }"
+              Primary Color
+            </label>
+
+            <div class="flex justify-center items-center gap-2">
+              <span
+                class="w-10 h-10 block rounded-full border border-muted-foreground/50 shrink-0"
+                :style="{
+                  backgroundColor: customColor.primary || '#ffffff',
+                }"
               />
-
-              <label
-                for="colorImage"
-                class="group cursor-pointer rounded-xl overflow-hidden transition-all duration-200 border-2 border-dashed flex flex-col items-center justify-center w-full h-48 bg-muted/20 hover:bg-muted/30 relative"
-              >
-                <NuxtImg
-                  v-if="file"
-                  :src="file"
-                  class="w-full h-full object-contain"
-                />
-
-                <div
-                  v-else
-                  class="flex flex-col items-center gap-2 text-muted-foreground transition-opacity"
-                >
-                  <Image class="w-6 h-6" />
-                  <span class="text-sm">Browse or drop an image</span>
-
-                  <span class="text-xs text-muted-foreground/60">
-                    PNG, JPG up to 5MB
-                  </span>
-                </div>
-              </label>
+              <Input
+                id="primaryColor"
+                v-model="customColor.primary"
+                placeholder="Enter hex code"
+                class="bg-muted shadow-none"
+              />
             </div>
-          </FileUpload>
-        </div>
+          </div>
 
-        <span
-          v-if="extractedColors.length > 0"
-          class="block font-semibold mb-2 mt-4 px-4 text-muted-foreground"
-          >Detected Colors</span
-        >
+          <div>
+            <label
+              for="secondaryColor"
+              class="block font-medium text-sm mb-2 text-muted-foreground"
+            >
+              Secondary Color
+            </label>
 
-        <div
-          v-if="extractedColors.length > 0"
-          class="flex flex-wrap gap-4 m-4 mt-0"
-        >
-          <button
-            v-for="color in extractedColors"
-            :key="color"
-            class="w-10 h-10 cursor-pointer border relative flex items-center justify-center transition-all duration-200 hover:scale-105"
-            :class="['rounded-full border-muted']"
-          >
-            <Check v-motion-pop class="text-white w-8 h-8" />
-          </button>
+            <div class="flex justify-center items-center gap-2">
+              <span
+                class="w-10 h-10 block rounded-full border border-muted-foreground/50 shrink-0"
+                :style="{
+                  backgroundColor: customColor.secondary || '#000000',
+                }"
+              />
+              <Input
+                id="secondaryColor"
+                v-model="customColor.secondary"
+                placeholder="Enter hex code"
+                class="bg-muted shadow-none"
+              />
+            </div>
+          </div>
         </div>
+        <DialogFooter>
+          <DialogTrigger>
+            <Button>Done</Button>
+          </DialogTrigger>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   </div>

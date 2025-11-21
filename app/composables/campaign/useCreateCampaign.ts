@@ -42,6 +42,7 @@ import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import type { CampaignSchema } from "~/schemas";
 import type { Campaign } from "@/types";
 import { nanoid } from "nanoid";
+import { toast } from "vue-sonner";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -72,23 +73,7 @@ export function useCreateCampaign() {
           status: "draft",
           published_at: null,
           project_id: "Random Project",
-          config: {
-            head: {
-              title: "Untitled Page",
-              description: "",
-            },
-            body: {
-              elements: [
-                {
-                  id: "element-new",
-                  type: "Section",
-                  styles: {},
-                  content: [],
-                },
-              ],
-            },
-            theme: {},
-          },
+          config: JSON.parse(newCampaign.config),
         },
       };
 
@@ -98,6 +83,12 @@ export function useCreateCampaign() {
       queryClient.setQueryData(["campaigns"], updatedCampaigns);
 
       return campaign;
+    },
+    onSuccess: (data) => {
+      navigateTo(`/dashboard/campaigns/${data.id}`, {
+        replace: true,
+      });
+      toast.success("Campaign is created");
     },
   });
 }

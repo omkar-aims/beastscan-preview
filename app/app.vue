@@ -16,6 +16,6 @@ useHead({
       <NuxtPage />
     </NuxtLayout>
 
-    <Toaster position="top-center" theme="system" rich-colors />
+    <Toaster position="top-center" theme="light" rich-colors />
   </div>
 </template>
