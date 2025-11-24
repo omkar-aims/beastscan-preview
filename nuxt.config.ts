@@ -38,6 +38,7 @@ export default defineNuxtConfig({
     "nuxt-color-picker",
     "@vueuse/motion/nuxt",
     "@nuxtjs/i18n",
+    "nuxt-file-storage",
   ],
   i18n: {
     locales: [

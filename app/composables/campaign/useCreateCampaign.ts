@@ -63,6 +63,8 @@ export function useCreateCampaign() {
         throw new Error("A campaign with this slug already exists");
       }
 
+      console.log(newCampaign.config);
+
       const campaign: Campaign = {
         type: "campaigns",
         id: String(Date.now()),
@@ -89,6 +91,10 @@ export function useCreateCampaign() {
         replace: true,
       });
       toast.success("Campaign is created");
+    },
+
+    onError(err) {
+      console.log(err);
     },
   });
 }

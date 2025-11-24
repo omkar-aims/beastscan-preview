@@ -75,8 +75,8 @@ function handleSelect() {
 
   const [primary, secondary] = pallet.colors;
 
-  let updatedTemplate = props.theme.replaceAll("PRIMARY_COLOR", primary);
-  updatedTemplate = updatedTemplate.replaceAll("SECONDARY_COLOR", secondary);
+  let updatedTemplate = props.theme.replaceAll("[PRIMARY_COLOR]", primary);
+  updatedTemplate = updatedTemplate.replaceAll("[SECONDARY_COLOR]", secondary);
   emit("done", updatedTemplate);
 }
 </script>

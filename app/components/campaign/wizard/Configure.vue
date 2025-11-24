@@ -1,18 +1,8 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { UserCircle2, Camera, Trash2, Plus, ArrowRight } from "lucide-vue-next";
-import { useForm } from "vee-validate";
+import { useFieldArray, useForm } from "vee-validate";
 import z from "zod";
-
-const socialLinks = ref([{ platform: "", url: "" }]);
-
-function addLink() {
-  socialLinks.value.push({ platform: "", url: "" });
-}
-
-function removeLink(index: number) {
-  socialLinks.value.splice(index, 1);
-}
 
 const emit = defineEmits(["done"]);
 
@@ -30,25 +20,12 @@ const formSchema = toTypedSchema(
     lastName: z.string().optional(),
     note: z.string().optional(),
 
-    organization: z.string().optional(),
-    role: z.string().optional(),
+    socialLinks: z
+      .array(socialLinkSchema)
+      .min(1, "At least one social link is required"),
 
-    telephone1: z
-      .string()
-      .optional()
-      .transform((v) => (v === "" ? undefined : v)),
-    telephone2: z
-      .string()
-      .optional()
-      .transform((v) => (v === "" ? undefined : v)),
-    email: z.string().optional(),
-    url: z.string().optional(),
-
-    street: z.string().optional(),
-    country: z.string().optional(),
-    zip: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
+    primaryButton: z.string().nonempty("Primary button is required"),
+    secondaryButton: z.string().nonempty("Secondary button is required"),
   })
 );
 
@@ -57,21 +34,20 @@ const defaultValues = {
   lastName: "",
   note: "",
 
-  organization: "",
-  role: "",
-
-  telephone1: "",
-  telephone2: "",
-  email: "",
-  url: "",
-
-  street: "",
-  country: "",
-  zip: "",
-  city: "",
-  state: "",
-
-  socialLinks: [{ platform: "", url: "" }],
+  socialLinks: [
+    {
+      platform: "facebook",
+      url: "https://www.facebook.com/yourpage",
+    },
+    {
+      platform: "instagram",
+      url: "https://www.instagram.com/yourpage",
+    },
+    {
+      platform: "x",
+      url: "https://www.x.com/yourpage",
+    },
+  ],
 };
 
 const { handleSubmit } = useForm({
@@ -79,9 +55,35 @@ const { handleSubmit } = useForm({
   initialValues: defaultValues,
 });
 
+const { fields, remove, push } = useFieldArray("socialLinks");
+const { handleFileInput, files } = useFileStorage({ clearOldFiles: false });
+
 const onSubmit = handleSubmit((values) => {
-  emit("done", values);
+  emit("done", {
+    ...values,
+    profileImage: files.value[0]?.content,
+  });
 });
+
+const socialNetworks = [
+  { label: "Facebook", value: "facebook" },
+  { label: "Instagram", value: "instagram" },
+  { label: "LinkedIn", value: "linkedin" },
+  { label: "Twitter", value: "twitter" },
+  { label: "Xing", value: "xing" },
+  { label: "Behance", value: "behance" },
+  { label: "Snapchat", value: "snapchat" },
+  { label: "YouTube", value: "youtube" },
+  { label: "Webpage", value: "webpage" },
+  { label: "Pinterest", value: "pinterest" },
+  { label: "Location", value: "location" },
+  { label: "Email", value: "email" },
+  { label: "Telegram", value: "telegram" },
+  { label: "TikTok", value: "tiktok" },
+  { label: "Viber", value: "viber" },
+  { label: "WeChat", value: "wechat" },
+  { label: "X", value: "x" },
+];
 </script>
 
 <template>
@@ -129,7 +131,10 @@ const onSubmit = handleSubmit((values) => {
                 type="file"
                 accept="image/*"
                 class="hidden"
-                @change="handleSelect"
+                @change="(e : Event) => {
+                  handleFileInput(e)
+                  handleSelect(e)
+                }"
               />
             </div>
           </FileUpload>
@@ -192,256 +197,124 @@ const onSubmit = handleSubmit((values) => {
       <Separator />
 
       <CardHeader>
-        <CardTitle>Company</CardTitle>
-      </CardHeader>
-      <CardContent class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="organization">
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter company name"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="role">
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter job role or position"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-        </div>
-      </CardContent>
-
-      <Separator />
-
-      <CardHeader>
-        <CardTitle>Contact</CardTitle>
-      </CardHeader>
-      <CardContent class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="telephone1">
-              <FormItem>
-                <FormLabel>Telephone 1</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter phone number"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="telephone2">
-              <FormItem>
-                <FormLabel>Telephone 2</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter alternate phone number"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="email">
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter email address"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="url">
-              <FormItem>
-                <FormLabel>Website URL</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter website URL"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-        </div>
-      </CardContent>
-
-      <Separator />
-
-      <CardHeader>
-        <CardTitle>Address</CardTitle>
-      </CardHeader>
-
-      <CardContent class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col space-y-2 md:col-span-2">
-            <FormField v-slot="{ componentField }" name="street">
-              <FormItem>
-                <FormLabel>Street</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter street address"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="country">
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter your country"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="zip">
-              <FormItem>
-                <FormLabel>Postal Code</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter postal/zip code"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="city">
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter your city"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="state">
-              <FormItem>
-                <FormLabel>State</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Enter your state/region"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
-        </div>
-      </CardContent>
-
-      <Separator />
-
-      <CardHeader>
         <CardTitle>Social Links</CardTitle>
       </CardHeader>
 
       <CardContent class="space-y-6">
         <div class="space-y-4">
-          <template v-for="(link, index) in socialLinks" :key="index">
-            <div
-              class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-2"
-            >
-              <TheSocialPlatformSelector />
+          <template v-for="(field, index) in fields" :key="field.key">
+            <div class="flex flex-col md:flex-row md:items-center gap-3">
+              <FormField
+                v-slot="{ componentField }"
+                :name="`socialLinks.${index}.platform`"
+              >
+                <FormItem class="w-full md:w-xs">
+                  <FormControl>
+                    <Select v-bind="componentField">
+                      <SelectTrigger class="w-full">
+                        <SelectValue placeholder="Choose Platform" />
+                      </SelectTrigger>
+                      <SelectContent class="h-52">
+                        <SelectItem
+                          v-for="network in socialNetworks"
+                          :key="network.value"
+                          :value="network.value"
+                        >
+                          {{ network.label }}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
-              <Input
-                v-model="link.url"
-                class="flex-1 bg-card w-full"
-                placeholder="Paste social profile link"
-              />
+              <FormField
+                v-slot="{ componentField }"
+                :name="`socialLinks.${index}.url`"
+              >
+                <FormItem class="flex-1">
+                  <FormControl>
+                    <Input
+                      placeholder="Paste social profile link"
+                      v-bind="componentField"
+                      class="bg-card"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
               <Button
                 variant="destructive"
                 size="sm"
                 type="button"
-                @click="removeLink(index)"
+                class="shrink-0"
+                @click="remove(index)"
               >
                 <Trash2 />
               </Button>
             </div>
           </template>
 
-          <Button type="button" @click="addLink">
+          <Button
+            type="button"
+            @click="
+              push({
+                platform: '',
+                url: '',
+              })
+            "
+          >
             <Plus />
             <span>Add New</span>
           </Button>
         </div>
       </CardContent>
 
+      <Separator />
+
+      <CardHeader>
+        <CardTitle>Action Buttons</CardTitle>
+      </CardHeader>
+
+      <CardContent class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex flex-col space-y-2">
+            <FormField v-slot="{ componentField }" name="primaryButton">
+              <FormItem>
+                <FormLabel>Primary Button</FormLabel>
+                <FormControl>
+                  <Input
+                    class="bg-card w-full"
+                    placeholder="Label for primary button"
+                    v-bind="componentField"
+                  />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            </FormField>
+          </div>
+
+          <div class="flex flex-col space-y-2">
+            <FormField v-slot="{ componentField }" name="secondaryButton">
+              <FormItem>
+                <FormLabel>Secondary Button</FormLabel>
+                <FormControl>
+                  <Input
+                    class="bg-card w-full"
+                    placeholder="Label for secondary button"
+                    v-bind="componentField"
+                  />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            </FormField>
+          </div>
+        </div>
+      </CardContent>
       <Separator />
 
       <CardFooter class="flex justify-end">
