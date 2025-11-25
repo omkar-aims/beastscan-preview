@@ -13,11 +13,11 @@ const steps = [
   },
   {
     id: 3,
-    title: "Configure",
+    title: "Template",
   },
   {
     id: 4,
-    title: "Theme",
+    title: "Configure",
   },
   {
     id: 5,
@@ -27,8 +27,8 @@ const steps = [
 
 const currentStep = ref<number>(1);
 
-const configData = ref({});
 const themeData = ref("");
+const extractedColors = ref([]);
 
 const newCampaign = ref({
   title: null,
@@ -106,20 +106,10 @@ const { mutate, status } = useCreateCampaign();
         }
       "
     />
-    <CampaignWizardConfigure
+
+    <CampaignWizardTheme
       v-if="currentStep === 3"
       v-motion-fade
-      @done="
-        (config) => {
-          currentStep += 1;
-          Object.assign(configData, config);
-        }
-      "
-    />
-    <CampaignWizardTheme
-      v-if="currentStep === 4"
-      v-motion-fade
-      :config="configData"
       @done="
         (theme) => {
           currentStep += 1;
@@ -127,11 +117,30 @@ const { mutate, status } = useCreateCampaign();
         }
       "
     />
+
+    <CampaignWizardConfigure
+      v-if="currentStep === 4"
+      v-motion-fade
+      :theme="themeData"
+      @done="
+        (theme) => {
+          currentStep += 1;
+          themeData = theme;
+        }
+      "
+      @extract-color="
+        (colors: []) => {
+          extractedColors = [...colors];
+        }
+      "
+    />
+
     <CampaignWizardCustomize
       v-if="currentStep === 5"
       v-motion-fade
       :theme="themeData"
       :status="status"
+      :extracted-colors="extractedColors"
       @done="
         (theme) => {
           newCampaign.config = theme;
