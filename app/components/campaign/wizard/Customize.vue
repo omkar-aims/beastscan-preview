@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Plus, Image } from "lucide-vue-next";
-import { nanoid } from "nanoid";
-import { Vibrant } from "node-vibrant/browser";
+import { Plus } from "lucide-vue-next";
+
+import { applyColors } from "#imports";
 
 const palettes = [
   { name: "Rose", colors: ["#FF007F", "#E60057"] },
@@ -20,44 +20,6 @@ const customColor = ref<{ primary: string; secondary: string }>({
 });
 
 const showCustomPicker = ref<boolean>(false);
-const selectedImage = ref<string | null>(null);
-const extractedPairs = ref<null | (typeof palettes)[0]>(null);
-
-async function extractColorPairsFromImage(e: Event) {
-  const target = e.target as HTMLInputElement;
-  if (!target?.files || !target.files[0]) return;
-
-  const imagePath = URL.createObjectURL(target.files[0]);
-  selectedImage.value = imagePath;
-
-  extractedPairs.value = null;
-
-  const palette = await Vibrant.from(imagePath).getPalette();
-
-  const swatches = Object.values(palette)
-    .filter((s) => s?.hex)
-    .map((s) => ({
-      hex: s.hex,
-      population: s.population ?? 0,
-    }));
-
-  swatches.sort((a, b) => b.population - a.population);
-
-  const unique = Array.from(new Set(swatches.map((s) => s.hex)));
-
-  const pairs = [];
-
-  for (let i = 0; i < unique.length - 1; i++) {
-    pairs.push({
-      name: nanoid(),
-      colors: [unique[i], unique[i + 1]],
-    });
-
-    if (pairs.length >= 4) break;
-  }
-
-  if (pairs) extractedPairs.value = pairs;
-}
 
 const selected = ref<string>("Rose");
 
@@ -65,25 +27,108 @@ const emit = defineEmits(["done"]);
 const props = defineProps<{
   theme: string;
   status: "idle" | "pending" | "error" | "success";
+  extractedColors: (typeof palettes)[0][];
 }>();
 
+const template = ref<string>(props.theme);
+
 function handleSelect() {
-  if (!selected.value) return;
-  const pallet = palettes.find((p) => p.name === selected.value);
-
-  if (!pallet) return;
-
-  const [primary, secondary] = pallet.colors;
-
-  let updatedTemplate = props.theme.replaceAll("[PRIMARY_COLOR]", primary);
-  updatedTemplate = updatedTemplate.replaceAll("[SECONDARY_COLOR]", secondary);
-  emit("done", updatedTemplate);
+  emit("done", template.value);
 }
+
+const iframeRef = useTemplateRef("iframeRef");
+
+const sendBuilderConfig = () => {
+  const iframe = iframeRef.value;
+  if (!iframe) return;
+
+  iframe.contentWindow?.postMessage(
+    {
+      type: "builderSetConfig",
+      config: template.value,
+    },
+    "*"
+  );
+};
+
+onMounted(() => {
+  const iframe = iframeRef.value;
+
+  if (!iframe) return;
+
+  const [primary, secondary] = palettes[0].colors;
+
+  template.value = applyColors(props.theme, {
+    primary,
+    secondary,
+  });
+
+  window.addEventListener("message", (event: MessageEvent) => {
+    if (event.data?.type === "builderReady") {
+      sendBuilderConfig();
+    }
+  });
+});
+
+watch(
+  () => template.value,
+  (val) => {
+    if (val) sendBuilderConfig();
+  },
+  { immediate: true }
+);
+
+watch(
+  () => selected.value,
+  (val) => {
+    if (!val) return;
+
+    const pallet = [...palettes, ...props.extractedColors].find(
+      (p) => p.name === val
+    );
+    if (!pallet) return;
+
+    const [primary, secondary] = pallet.colors;
+
+    template.value = applyColors(props.theme, {
+      primary,
+      secondary,
+    });
+  }
+);
 </script>
 
 <template>
   <div class="grid grid-cols-[1fr_320px] gap-6">
     <div class="space-y-6">
+      <h2 class="text-lg font-semibold mb-2">Extracted Palettes</h2>
+
+      <div class="flex flex-wrap gap-6">
+        <div
+          v-for="palette in extractedColors"
+          :key="palette.name"
+          class="active:translate-y-1 ring-2 duration-200 transition-transform group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow"
+          :class="
+            palette.name === selected ? 'ring-primary' : 'ring-transparent'
+          "
+          @click="selected = palette.name"
+        >
+          <div class="rounded-full overflow-hidden h-8 w-8 flex">
+            <div
+              v-for="(color, i) in palette.colors"
+              :key="i"
+              :style="{ backgroundColor: color }"
+              class="flex-1"
+            />
+          </div>
+
+          <div class="text-sm font-medium text-center text-foreground">
+            {{ palette.name }}
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-lg font-semibold mb-2">Predefined Palettes</h2>
       <div class="flex flex-wrap gap-6">
         <div
           v-for="palette in palettes"
@@ -122,34 +167,30 @@ function handleSelect() {
             Custom
           </div>
         </div>
-        <label
-          class="group cursor-pointer bg-card flex items-center justify-center gap-2 rounded-full py-2 px-4 hover:shadow transition"
-          for="pickImage"
-        >
-          <Image class="w-4 h-4" />
-          <div class="text-sm font-medium text-center text-foreground">
-            Pick from image
-          </div>
-          <Input
-            id="pickImage"
-            type="file"
-            class="hidden"
-            @change="extractColorPairsFromImage"
-          />
-        </label>
       </div>
 
       <StatefulButton :status="status" @click="handleSelect">
         Create
       </StatefulButton>
     </div>
+    <div class="flex justify-end">
+      <div
+        class="relative mx-auto bg-black rounded-[40px] p-4 shadow-2xl border border-gray-700"
+        style="width: 320px; height: 600px"
+      >
+        <div
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-3xl z-20"
+        />
 
-    <div class="h-[428px] overflow-hidden flex justify-end">
-      <NuxtImg
-        src="templates/template-03.png"
-        alt="Selected Template"
-        class="h-full rounded-xl"
-      />
+        <div class="w-full h-full overflow-hidden rounded-[32px] bg-white">
+          <iframe
+            ref="iframeRef"
+            src="https://beast-builder.netlify.app/?mode=view"
+            width="286"
+            height="600"
+          />
+        </div>
+      </div>
     </div>
 
     <Dialog v-model:open="showCustomPicker">
