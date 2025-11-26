@@ -25,27 +25,27 @@ function onThemeSelect(theme: (typeof templates)[0]) {
 </script>
 
 <template>
-  <section class="space-y-6">
-    <div class="flex flex-wrap gap-4">
+  <section class="space-y-8">
+    <div class="flex flex-wrap gap-6">
       <div
         v-for="template in templates"
         :key="template.id"
-        class="h-[412px] overflow-hidden group relative cursor-pointer rounded-3xl"
+        class="group relative cursor-pointer rounded-2xl overflow-hidden w-[220px]"
         @click="() => onThemeSelect(template)"
       >
         <NuxtImg
           :src="template.thumbnail"
           :alt="template.name"
-          class="h-full w-auto"
+          class="h-full w-full object-cover"
         />
 
         <div
-          class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-4"
+          class="absolute left-0 right-0 bottom-0 bg-black/60 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 p-4 rounded-t-none"
         >
-          <h3 class="text-white text-lg font-semibold">
+          <h3 class="text-white text-lg font-semibold mb-1">
             {{ template.name }}
           </h3>
-          <p class="text-white/80 text-sm">
+          <p class="text-white/80 text-sm leading-snug">
             {{ template.description }}
           </p>
         </div>
