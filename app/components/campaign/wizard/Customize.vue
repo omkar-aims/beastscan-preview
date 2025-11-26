@@ -176,7 +176,7 @@ watch(
     <div class="flex justify-end">
       <div
         class="relative mx-auto bg-black rounded-[40px] p-4 shadow-2xl border border-gray-700"
-        style="width: 320px; height: 600px"
+        style="width: 320px; height: 800px"
       >
         <div
           class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-3xl z-20"
@@ -187,7 +187,7 @@ watch(
             ref="iframeRef"
             src="https://beast-builder.netlify.app/?mode=view"
             width="286"
-            height="600"
+            height="800"
           />
         </div>
       </div>
