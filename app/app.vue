@@ -1,6 +1,7 @@
 <script setup="ts">
 import { Toaster } from "./components/ui/sonner";
 import "vue-sonner/style.css";
+import "vue-advanced-cropper/dist/style.css";
 
 useHead({
   titleTemplate: (title) => (title ? `${title} | Beastscan` : "Beastscan"),

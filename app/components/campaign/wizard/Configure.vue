@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import {
-  UserCircle2,
-  Camera,
-  Trash2,
-  Plus,
-  ArrowRight,
-  Image,
-} from "lucide-vue-next";
+import { UserCircle2, Trash2, Plus, ArrowRight } from "lucide-vue-next";
 import { useFieldArray, useForm } from "vee-validate";
 import { applyTokens } from "@/utils";
 import { Vibrant } from "node-vibrant/browser";
@@ -69,25 +62,20 @@ const { handleSubmit } = useForm({
 });
 
 const { fields, remove, push } = useFieldArray("socialLinks");
-const { handleFileInput, files } = useFileStorage({ clearOldFiles: false });
-const { handleFileInput: handleCoverImage, files: coverFiles } = useFileStorage(
-  { clearOldFiles: false }
-);
+
+const profileImage = ref<null | string>(null);
 
 const showProfileError = ref<boolean>(false);
 const showCoverError = ref<boolean>(false);
 
 const onSubmit = handleSubmit((values) => {
-  const profileImage = files.value[0]?.content || "";
-  const coverImage = selectedCover.value;
-
-  if (profileImage) {
+  if (profileImage.value) {
     showProfileError.value = false;
   } else {
     showProfileError.value = true;
     return;
   }
-  if (coverImage) {
+  if (coverImage.value) {
     showCoverError.value = false;
   } else {
     showCoverError.value = true;
@@ -99,8 +87,8 @@ const onSubmit = handleSubmit((values) => {
   const tokenData = {
     TITLE: `${values.firstName} ${values.lastName}`,
     TEXT: values.note,
-    PROFILE_IMAGE: profileImage,
-    BANNER_IMAGE: coverImage,
+    PROFILE_IMAGE: profileImage.value,
+    BANNER_IMAGE: coverImage.value,
     PRIMARY_BUTTON: values.primaryButton,
     SECONDARY_BUTTON: values.secondaryButton,
     SOCIAL_LINKS: JSON.stringify(values.socialLinks || []),
@@ -131,23 +119,9 @@ const socialNetworks = [
   { label: "X", value: "x" },
 ];
 
-const showCoverGallery = ref<boolean>(false);
-const selectedCover = ref<null | string>(null);
+const coverImage = ref<null | string>(null);
 
-watch(
-  () => coverFiles.value.at(0),
-  (file) => {
-    selectedCover.value = file?.content ?? "";
-  }
-);
-
-const runtimeConfig = useRuntimeConfig();
-function chooseFromGallery(path: string) {
-  selectedCover.value = `${runtimeConfig.public.previewBase}${path}`;
-  coverFiles.value = [];
-}
-
-watch(selectedCover, async (cover) => {
+watch(coverImage, async (cover) => {
   if (!cover) return;
 
   const imageSrc = cover.startsWith("data:image")
@@ -175,69 +149,45 @@ watch(selectedCover, async (cover) => {
 
   emit("extract-color", finalPalettes);
 });
+
+const profileRef = useTemplateRef("profileRef");
 </script>
 
 <template>
   <form @submit.prevent="onSubmit">
     <Card>
       <CardContent class="space-y-6">
-        <div class="flex flex-col items-center space-y-4">
-          <FileUpload
-            v-slot="{ file, handleSelect, isFresh }"
-            class="flex flex-col items-center gap-1"
-          >
-            <div class="relative inline-block">
-              <label
-                for="profile-upload"
-                class="cursor-pointer flex items-center justify-center w-32 h-32 rounded-full transition-colors transform border-2 border-dashed border-card-foreground"
-              >
-                <Avatar class="w-32 h-32 relative overflow-hidden">
-                  <AvatarImage
-                    v-if="file"
-                    :key="file"
-                    :src="file"
-                    alt="Profile Preview"
-                    class="w-full h-full object-cover absolute top-0 left-0"
-                  />
-
-                  <AvatarFallback
-                    v-if="!file"
-                    class="flex items-center justify-center text-card-foreground w-full h-full absolute top-0 left-0"
-                  >
-                    <UserCircle2 class="w-12 h-12 stroke-1" />
-                  </AvatarFallback>
-                </Avatar>
-
-                <span
-                  class="absolute bottom-1 right-1 rounded-full p-1.5 w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center shadow-xs hover:bg-primary/90 transition-colors duration-200"
-                >
-                  <Camera />
-                </span>
-
-                <div
-                  v-if="isFresh"
-                  class="absolute inset-0 rounded-full border-2 border-dashed border-primary animate-border pointer-events-none"
-                />
-              </label>
-
-              <Input
-                id="profile-upload"
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="(e : Event) => {
-                  handleFileInput(e)
-                  handleSelect(e)
-                }"
-              />
+        <div class="space-y-4">
+          <div v-if="profileImage" class="flex justify-center">
+            <div
+              class="relative flex h-40 w-40 items-center justify-center rounded-full border border-border bg-background shadow-sm"
+            >
+              <Avatar class="h-full w-full">
+                <AvatarImage :src="profileImage" class="object-cover" />
+                <AvatarFallback class="flex items-center justify-center">
+                  <UserCircle2 class="h-16 w-16 text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
             </div>
+          </div>
+
+          <div class="space-y-2">
+            <ImageUpload
+              ref="profileRef"
+              @select="(image) => (profileImage = image)"
+            >
+              <span class="block text-sm font-medium text-foreground">
+                Profile Image
+              </span>
+            </ImageUpload>
+
             <p
               v-if="showProfileError"
-              class="text-sm font-medium text-destructive"
+              class="mt-1 text-center text-sm font-medium text-destructive"
             >
-              Please upload profile image
+              Profile image is required
             </p>
-          </FileUpload>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -421,65 +371,36 @@ watch(selectedCover, async (cover) => {
       </CardHeader>
 
       <CardContent class="space-y-6 w-full">
-        <FileUpload>
-          <div class="relative w-full h-48 rounded-md overflow-hidden">
-            <label
-              for="cover-upload"
-              class="cursor-pointer flex items-center justify-center w-full h-full rounded-md border-2 hover:bg-muted transition-all duration-200 border-dashed overflow-hidden relative"
-              :class="
-                selectedCover
-                  ? 'border-transparent'
-                  : 'border-muted-foreground/50'
-              "
+        <div class="space-y-4">
+          <div v-if="coverImage" class="w-full">
+            <div
+              class="relative h-48 w-full overflow-hidden rounded-md border border-border bg-muted shadow-sm"
             >
               <NuxtImg
-                v-if="selectedCover"
-                :key="selectedCover"
-                :src="selectedCover"
-                class="w-full h-full object-cover absolute inset-0"
-                alt="Cover Preview"
+                :src="coverImage"
+                class="h-full w-full object-cover"
+                alt="Cover Image"
               />
-
-              <div
-                v-if="!selectedCover"
-                class="w-full h-full flex flex-col items-center justify-center text-card-foreground space-y-2"
-              >
-                <Image class="w-10 h-10 stroke-1" />
-                <span class="text-sm">Upload Cover Image</span>
-              </div>
-
-              <span
-                class="absolute bottom-2 right-2 rounded-full p-1.5 w-9 h-9 bg-primary text-primary-foreground flex items-center justify-center shadow-xs hover:bg-primary/90 transition-colors duration-200"
-              >
-                <Camera class="w-4 h-4" />
-              </span>
-            </label>
-
-            <Input
-              id="cover-upload"
-              type="file"
-              accept="image/*"
-              class="hidden"
-              @change="
-                (e: Event) => {
-                  handleCoverImage(e);
-                }
-              "
-            />
+            </div>
           </div>
 
-          <p
-            v-if="showCoverError"
-            class="mt-1 text-center text-sm font-medium text-destructive"
-          >
-            Please upload cover image
-          </p>
-        </FileUpload>
+          <div class="space-y-2">
+            <span class="block text-sm font-medium text-foreground">
+              Cover Image
+            </span>
 
-        <div class="flex justify-center">
-          <Button variant="link" type="button" @click="showCoverGallery = true">
-            Choose from gallery
-          </Button>
+            <ImageUpload
+              :aspect-ratio="3 / 1"
+              @select="(image) => (coverImage = image)"
+            />
+
+            <p
+              v-if="showCoverError"
+              class="mt-1 text-center text-sm font-medium text-destructive"
+            >
+              Cover image is required
+            </p>
+          </div>
         </div>
       </CardContent>
 
@@ -494,58 +415,5 @@ watch(selectedCover, async (cover) => {
         </CardAction>
       </CardFooter>
     </Card>
-
-    <Teleport v-if="showCoverGallery" to="body">
-      <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-      >
-        <div
-          class="relative bg-background h-[90vh] max-h-[500px] w-3xl rounded-lg overflow-hidden p-6"
-        >
-          <h2 class="text-lg font-semibold mb-4">
-            Choose Cover Image or Gradient
-          </h2>
-
-          <div
-            class="grid grid-cols-2 gap-4 overflow-y-auto max-h-[360px] px-2 pb-6"
-          >
-            <div v-for="t in 2" :key="'cover-' + t" class="cursor-pointer">
-              <NuxtImg
-                :src="`/banners/0${t}.webp`"
-                class="w-full h-auto rounded-md hover:opacity-90 transition ring-2"
-                :class="
-                  selectedCover ===
-                  `${runtimeConfig.public.previewBase}banners/0${t}.webp`
-                    ? 'ring-primary'
-                    : 'ring-transparent'
-                "
-                @click="chooseFromGallery(`banners/0${t}.webp`)"
-              />
-            </div>
-
-            <div v-for="t in 3" :key="'gradient-' + t" class="cursor-pointer">
-              <NuxtImg
-                :src="`/gradients/0${t}.png`"
-                class="w-full h-auto rounded-md hover:opacity-90 transition ring-2"
-                :class="
-                  selectedCover ===
-                  `${runtimeConfig.public.previewBase}gradients/0${t}.png`
-                    ? 'ring-primary'
-                    : 'ring-transparent'
-                "
-                @click="chooseFromGallery(`gradients/0${t}.png`)"
-              />
-            </div>
-          </div>
-
-          <div class="absolute bottom-4 right-4 flex gap-3">
-            <Button variant="outline" @click="showCoverGallery = false"
-              >Cancel</Button
-            >
-            <Button @click="showCoverGallery = false">Confirm</Button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
   </form>
 </template>
