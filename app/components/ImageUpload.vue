@@ -42,16 +42,7 @@ function handleSelect() {
   <div>
     <Dialog v-model:open="showCropper">
       <DialogTrigger as-child>
-        <div>
-          <slot />
-          <div
-            class="mt-1 h-10 border border-input shadow-xs w-full bg-card rounded-md flex items-center text-muted-foreground px-4 cursor-pointer"
-          >
-            <span class="text-sm">
-              {{ croppedImage ? "Change Image" : "Upload Image" }}
-            </span>
-          </div>
-        </div>
+        <slot />
       </DialogTrigger>
 
       <DialogContent class="sm:max-w-md bg-card">

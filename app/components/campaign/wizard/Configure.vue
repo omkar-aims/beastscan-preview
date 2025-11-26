@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { UserCircle2, Trash2, Plus, ArrowRight } from "lucide-vue-next";
+import {
+  UserCircle2,
+  Trash2,
+  Plus,
+  ArrowRight,
+  Camera,
+  Image,
+} from "lucide-vue-next";
 import { useFieldArray, useForm } from "vee-validate";
 import { applyTokens } from "@/utils";
 import { Vibrant } from "node-vibrant/browser";
@@ -158,27 +165,41 @@ const profileRef = useTemplateRef("profileRef");
     <Card>
       <CardContent class="space-y-6">
         <div class="space-y-4">
-          <div v-if="profileImage" class="flex justify-center">
-            <div
-              class="relative flex h-40 w-40 items-center justify-center rounded-full border border-border bg-background shadow-sm"
-            >
-              <Avatar class="h-full w-full">
-                <AvatarImage :src="profileImage" class="object-cover" />
-                <AvatarFallback class="flex items-center justify-center">
-                  <UserCircle2 class="h-16 w-16 text-muted-foreground" />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-
           <div class="space-y-2">
             <ImageUpload
               ref="profileRef"
               @select="(image) => (profileImage = image)"
             >
-              <span class="block text-sm font-medium text-foreground">
-                Profile Image
-              </span>
+              <div class="flex justify-center">
+                <div class="relative inline-block">
+                  <div
+                    for="profile-upload"
+                    class="cursor-pointer flex items-center justify-center w-32 h-32 rounded-full transition-colors transform border-2 border-dashed border-card-foreground"
+                  >
+                    <Avatar class="w-32 h-32 relative overflow-hidden">
+                      <AvatarImage
+                        v-if="profileImage"
+                        :src="profileImage"
+                        alt="Profile Preview"
+                        class="w-full h-full object-cover absolute top-0 left-0"
+                      />
+
+                      <AvatarFallback
+                        v-if="!profileImage"
+                        class="flex items-center justify-center text-card-foreground w-full h-full absolute top-0 left-0"
+                      >
+                        <UserCircle2 class="w-12 h-12 stroke-1" />
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <span
+                      class="absolute bottom-1 right-1 rounded-full p-1.5 w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center shadow-xs hover:bg-primary/90 transition-colors duration-200"
+                    >
+                      <Camera />
+                    </span>
+                  </div>
+                </div>
+              </div>
             </ImageUpload>
 
             <p
@@ -372,27 +393,45 @@ const profileRef = useTemplateRef("profileRef");
 
       <CardContent class="space-y-6 w-full">
         <div class="space-y-4">
-          <div v-if="coverImage" class="w-full">
-            <div
-              class="relative h-48 w-full overflow-hidden rounded-md border border-border bg-muted shadow-sm"
-            >
-              <NuxtImg
-                :src="coverImage"
-                class="h-full w-full object-cover"
-                alt="Cover Image"
-              />
-            </div>
-          </div>
-
           <div class="space-y-2">
-            <span class="block text-sm font-medium text-foreground">
-              Cover Image
-            </span>
-
             <ImageUpload
               :aspect-ratio="3 / 1"
               @select="(image) => (coverImage = image)"
-            />
+            >
+              <div class="relative w-full h-48 rounded-md overflow-hidden">
+                <div
+                  for="cover-upload"
+                  class="cursor-pointer flex items-center justify-center w-full h-full rounded-md border-2 hover:bg-muted transition-all duration-200 border-dashed overflow-hidden relative"
+                  :class="
+                    coverImage
+                      ? 'border-transparent'
+                      : 'border-muted-foreground/50'
+                  "
+                >
+                  <NuxtImg
+                    v-if="coverImage"
+                    :src="coverImage"
+                    class="w-full h-full object-cover absolute inset-0"
+                    alt="Cover Preview"
+                  />
+
+                  <div
+                    v-if="!coverImage"
+                    class="w-full h-full flex flex-col items-center justify-center text-card-foreground space-y-2"
+                  >
+                    <Image class="w-10 h-10 stroke-1" />
+                    <span class="text-sm">Upload Cover Image</span>
+                  </div>
+
+                  <span
+                    class="absolute bottom-2 right-2 rounded-full p-1.5 w-9 h-9 bg-primary text-primary-foreground flex items-center justify-center shadow-xs hover:bg-primary/90 transition-colors duration-200"
+                  >
+                    <Camera class="w-4 h-4" />
+                  </span>
+                </div>
+                />
+              </div>
+            </ImageUpload>
 
             <p
               v-if="showCoverError"
