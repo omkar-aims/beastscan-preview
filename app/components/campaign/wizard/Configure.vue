@@ -13,6 +13,7 @@ import { applyTokens } from "@/utils";
 import { Vibrant } from "node-vibrant/browser";
 
 import z from "zod";
+import { nanoid } from "nanoid";
 const emit = defineEmits(["done", "extract-color"]);
 
 const props = defineProps<{
@@ -27,18 +28,25 @@ const socialLinkSchema = z.object({
     .url("Please enter a valid URL (include https://)"),
 });
 
+const customLink = z.object({
+  label: z.string().nonempty("Button Label is required"),
+  url: z
+    .string()
+    .nonempty("URL is required")
+    .url("Please enter a valid URL (include https://)"),
+});
+
 const formSchema = toTypedSchema(
   z.object({
     firstName: z.string().nonempty("First name is required"),
     lastName: z.string().nonempty("First name is required"),
-    note: z.string().nonempty("Note is required"),
+    note: z.string().nonempty("About me is required"),
 
     socialLinks: z
       .array(socialLinkSchema)
       .min(1, "At least one social link is required"),
 
-    primaryButton: z.string().nonempty("Primary button is required"),
-    secondaryButton: z.string().nonempty("Secondary button is required"),
+    customLinks: z.array(customLink),
   })
 );
 
@@ -61,6 +69,13 @@ const defaultValues = {
       url: "https://www.x.com/yourpage",
     },
   ],
+
+  customLinks: [
+    {
+      label: "Visit My Website",
+      url: "https://mywebsite.com",
+    },
+  ],
 };
 
 const { handleSubmit } = useForm({
@@ -69,6 +84,11 @@ const { handleSubmit } = useForm({
 });
 
 const { fields, remove, push } = useFieldArray("socialLinks");
+const {
+  fields: customLinks,
+  remove: removeCustomLink,
+  push: addCustomLink,
+} = useFieldArray("customLinks");
 
 const profileImage = ref<null | string>(null);
 
@@ -89,6 +109,24 @@ const onSubmit = handleSubmit((values) => {
     return;
   }
 
+  const generatedButtons = values.customLinks.map(({ label, url }) => ({
+    id: `element-${nanoid(4)}`,
+    type: "Button",
+    styles: {
+      margin: "1rem 0 0 0",
+      borderRadius: "100px",
+      background: "[PRIMARY_COLOR]",
+      padding: "1.4rem",
+    },
+    props: {
+      contenteditable: true,
+      variant: "default",
+      class: "w-full max-w-md",
+      href: url,
+    },
+    content: label || "[Label]",
+  }));
+
   const template = props.theme;
 
   const tokenData = {
@@ -96,9 +134,8 @@ const onSubmit = handleSubmit((values) => {
     TEXT: values.note,
     PROFILE_IMAGE: profileImage.value,
     BANNER_IMAGE: coverImage.value,
-    PRIMARY_BUTTON: values.primaryButton,
-    SECONDARY_BUTTON: values.secondaryButton,
     SOCIAL_LINKS: JSON.stringify(values.socialLinks || []),
+    CUSTOM_LINKS: JSON.stringify(generatedButtons || []),
   };
 
   const finalTemplate = applyTokens(template, tokenData);
@@ -156,8 +193,6 @@ watch(coverImage, async (cover) => {
 
   emit("extract-color", finalPalettes);
 });
-
-const profileRef = useTemplateRef("profileRef");
 </script>
 
 <template>
@@ -167,14 +202,15 @@ const profileRef = useTemplateRef("profileRef");
         <div class="space-y-4">
           <div class="space-y-2">
             <ImageUpload
-              ref="profileRef"
+              title="Profile Image"
               @select="(image) => (profileImage = image)"
             >
               <div class="flex justify-center">
                 <div class="relative inline-block">
                   <div
                     for="profile-upload"
-                    class="cursor-pointer flex items-center justify-center w-32 h-32 rounded-full transition-colors transform border-2 border-dashed border-card-foreground"
+                    class="cursor-pointer flex items-center justify-center w-32 h-32 rounded-full transition-colors transform border-2 border-muted"
+                    :class="profileImage ? 'border-solid' : 'border-dashed '"
                   >
                     <Avatar class="w-32 h-32 relative overflow-hidden">
                       <AvatarImage
@@ -250,11 +286,11 @@ const profileRef = useTemplateRef("profileRef");
         <div class="flex flex-col space-y-2">
           <FormField v-slot="{ componentField }" name="note">
             <FormItem>
-              <FormLabel>Note</FormLabel>
+              <FormLabel>About Me</FormLabel>
               <FormControl>
                 <Textarea
                   class="bg-card w-full"
-                  placeholder="Add a note or description..."
+                  placeholder="A short description about your self"
                   v-bind="componentField"
                 />
               </FormControl>
@@ -342,51 +378,75 @@ const profileRef = useTemplateRef("profileRef");
           </Button>
         </div>
       </CardContent>
-
       <Separator />
 
       <CardHeader>
-        <CardTitle>Action Buttons</CardTitle>
+        <CardTitle>Custom Links</CardTitle>
       </CardHeader>
 
       <CardContent class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="primaryButton">
-              <FormItem>
-                <FormLabel>Primary Button</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Label for primary button"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
+        <div class="space-y-4">
+          <template v-for="(field, index) in customLinks" :key="field.key">
+            <div class="flex flex-col md:flex-row md:items-center gap-3">
+              <FormField
+                v-slot="{ componentField }"
+                :name="`customLinks.${index}.label`"
+              >
+                <FormItem class="w-full md:w-xs">
+                  <FormControl>
+                    <Input
+                      placeholder="Label"
+                      v-bind="componentField"
+                      class="bg-card"
+                    />
+                  </FormControl>
+                </FormItem>
+              </FormField>
 
-          <div class="flex flex-col space-y-2">
-            <FormField v-slot="{ componentField }" name="secondaryButton">
-              <FormItem>
-                <FormLabel>Secondary Button</FormLabel>
-                <FormControl>
-                  <Input
-                    class="bg-card w-full"
-                    placeholder="Label for secondary button"
-                    v-bind="componentField"
-                  />
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            </FormField>
-          </div>
+              <FormField
+                v-slot="{ componentField }"
+                :name="`customLinks.${index}.url`"
+              >
+                <FormItem class="flex-1">
+                  <FormControl>
+                    <Input
+                      placeholder="URL"
+                      v-bind="componentField"
+                      class="bg-card"
+                    />
+                  </FormControl>
+                </FormItem>
+              </FormField>
+
+              <Button
+                variant="destructive"
+                size="sm"
+                type="button"
+                class="shrink-0"
+                @click="removeCustomLink(index)"
+              >
+                <Trash2 />
+              </Button>
+            </div>
+          </template>
+
+          <Button
+            type="button"
+            @click="
+              addCustomLink({
+                label: '',
+                url: '',
+              })
+            "
+          >
+            <Plus />
+            <span>Add New</span>
+          </Button>
         </div>
       </CardContent>
+
       <Separator />
+
       <CardHeader>
         <CardTitle>Cover Image</CardTitle>
       </CardHeader>
@@ -396,16 +456,17 @@ const profileRef = useTemplateRef("profileRef");
           <div class="space-y-2">
             <ImageUpload
               :aspect-ratio="3 / 1"
+              title="Banner Image"
               @select="(image) => (coverImage = image)"
             >
               <div class="relative w-full h-48 rounded-md overflow-hidden">
                 <div
                   for="cover-upload"
-                  class="cursor-pointer flex items-center justify-center w-full h-full rounded-md border-2 hover:bg-muted transition-all duration-200 border-dashed overflow-hidden relative"
+                  class="cursor-pointer flex items-center justify-center w-full h-full rounded-md border-2 hover:bg-muted transition-all duration-200 overflow-hidden relative"
                   :class="
                     coverImage
-                      ? 'border-transparent'
-                      : 'border-muted-foreground/50'
+                      ? 'border-transparent border-solid'
+                      : 'border-muted-foreground/50 border-dashed'
                   "
                 >
                   <NuxtImg
