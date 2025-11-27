@@ -4,9 +4,9 @@ export const createCampaignSchema = z.object({
   title: z
     .string({ required_error: "Title is required" })
     .min(1, "Title cannot be empty"),
-  slug: z
-    .string({ required_error: "Slug is required" })
-    .min(1, "Slug cannot be empty"),
+  type: z
+    .string({ required_error: "Type is required" })
+    .min(1, "Type cannot be empty"),
   status: z
     .enum(["draft", "published", "archived"], {
       required_error: "Status is required",

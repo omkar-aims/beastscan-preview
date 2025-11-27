@@ -1,33 +1,26 @@
 <script setup lang="ts">
 import { ChevronRight, Check } from "lucide-vue-next";
 import { useCreateCampaign } from "~/composables/campaign/useCreateCampaign";
-
+import { campaignTemplates } from "@/constants";
 const steps = [
   {
     id: 1,
     title: "Basic Details",
   },
+
   {
     id: 2,
-    title: "Type",
-  },
-  {
-    id: 3,
-    title: "Template",
-  },
-  {
-    id: 4,
     title: "Configure",
   },
   {
-    id: 5,
+    id: 3,
     title: "Customize",
   },
 ];
 
 const currentStep = ref<number>(1);
 
-const themeData = ref("");
+const themeData = ref(campaignTemplates[0]?.config);
 const extractedColors = ref([]);
 
 const newCampaign = ref({
@@ -56,7 +49,7 @@ const { mutate, status } = useCreateCampaign();
             class="h-6 w-6 flex items-center justify-center rounded-full border font-medium text-base transition-all"
             :class="[
               currentStep > step.id
-                ? 'bg-success text-white border-success'
+                ? 'bg-primary text-white border-primary'
                 : currentStep === step.id
                 ? 'border-primary text-primary border-2'
                 : 'border-muted-foreground/40 text-muted-foreground border-2',
@@ -96,30 +89,9 @@ const { mutate, status } = useCreateCampaign();
         }
       "
     />
-    <CampaignWizardType
-      v-if="currentStep === 2"
-      v-motion-fade
-      @done="
-        (type) => {
-          currentStep += 1;
-          newCampaign.type = type;
-        }
-      "
-    />
-
-    <CampaignWizardTheme
-      v-if="currentStep === 3"
-      v-motion-fade
-      @done="
-        (theme) => {
-          currentStep += 1;
-          themeData = theme;
-        }
-      "
-    />
 
     <CampaignWizardConfigure
-      v-if="currentStep === 4"
+      v-if="currentStep === 2"
       v-motion-fade
       :theme="themeData"
       @done="
@@ -136,7 +108,7 @@ const { mutate, status } = useCreateCampaign();
     />
 
     <CampaignWizardCustomize
-      v-if="currentStep === 5"
+      v-if="currentStep === 3"
       v-motion-fade
       :theme="themeData"
       :status="status"
