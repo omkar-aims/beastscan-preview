@@ -2,6 +2,7 @@
 import { ChevronRight, Check } from "lucide-vue-next";
 import { useCreateCampaign } from "~/composables/campaign/useCreateCampaign";
 import { campaignTemplates } from "@/constants";
+
 const steps = [
   {
     id: 1,

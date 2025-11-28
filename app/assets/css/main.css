@@ -428,3 +428,30 @@
     transform: rotate(90deg);
   }
 }
+
+.vc-twitter-picker {
+  box-shadow: none !important;
+}
+
+.body {
+  padding: 0 !important ;
+  margin-top: 4px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+.swatch,
+.hash {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.swatch[aria-selected="true"] {
+  border: 2px solid #333333;
+  box-shadow: none !important;
+}
+
+.vc-input-input {
+  height: 46px !important;
+  width: 100% !important;
+}
