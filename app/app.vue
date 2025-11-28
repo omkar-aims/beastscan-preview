@@ -2,6 +2,7 @@
 import { Toaster } from "./components/ui/sonner";
 import "vue-sonner/style.css";
 import "vue-advanced-cropper/dist/style.css";
+import "vue-color/style.css";
 
 useHead({
   titleTemplate: (title) => (title ? `${title} | Beastscan` : "Beastscan"),

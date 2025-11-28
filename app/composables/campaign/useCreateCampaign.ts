@@ -59,12 +59,6 @@ export function useCreateCampaign() {
         localStorage.getItem("campaigns") ?? "[]"
       );
 
-      if (campaigns.some((c) => c.attributes.slug === newCampaign.slug)) {
-        throw new Error("A campaign with this slug already exists");
-      }
-
-      console.log(newCampaign.config);
-
       const campaign: Campaign = {
         type: "campaigns",
         id: String(Date.now()),

@@ -43,19 +43,6 @@ const campaignTypes = [
   <div>
     <div class="space-y-6">
       <form class="space-y-6" @submit="onSubmit">
-        <FormField v-slot="{ componentField }" name="title">
-          <FormItem>
-            <FormLabel>Campaign Title</FormLabel>
-            <FormControl>
-              <Input
-                v-bind="componentField"
-                placeholder="Eg. My Product Launch"
-                class="bg-card border-none"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
         <FormField v-slot="{ componentField }" name="type">
           <FormItem>
             <FormLabel> Choose campaign type </FormLabel>
@@ -78,7 +65,12 @@ const campaignTypes = [
                   />
 
                   <div
-                    class="relative flex gap-4 p-6 h-full rounded-xl border bg-card shadow-sm border-muted transition-all duration-200 group-hover:bg-primary/10 group-hover:border-primary/10"
+                    class="relative flex gap-4 p-6 h-full ring-1 rounded-lg border bg-card shadow-sm border-muted transition-all duration-200"
+                    :class="
+                      form.values.type === type.id
+                        ? 'ring-primary'
+                        : 'ring-transparent'
+                    "
                   >
                     <div
                       class="shrink-0 flex items-center justify-center w-8 h-8 rounded-full"
@@ -104,6 +96,19 @@ const campaignTypes = [
               </RadioGroup>
             </FormControl>
 
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField v-slot="{ componentField }" name="title">
+          <FormItem>
+            <FormLabel>Campaign Title</FormLabel>
+            <FormControl>
+              <Input
+                v-bind="componentField"
+                placeholder="Eg. My Product Launch"
+                class="bg-card h-12"
+              />
+            </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>

@@ -92,28 +92,12 @@ const {
 
 const profileImage = ref<null | string>(null);
 
-const showProfileError = ref<boolean>(false);
-const showCoverError = ref<boolean>(false);
-
 const onSubmit = handleSubmit((values) => {
-  if (profileImage.value) {
-    showProfileError.value = false;
-  } else {
-    showProfileError.value = true;
-    return;
-  }
-  if (coverImage.value) {
-    showCoverError.value = false;
-  } else {
-    showCoverError.value = true;
-    return;
-  }
-
-  const generatedButtons = values.customLinks.map(({ label, url }) => ({
+  const generatedButtons = values.customLinks.map(({ label, url }, i) => ({
     id: `element-${nanoid(4)}`,
     type: "Button",
     styles: {
-      margin: "1rem 0 0 0",
+      margin: i === 0 ? "1rem 0 0 0" : "0",
       borderRadius: "100px",
       background: "[PRIMARY_COLOR]",
       padding: "1.4rem",
@@ -136,6 +120,11 @@ const onSubmit = handleSubmit((values) => {
     BANNER_IMAGE: coverImage.value,
     SOCIAL_LINKS: JSON.stringify(values.socialLinks || []),
     CUSTOM_LINKS: JSON.stringify(generatedButtons || []),
+    PROFILE_IMAGE_CLASS: coverImage.value
+      ? "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
+      : "",
+    PROFILE_IMAGE_MARGIN: coverImage.value ? "0" : "0 auto",
+    INFO_BOX_MARGIN: coverImage.value ? "4rem 0px 0px" : "0",
   };
 
   const finalTemplate = applyTokens(template, tokenData);
@@ -237,13 +226,6 @@ watch(coverImage, async (cover) => {
                 </div>
               </div>
             </ImageUpload>
-
-            <p
-              v-if="showProfileError"
-              class="mt-1 text-center text-sm font-medium text-destructive"
-            >
-              Profile image is required
-            </p>
           </div>
         </div>
 
@@ -493,13 +475,6 @@ watch(coverImage, async (cover) => {
                 />
               </div>
             </ImageUpload>
-
-            <p
-              v-if="showCoverError"
-              class="mt-1 text-center text-sm font-medium text-destructive"
-            >
-              Cover image is required
-            </p>
           </div>
         </div>
       </CardContent>

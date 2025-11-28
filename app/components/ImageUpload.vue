@@ -71,12 +71,12 @@ const config = useRuntimeConfig();
               @click="image = `${config.public.previewBase}banners/0${i}.png`"
             />
           </div>
-          <div v-else class="grid grid-cols-2 gap-3 p-1 h-[256px]">
+          <div v-else class="p-1 grid grid-cols-3 gap-y-4">
             <NuxtImg
               v-for="i in 10"
               :key="i"
               :src="`/avatars/0${i}.png`"
-              class="cursor-pointer hover:ring-2 hover:ring-primary transition w-full h-full object-cover"
+              class="cursor-pointer hover:ring-2 hover:ring-primary transition w-20 h-20 object-cover"
               @click="image = `${config.public.previewBase}avatars/0${i}.png`"
             />
           </div>
@@ -86,7 +86,7 @@ const config = useRuntimeConfig();
           <div v-if="!image" class="flex-1">
             <Label for="profile-image">
               <div
-                class="h-full min-h-[360px] w-full rounded-lg border-2 border-dashed border-muted-foreground/50 flex flex-col items-center justify-center cursor-pointer text-center hover:border-primary transition"
+                class="bg-muted h-full min-h-[360px] w-full rounded-xl flex flex-col items-center justify-center cursor-pointer text-center hover:border-primary transition"
               >
                 <p class="text-sm">
                   <span class="text-primary font-semibold hover:underline">
