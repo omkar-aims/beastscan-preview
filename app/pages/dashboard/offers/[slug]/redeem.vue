@@ -97,7 +97,7 @@ const offer = {
           class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-sm text-muted-foreground"
         >
           <div
-            class="flex items-center gap-3 p-3 border border-border/40 rounded-xl hover:bg-muted/30 transition"
+            class="flex items-center gap-3 p-3 border border-border rounded-xl hover:bg-muted/30 transition"
           >
             <div
               class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-green-600 shadow-sm flex-shrink-0"
@@ -114,7 +114,7 @@ const offer = {
           </div>
 
           <div
-            class="flex items-center gap-3 p-3 border border-border/40 rounded-xl hover:bg-muted/30 transition"
+            class="flex items-center gap-3 p-3 border border-border rounded-xl hover:bg-muted/30 transition"
           >
             <div
               class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 shadow-sm flex-shrink-0"
@@ -130,7 +130,7 @@ const offer = {
           </div>
 
           <div
-            class="flex items-center gap-3 p-3 border border-border/40 rounded-xl hover:bg-muted/30 transition"
+            class="flex items-center gap-3 p-3 border border-border rounded-xl hover:bg-muted/30 transition"
           >
             <div
               class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-amber-600 shadow-sm flex-shrink-0"
@@ -146,7 +146,7 @@ const offer = {
           </div>
 
           <div
-            class="flex items-center gap-3 p-3 border border-border/40 rounded-xl hover:bg-muted/30 transition"
+            class="flex items-center gap-3 p-3 border border-border rounded-xl hover:bg-muted/30 transition"
           >
             <div
               class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-red-500 to-rose-600 shadow-sm flex-shrink-0"

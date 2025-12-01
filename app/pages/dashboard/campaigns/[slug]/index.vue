@@ -76,7 +76,7 @@ const showQuickEditModal = ref<boolean>(false);
       <AppHeading :level="3">Campaign Overview</AppHeading>
       <ButtonGroup>
         <Button
-          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border"
           @click="
             async () =>
               await navigateTo(
@@ -92,7 +92,7 @@ const showQuickEditModal = ref<boolean>(false);
         </Button>
 
         <Button
-          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+          class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border"
           @click="showQuickEditModal = true"
         >
           <Edit3 class="w-4 h-4" />
@@ -102,7 +102,7 @@ const showQuickEditModal = ref<boolean>(false);
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button
-              class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border-r"
+              class="bg-card text-card-foreground hover:text-primary-foreground rounded-md border"
               size="icon"
               aria-label="More Options"
             >

@@ -65,7 +65,7 @@ const campaignTypes = [
                   />
 
                   <div
-                    class="relative flex gap-4 p-6 h-full ring-1 rounded-lg border bg-card shadow-sm border-muted transition-all duration-200"
+                    class="relative flex gap-4 p-6 h-full ring-1 rounded-lg border border-border bg-card shadow transition-all duration-200"
                     :class="
                       form.values.type === type.id
                         ? 'ring-primary'

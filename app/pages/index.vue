@@ -232,7 +232,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-card text-card-foreground">
+  <div class="min-h-screen flex flex-col bg-background text-card-foreground">
     <header
       class="max-w-7xl w-full mx-auto py-4 px-4 sm:px-6 flex items-center justify-between"
     >
@@ -447,7 +447,7 @@ onMounted(() => {
     </header>
 
     <section
-      class="relative bg-gray-100 flex flex-col items-center justify-center text-center pt-20 px-6 space-y-8 overflow-hidden"
+      class="relative bg-background flex flex-col items-center justify-center text-center pt-20 px-6 space-y-8 overflow-hidden"
     >
       <h1
         class="text-5xl sm:text-6xl font-extrabold leading-tight max-w-4xl tracking-tight"
@@ -520,7 +520,7 @@ onMounted(() => {
     </section>
 
     <section class="max-w-full grid grid-cols-1 lg:grid-cols-2">
-      <div class="py-20 flex flex-col items-center bg-gray-100">
+      <div class="py-20 flex flex-col items-center bg-background">
         <div
           class="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-rose-500"
         >
@@ -562,7 +562,7 @@ onMounted(() => {
         "
       />
 
-      <div class="py-20 flex flex-col items-center bg-gray-100">
+      <div class="py-20 flex flex-col items-center bg-background">
         <div
           class="mb-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-rose-500"
         >

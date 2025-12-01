@@ -42,15 +42,19 @@ function isActive(path: string) {
 
 <template>
   <Sidebar>
-    <SidebarHeader class="px-0">
+    <SidebarHeader>
       <AppSidebarProjectSwitcher v-if="projects" :projects="projects" />
     </SidebarHeader>
     <SidebarContent>
-      <SidebarGroup class="px-0">
+      <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-              <SidebarMenuButton as-child :is-active="isActive(item.url)">
+              <SidebarMenuButton
+                as-child
+                :is-active="isActive(item.url)"
+                class="p-6"
+              >
                 <NuxtLink :href="`${item.url}`">
                   <component :is="item.icon" />
                   <span class="text-base">{{ item.title }}</span>

@@ -82,17 +82,13 @@ const filteredCampaigns = computed(() => {
 
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
         <div class="relative w-full sm:w-1/3">
-          <Input
-            v-model="searchQuery"
-            placeholder="Search campaigns..."
-            class="bg-card"
-          />
+          <Input v-model="searchQuery" placeholder="Search campaigns..." />
         </div>
 
         <div class="flex items-center gap-3">
           <Select v-model="sortBy">
             <SelectTrigger
-              class="group bg-card border-transparent text-sm font-normal rounded-full px-4 py-2 flex items-center hover:bg-primary hover:text-primary-foreground justify-center gap-1"
+              class="group shadow text-sm font-normal border-border rounded-full px-4 py-2 flex items-center hover:bg-primary hover:text-primary-foreground justify-center gap-1"
               :hide-icon="true"
             >
               <ArrowDownUp
