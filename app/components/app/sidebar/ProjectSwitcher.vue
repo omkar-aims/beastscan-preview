@@ -14,7 +14,7 @@ const userStore = useUserStore();
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <SidebarMenuButton
-              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              class="p-6 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div
                 class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
@@ -59,7 +59,7 @@ const userStore = useUserStore();
               <DialogTrigger
                 class="w-full text-left flex items-center gap-2 group"
               >
-                <Plus class="size-4 group-hover:text-white" />
+                <Plus class="size-4" />
                 Add Project
               </DialogTrigger>
             </DropdownMenuItem>
@@ -77,7 +77,7 @@ const userStore = useUserStore();
             <FormItem>
               <FormLabel>Project Name</FormLabel>
               <FormControl>
-                <Input class="bg-white" v-bind="componentField" />
+                <Input v-bind="componentField" />
               </FormControl>
               <FormDescription />
               <FormMessage />

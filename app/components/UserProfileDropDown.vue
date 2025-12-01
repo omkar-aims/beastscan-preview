@@ -65,21 +65,18 @@ const accounts = [
       <DropdownMenuItem
         v-for="item in menuItems"
         :key="item.href"
-        class="group cursor-pointer"
+        class="cursor-pointer"
         @click="navigateTo(item.href)"
       >
-        <component
-          :is="item.icon"
-          class="h-4 w-4 mr-2 group-hover:text-primary-foreground"
-        />
+        <component :is="item.icon" class="h-4 w-4 mr-2" />
         <span>{{ item.label }}</span>
       </DropdownMenuItem>
 
       <DropdownMenuItem
-        class="group cursor-pointer"
+        class="cursor-pointer"
         @click="showAccountDialog = true"
       >
-        <Users class="h-4 w-4 mr-2 group-hover:text-primary-foreground" />
+        <Users class="h-4 w-4 mr-2" />
         Switch Account
       </DropdownMenuItem>
 
@@ -87,13 +84,10 @@ const accounts = [
 
       <DropdownMenuItem
         variant="destructive"
-        class="group cursor-pointer"
+        class="cursor-pointer"
         @click="showLogoutDialog = true"
       >
-        <component
-          :is="logoutItem.icon"
-          class="h-4 w-4 mr-2 group-hover:text-primary-foreground"
-        />
+        <component :is="logoutItem.icon" class="h-4 w-4 mr-2" />
         {{ logoutItem.label }}
       </DropdownMenuItem>
     </DropdownMenuContent>

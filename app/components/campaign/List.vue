@@ -36,8 +36,8 @@ const runtimeConfig = useRuntimeConfig();
     <div class="space-y-6">
       <Card v-for="campaign in campaigns" :key="campaign.id">
         <CardContent class="grid grid-cols-[120px_1fr_auto] gap-6">
-          <div class="flex flex-col gap-2 items-center">
-            <div class="p-2 rounded-xl bg-white">
+          <div class="flex flex-col items-center">
+            <div class="p-1 rounded-md bg-white">
               <NuxtImg
                 src="https://qrapi.beastscan.com/?size=300&margin=10&renderer=pattern&format=svg&text=https%3A%2F%2Fqrapi.beastscan.com&dots_type=hex&dots_color=%231e40af&dots_negative_color=%23c7d2fe&corners_square_type=rounded&corners_square_color=%231e40af&corners_square_background_color=%23c7d2fe&corners_dot_type=dot&corners_dot_color=%231e40af&pattern_bg=transparent"
                 width="120"
@@ -45,16 +45,16 @@ const runtimeConfig = useRuntimeConfig();
                 alt="Campaign QR"
                 class="rounded-lg"
               />
-
-              <Button
-                variant="link"
-                size="sm"
-                class="p-0 w-full px-1 text-muted-foreground"
-                @click="showCreateModal = true"
-              >
-                Edit QR code
-              </Button>
             </div>
+
+            <Button
+              variant="link"
+              size="sm"
+              class="p-0 w-full px-1 text-muted-foreground"
+              @click="showCreateModal = true"
+            >
+              Edit QR code
+            </Button>
           </div>
 
           <div class="space-y-3 min-w-0">

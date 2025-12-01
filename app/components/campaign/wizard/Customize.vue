@@ -119,7 +119,7 @@ watch(
           <button
             v-for="palette in extractedColors"
             :key="palette.name"
-            class="relative group flex items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-sm"
+            class="relative group flex border border-border items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-md"
             :class="selected === palette.name ? 'ring-primary' : 'ring-card'"
             @click="selected = palette.name"
           >
@@ -156,7 +156,7 @@ watch(
 
         <div class="grid grid-cols-2 gap-4">
           <button
-            class="relative group flex items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-sm"
+            class="relative group flex border border-border items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-md"
             :class="
               selected.startsWith('custom') ? 'ring-primary' : 'ring-border'
             "
@@ -188,7 +188,7 @@ watch(
           <button
             v-for="palette in palettes"
             :key="palette.name"
-            class="relative group flex items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-sm"
+            class="relative group flex border border-border items-center gap-4 rounded-lg p-4 bg-card ring-1 transition shadow-md"
             :class="selected === palette.name ? 'ring-primary' : 'ring-border'"
             @click="selected = palette.name"
           >
@@ -230,7 +230,7 @@ watch(
     </div>
 
     <div class="flex justify-center items-start">
-      <div class="w-full h-[620px] rounded-xl bg-card">
+      <div class="w-full h-[620px] rounded-xl bg-card border border-border">
         <div class="flex items-center gap-2 px-4 py-2 border-b">
           <span class="h-3 w-3 rounded-full bg-red-500" />
           <span class="h-3 w-3 rounded-full bg-yellow-400" />

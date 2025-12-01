@@ -115,20 +115,20 @@ const nextSteps = [
 
         <DropdownMenuContent class="w-48">
           <DropdownMenuItem
-            class="flex items-center gap-2 cursor-pointer group"
+            class="flex items-center gap-2 cursor-pointer"
             @click="navigateTo('/dashboard/campaigns/new')"
           >
-            <Megaphone class="w-4 h-4 group-hover:text-primary-foreground" />
+            <Megaphone class="w-4 h-4" />
             <span>Campaign</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem class="flex items-center gap-2 cursor-pointer">
-            <FileText class="w-4 h-4 group-hover:text-primary-foreground" />
+            <FileText class="w-4 h-4" />
             <span>Form</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem class="flex items-center gap-2 cursor-pointer">
-            <QrCode class="w-4 h-4 group-hover:text-primary-foreground" />
+            <QrCode class="w-4 h-4" />
             <span>QR Code</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
